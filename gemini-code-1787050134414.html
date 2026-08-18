@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>챗냥이의 오락 지출 노트 1.0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN 추가 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* 탭 전환을 위한 CSS */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-20 font-sans">
+  <div class="max-w-md mx-auto p-4 space-y-4">
+    
+    <!-- ==================== [탭 1: 입력 화면] ==================== -->
+    <div id="tab-input" class="tab-content active space-y-4">
+      <!-- 대시보드 요약 -->
+      <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700">
+        <h1 class="text-lg font-bold text-slate-200">🐱 챗냥이의 오락 지출 노트 1.0</h1>
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div class="bg-slate-950/60 p-3 rounded-xl">
+            <span class="text-xs text-slate-400">오늘 지출</span>
+            <p id="todayCost" class="text-xl font-bold text-emerald-400">0원</p>
+          </div>
+          <div class="bg-slate-950/60 p-3 rounded-xl">
+            <span class="text-xs text-slate-400">오늘 판수</span>
+            <p id="todayCount" class="text-xl font-bold text-indigo-400">0판</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- 입력 폼 -->
+      <section class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 space-y-3">
+        <!-- 오락실 지점 -->
+        <div>
+          <label class="text-xs text-slate-400 font-medium">어디 오락실인가요?</label>
+          <input type="text" id="arcadeInput" placeholder="예: 삼보, 짱오락실" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <!-- 게임 & 기체 선택 -->
+        <div>
+          <label class="text-xs text-slate-400 font-medium">어떤 게임을 하셨나요?</label>
+          <select id="gameSelect" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+            <optgroup label="사운드 볼텍스">
+              <option value="사볼 (발키리)">사운드 볼텍스 (발키리)</option>
+              <option value="사볼 (구기체)">사운드 볼텍스 (구기체)</option>
+            </optgroup>
+            <optgroup label="비트매니아 IIDX">
+              <option value="투덱 (라이트닝)">투덱 (라이트닝)</option>
+              <option value="투덱 (구기체)">투덱 (구기체)</option>
+            </optgroup>
+            <optgroup label="유비트">
+              <option value="유비트 (신기체)">유비트 (신기체)</option>
+              <option value="유비트 (구기체)">유비트 (구기체)</option>
+            </optgroup>
+            <optgroup label="기타도라">
+              <option value="기타매니아 (신기체)">기타매니아 (신기체)</option>
+              <option value="기타매니아 (구기체)">기타매니아 (구기체)</option>
+              <option value="드럼매니아 (신기체)">드럼매니아 (신기체)</option>
+              <option value="드럼매니아 (구기체)">드럼매니아 (구기체)</option>
+            </optgroup>
+            <optgroup label="기타 게임">
+              <option value="EZ2AC">EZ2AC</option>
+              <option value="팝픈뮤직">팝픈뮤직</option>
+              <option value="기타">기타 직접입력</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <!-- 모드 / 금액 / 판수 -->
+        <div>
+          <label class="text-xs text-slate-400 font-medium">모드 / 메모 (선택)</label>
+          <input type="text" id="modeInput" placeholder="예: 스탠다드, 프리미엄" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="text-xs text-slate-400 font-medium">판당 금액 (원)</label>
+          <div class="grid grid-cols-4 gap-1.5 mt-1 mb-2">
+            <button type="button" onclick="setPrice(500)" class="bg-slate-700 hover:bg-slate-600 text-xs py-1.5 rounded-lg">500원</button>
+            <button type="button" onclick="setPrice(1000)" class="bg-slate-700 hover:bg-slate-600 text-xs py-1.5 rounded-lg">1,000원</button>
+            <button type="button" onclick="setPrice(1500)" class="bg-slate-700 hover:bg-slate-600 text-xs py-1.5 rounded-lg">1,500원</button>
+            <button type="button" onclick="setPrice(2000)" class="bg-slate-700 hover:bg-slate-600 text-xs py-1.5 rounded-lg">2,000원</button>
+          </div>
+          <!-- step="500" 추가: 기본 화살표로 500원씩 조절됨 -->
+          <input type="number" id="priceInput" value="1000" step="500" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-right font-semibold focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="text-xs text-slate-400 font-medium">플레이 판수</label>
+          <div class="flex items-center space-x-2 mt-1">
+            <button type="button" onclick="changeCount(-1)" class="w-12 h-10 bg-slate-700 rounded-xl font-bold text-lg active:scale-95 transition">-</button>
+            <input type="number" id="countInput" value="1" min="1" class="w-full text-center bg-slate-900 border border-slate-700 rounded-xl h-10 font-bold focus:outline-none">
+            <button type="button" onclick="changeCount(1)" class="w-12 h-10 bg-indigo-600 rounded-xl font-bold text-lg active:scale-95 transition">+</button>
+          </div>
+        </div>
+
+        <button onclick="addLog()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl shadow-md mt-2 active:scale-95 transition">
+          지출 기록하기
+        </button>
+      </section>
+    </div>
+
+    <!-- ==================== [탭 2: 통계 & 기록] ==================== -->
+    <div id="tab-stats" class="tab-content space-y-4">
+      <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700">
+        <h1 class="text-lg font-bold text-slate-200 mb-2">📊 월별 지출 현황</h1>
+        
+        <!-- 이번 달 총액 표시 -->
+        <div class="bg-slate-950/60 p-4 rounded-xl mb-4 text-center">
+          <span class="text-sm text-slate-400 block mb-1">이번 달 오락실 지출</span>
+          <span id="thisMonthTotalCost" class="text-3xl font-bold text-rose-400">0원</span>
+        </div>
+
+        <!-- 월별 막대 그래프 영역 -->
+        <div class="bg-slate-900 p-3 rounded-xl mb-4">
+          <canvas id="monthlyChart" height="200"></canvas>
+        </div>
+      </header>
+
+      <!-- 전체 기록 리스트 -->
+      <section class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700">
+        <h2 class="text-sm font-bold text-slate-400 mb-3">전체 상세 기록</h2>
+        <div id="fullLogList" class="space-y-2 max-h-96 overflow-y-auto pr-1"></div>
+      </section>
+    </div>
+
+    <!-- ==================== [탭 3: 데이터 설정 (백업/복구)] ==================== -->
+    <div id="tab-settings" class="tab-content space-y-4">
+      <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 text-center">
+        <h1 class="text-lg font-bold text-slate-200">⚙️ 데이터 관리</h1>
+        <div class="mt-4 bg-slate-900 p-4 rounded-xl border border-slate-700">
+          <p class="text-xs text-slate-400 mb-1">내 고유 유저 코드</p>
+          <p id="userCodeDisplay" class="text-2xl font-mono text-indigo-400 font-bold tracking-widest">---</p>
+          <p class="text-xs text-slate-500 mt-2 break-keep">이 사이트에 접속하는 사람마다 자동으로 고유 코드가 발급되며 각자의 폰에 데이터가 따로 저장됩니다.</p>
+        </div>
+      </header>
+
+      <section class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 space-y-3">
+        <h2 class="text-sm font-bold text-slate-400 mb-1">데이터 백업 및 복구</h2>
+        <p class="text-xs text-slate-500 mb-3 break-keep">사이트 주소가 바뀌거나 휴대폰을 바꿀 때를 대비해 데이터를 파일로 추출해두세요.</p>
+        
+        <button onclick="exportData()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl shadow-md flex justify-center items-center gap-2">
+          <span>📥 데이터 파일 추출 (다운로드)</span>
+        </button>
+
+        <div class="relative w-full">
+          <input type="file" id="importFile" accept=".json" onchange="importData(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+          <div class="w-full bg-slate-900 border border-slate-600 hover:bg-slate-800 text-slate-300 font-bold py-3 rounded-xl shadow-md flex justify-center items-center gap-2 text-center transition">
+            <span>📤 복구 파일 불러오기</span>
+          </div>
+        </div>
+
+        <button onclick="clearAllLogs()" class="w-full bg-rose-900/40 text-rose-400 border border-rose-900/50 hover:bg-rose-900/60 font-bold py-3 rounded-xl shadow-md mt-4 transition">
+          🚨 데이터 전체 초기화
+        </button>
+      </section>
+    </div>
+
+  </div>
+
+  <!-- 하단 네비게이션 바 -->
+  <nav class="fixed bottom-0 w-full max-w-md left-1/2 -translate-x-1/2 bg-slate-800 border-t border-slate-700 flex justify-around p-3 pb-safe z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.3)]">
+    <button onclick="switchTab('tab-input')" id="btn-tab-input" class="nav-btn text-indigo-400 font-bold flex flex-col items-center">
+      <span class="text-xl">✍️</span><span class="text-xs mt-1">입력</span>
+    </button>
+    <button onclick="switchTab('tab-stats')" id="btn-tab-stats" class="nav-btn text-slate-500 hover:text-slate-300 font-bold flex flex-col items-center">
+      <span class="text-xl">📊</span><span class="text-xs mt-1">통계</span>
+    </button>
+    <button onclick="switchTab('tab-settings')" id="btn-tab-settings" class="nav-btn text-slate-500 hover:text-slate-300 font-bold flex flex-col items-center">
+      <span class="text-xl">⚙️</span><span class="text-xs mt-1">설정</span>
+    </button>
+  </nav>
+
+  <script>
+    // 상태 변수
+    let logs = JSON.parse(localStorage.getItem('rhythm_logs_v3') || '[]');
+    let userCode = localStorage.getItem('rhythm_user_code');
+    let chartInstance = null;
+
+    // 초기 유저 코드 생성
+    if (!userCode) {
+      userCode = 'U-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      localStorage.setItem('rhythm_user_code', userCode);
+    }
+    document.getElementById('userCodeDisplay').textContent = userCode;
+
+    // 탭 전환 기능
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-indigo-400');
+        btn.classList.add('text-slate-500');
+      });
+      document.getElementById('btn-' + tabId).classList.add('text-indigo-400');
+      document.getElementById('btn-' + tabId).classList.remove('text-slate-500');
+
+      if (tabId === 'tab-stats') {
+        renderStats();
+      } else {
+        renderDashboard();
+      }
+    }
+
+    // 데이터 입력 기능
+    function setPrice(amount) { document.getElementById('priceInput').value = amount; }
+    function changeCount(val) {
+      const input = document.getElementById('countInput');
+      const next = parseInt(input.value || 1) + val;
+      if (next >= 1) input.value = next;
+    }
+
+    function addLog() {
+      const log = {
+        id: Date.now(),
+        userId: userCode,
+        date: new Date().toISOString(), // ISO 날짜 (월별 분류용)
+        dateStr: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+        timeStr: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+        arcade: document.getElementById('arcadeInput').value.trim() || '이름 모를 오락실',
+        game: document.getElementById('gameSelect').value,
+        mode: document.getElementById('modeInput').value.trim() || '일반',
+        unitPrice: parseInt(document.getElementById('priceInput').value || 0),
+        count: parseInt(document.getElementById('countInput').value || 1),
+      };
+      log.totalCost = log.unitPrice * log.count;
+
+      logs.unshift(log);
+      localStorage.setItem('rhythm_logs_v3', JSON.stringify(logs));
+      
+      document.getElementById('countInput').value = 1;
+      renderDashboard();
+      alert('지출 내역이 기록되었습니다!');
+    }
+
+    function deleteLog(id) {
+      if(confirm('이 기록을 삭제할까요?')){
+        logs = logs.filter(l => l.id !== id);
+        localStorage.setItem('rhythm_logs_v3', JSON.stringify(logs));
+        renderDashboard();
+        renderStats();
+      }
+    }
+
+    // 대시보드 (입력 탭) 렌더링
+    function renderDashboard() {
+      const todayStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      let todayCost = 0, todayCount = 0;
+
+      logs.forEach(log => {
+        if (log.dateStr === todayStr) {
+          todayCost += log.totalCost;
+          todayCount += log.count;
+        }
+      });
+      document.getElementById('todayCost').textContent = `${todayCost.toLocaleString()}원`;
+      document.getElementById('todayCount').textContent = `${todayCount}판`;
+    }
+
+    // 통계 및 전체 기록 리스트 (통계 탭) 렌더링
+    function renderStats() {
+      const listEl = document.getElementById('fullLogList');
+      listEl.innerHTML = '';
+
+      // 이번 달 문자열 만들기 (예: "2026-08")
+      const now = new Date();
+      const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      let thisMonthTotal = 0;
+
+      if (logs.length === 0) {
+        listEl.innerHTML = '<div class="text-center py-8 text-slate-500 text-sm">아직 기록이 없습니다.</div>';
+        document.getElementById('thisMonthTotalCost').textContent = '0원';
+        if(chartInstance) chartInstance.destroy();
+        return;
+      }
+
+      // 월별 지출 집계
+      const monthlyCosts = {};
+      logs.forEach(log => {
+        // 날짜에서 YYYY-MM 추출
+        const monthKey = log.date.substring(0, 7);
+        monthlyCosts[monthKey] = (monthlyCosts[monthKey] || 0) + log.totalCost;
+        
+        // 이번 달 총액 계산
+        if (monthKey === currentMonthStr) {
+          thisMonthTotal += log.totalCost;
+        }
+      });
+
+      document.getElementById('thisMonthTotalCost').textContent = `${thisMonthTotal.toLocaleString()}원`;
+
+      // 차트 데이터 정렬 (과거순으로 정렬하여 그래프 왼쪽부터 오른쪽으로 표시)
+      const sortedMonths = Object.keys(monthlyCosts).sort();
+      // YYYY-MM 형식을 YY년 M월 형식으로 변환
+      const chartLabels = sortedMonths.map(m => {
+        const [year, month] = m.split('-');
+        return `${year.slice(2)}년 ${parseInt(month)}월`;
+      });
+      const chartData = sortedMonths.map(m => monthlyCosts[m]);
+
+      // 차트 그리기 (Bar Chart)
+      const ctx = document.getElementById('monthlyChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: chartLabels,
+          datasets: [{
+            label: '월별 총 지출액',
+            data: chartData,
+            backgroundColor: '#4f46e5', // indigo-600
+            borderRadius: 6,
+            barPercentage: 0.6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return context.parsed.y.toLocaleString() + '원';
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(255, 255, 255, 0.1)' },
+              ticks: { 
+                color: '#94a3b8',
+                callback: function(value) {
+                  return value.toLocaleString() + '원';
+                }
+              }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#cbd5e1' }
+            }
+          }
+        }
+      });
+
+      // 리스트 렌더링
+      logs.forEach(log => {
+        const card = document.createElement('div');
+        card.className = 'bg-slate-900 border border-slate-700/60 p-3 rounded-xl flex justify-between items-center';
+        card.innerHTML = `
+          <div class="w-full">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs text-slate-400">${log.dateStr} ${log.timeStr} • <b class="text-indigo-300">${log.arcade}</b></span>
+              <button onclick="deleteLog(${log.id})" class="text-slate-500 hover:text-rose-400 text-xs px-2 py-1 rounded bg-slate-800">삭제</button>
+            </div>
+            <div class="flex justify-between items-end mt-2">
+              <div>
+                <span class="font-bold text-sm text-slate-200">${log.game}</span>
+                <span class="text-xs bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded ml-1">${log.mode}</span>
+              </div>
+              <div class="text-right">
+                <span class="text-xs text-slate-400 mr-2">${log.count}판</span>
+                <span class="font-bold text-rose-400 text-sm">${log.totalCost.toLocaleString()}원</span>
+              </div>
+            </div>
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    // ===== 데이터 내보내기/가져오기 로직 ===== //
+    function exportData() {
+      if(logs.length === 0) {
+        alert("추출할 데이터가 없습니다.");
+        return;
+      }
+      const dataStr = JSON.stringify({ userCode, logs }, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `챗냥이노트_${userCode}_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if(imported.logs && Array.isArray(imported.logs)) {
+            if(confirm("기존 데이터에 불러온 데이터를 병합(추가)하시겠습니까?\n'취소'를 누르면 기존 데이터를 덮어씁니다.")) {
+              logs = [...imported.logs, ...logs];
+            } else {
+              logs = imported.logs;
+              if(imported.userCode) {
+                userCode = imported.userCode;
+                localStorage.setItem('rhythm_user_code', userCode);
+                document.getElementById('userCodeDisplay').textContent = userCode;
+              }
+            }
+            const uniqueLogs = Array.from(new Map(logs.map(item => [item.id, item])).values());
+            logs = uniqueLogs.sort((a, b) => b.id - a.id);
+            
+            localStorage.setItem('rhythm_logs_v3', JSON.stringify(logs));
+            alert("데이터 복구가 완료되었습니다.");
+            renderDashboard();
+            if(document.getElementById('tab-stats').classList.contains('active')) renderStats();
+          } else {
+            alert("잘못된 파일 형식입니다.");
+          }
+        } catch (err) {
+          alert("파일을 읽는 중 오류가 발생했습니다.");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function clearAllLogs() {
+      if (confirm('🚨 모든 데이터를 정말 삭제하시겠습니까? 복구할 수 없습니다!')) {
+        logs = [];
+        localStorage.removeItem('rhythm_logs_v3');
+        renderDashboard();
+        if(chartInstance) chartInstance.destroy();
+        document.getElementById('fullLogList').innerHTML = '';
+        document.getElementById('thisMonthTotalCost').textContent = '0원';
+        alert("초기화 되었습니다.");
+      }
+    }
+
+    // 초기 실행
+    renderDashboard();
+  </script>
+</body>
+</html>
