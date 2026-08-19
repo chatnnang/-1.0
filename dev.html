@@ -22,7 +22,6 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen pb-20 font-sans overflow-x-hidden">
   
-  <!-- [이미지 저장용 숨김 캔버스] -->
   <div id="exportScorecard" class="absolute left-[-9999px] top-0 w-[1280px] bg-slate-900 p-8 font-sans z-[-50]">
     <div class="flex justify-between items-end border-b-2 border-slate-700 pb-4 mb-6">
       <div>
@@ -45,7 +44,6 @@
   </div>
 
   <div class="max-w-md mx-auto p-4 space-y-4">
-    <!-- DEV 서버 표시 -->
     <div class="bg-fuchsia-600 text-white text-center text-[10px] font-bold py-1 rounded-full shadow-lg">⚠️ 현재 [DEV 서버]에서 테스트 중입니다.</div>
 
     <!-- 인증 바 -->
@@ -124,14 +122,13 @@
       </section>
     </div>
 
-    <!-- [탭 2: 플레이 데이터 (무과금 파서 버전 적용)] -->
+    <!-- [탭 2: 플레이 데이터] -->
     <div id="tab-profile" class="tab-content active space-y-4">
       <div class="flex overflow-x-auto hide-scrollbar space-x-2 py-1">
         <button class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md whitespace-nowrap">사운드 볼텍스</button>
         <button class="bg-slate-800 text-slate-400 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap opacity-50 cursor-not-allowed">마이마이 DX (준비중)</button>
       </div>
 
-      <!-- 데이터 없음 뷰 -->
       <div id="sdvxEmptyState" class="bg-slate-800 border border-slate-700 rounded-2xl p-5 text-center space-y-4 shadow-lg hidden">
         <div class="text-4xl mb-2">🎮</div>
         <h2 class="text-lg font-bold text-slate-200">데이터가 등록되지 않았습니다</h2>
@@ -143,7 +140,6 @@
         <button onclick="copyBookmarklet()" class="w-full bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold py-3 rounded-xl active:scale-95 transition">데이터 갱신용 코드 복사</button>
       </div>
 
-      <!-- 데이터 있음 뷰 -->
       <div id="sdvxProfileState" class="space-y-4 hidden">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-lg relative overflow-hidden">
           <div class="absolute -right-6 -top-6 w-32 h-32 bg-indigo-600/20 rounded-full blur-2xl"></div>
@@ -174,6 +170,7 @@
           <div class="bg-slate-800 border border-slate-700 rounded-2xl p-3 shadow-lg pb-4">
             <div id="vf50MobileList" class="grid grid-cols-2 gap-2"></div>
           </div>
+          
           <button onclick="copyBookmarklet()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 font-bold py-3 rounded-xl shadow flex justify-center items-center gap-2 active:scale-95 transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
             <span>전적 데이터 갱신용 코드 복사</span>
@@ -197,13 +194,12 @@
       </section>
     </div>
 
-    <!-- [탭 4: 공지 (DB 기반 동적 로드)] -->
+    <!-- [탭 4: 공지] -->
     <div id="tab-notice" class="tab-content space-y-4">
       <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 flex justify-between items-center">
         <h1 class="text-lg font-bold text-slate-200">📢 공지사항</h1>
       </header>
       
-      <!-- 👑 관리자 전용 공지 작성 폼 (숨김 처리, 권한 확인 시 표시) -->
       <section id="adminNoticeForm" class="hidden bg-indigo-900/30 p-4 rounded-2xl shadow-lg border border-indigo-700 space-y-3 mb-4">
         <h2 class="text-sm font-bold text-indigo-300">👑 관리자 공지 작성</h2>
         <input type="text" id="noticeTitle" placeholder="공지 제목" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200">
@@ -212,11 +208,10 @@
           <option value="신규|bg-fuchsia-600">신규 업데이트 (보라색)</option>
           <option value="점검중|bg-rose-600">점검/오류 (빨간색)</option>
         </select>
-        <textarea id="noticeContent" rows="3" placeholder="공지 내용 (엔터 치면 줄바꿈 됩니다)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200"></textarea>
+        <textarea id="noticeContent" rows="3" placeholder="공지 내용" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200"></textarea>
         <button onclick="addNotice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-sm transition">DB에 공지 등록하기</button>
       </section>
 
-      <!-- DB에서 불러온 공지사항 목록이 뜨는 곳 -->
       <section id="dynamicNoticeList" class="space-y-3"></section>
     </div>
 
@@ -246,11 +241,8 @@
   </nav>
 
   <script>
-    // ==========================================================
-    // 👑 관리자 권한 설정 (이곳에 본인의 구글 이메일을 넣으세요!)
-    // ==========================================================
     const ADMIN_EMAILS = [
-      "junhoodemian@gmail.com" // <-- 이 부분을 수정하세요! (예: "cat123@gmail.com")
+      "본인구글이메일@gmail.com"
     ];
 
     const firebaseConfig = {
@@ -262,7 +254,7 @@
       appId: "1:1066933910880:web:a1ddbcfb455e7507c73205"
     };
 
-    let auth, db, monthlyChartInstance;
+    let auth, db, radarChartInstance, monthlyChartInstance;
     let currentUser = null;
     let isAdmin = false;
     let logs = [];
@@ -275,9 +267,14 @@
       db = firebase.firestore();
     } catch(e) { console.warn("Firebase Init", e); }
 
-    // ==========================================================
-    // 👑 동적 공지사항 (DB 연동) 기능
-    // ==========================================================
+    if(db) {
+      db.collection("notices").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+        notices = [];
+        snapshot.forEach((doc) => notices.push(doc.data()));
+        if(document.getElementById('tab-notice').classList.contains('active')) renderDynamicNotices();
+      });
+    }
+
     async function addNotice() {
       if(!isAdmin) return alert("관리자 권한이 없습니다.");
       const title = document.getElementById('noticeTitle').value.trim();
@@ -325,23 +322,10 @@
       });
     }
 
-    // 💡 공지사항 실시간 로드
-    if(db) {
-      db.collection("notices").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-        notices = [];
-        snapshot.forEach((doc) => notices.push(doc.data()));
-        if(document.getElementById('tab-notice').classList.contains('active')) renderDynamicNotices();
-      });
-    }
-
-    // ==========================================================
-    // 앱 초기화 및 로그인 (관리자 체크 포함)
-    // ==========================================================
     if (auth) {
       auth.onAuthStateChanged((user) => {
         if (user) {
           currentUser = user;
-          // 관리자 여부 체크
           if(ADMIN_EMAILS.includes(user.email)) {
             isAdmin = true;
             document.getElementById('adminNoticeForm').classList.remove('hidden');
@@ -384,9 +368,6 @@
     }
     function logoutGoogle() { if (auth) auth.signOut(); }
 
-    // ==========================================================
-    // 💡 [사볼 무과금 파서 & DB 기반 소수점 연산 로직]
-    // ==========================================================
     const SONG_DB = {
       "Who then no 灯_MXM": 19.7, "XELENOPHOEBEA_MXM": 19.5, "DANGER XLOZE_MXM": 19.4, "Ardenok_MXM": 19.4, "Titanomachia_MXM": 19.3,
       "神罰_MXM": 19.3, "華麗なる一撃_MXM": 19.2, "Zt!ri△_MXM": 19.5, "Quaint Echo_EXH": 18.8, "ミスクレイジースピード_MXM": 18.7,
@@ -410,7 +391,7 @@
       "9th Outburst_MXM": 19.6, "Votum stellarum -forest #25 RMX-_MXM": 18.9, "天鯨譚_MXM": 19.5, "Plan 8_MXM": 19.2, "CAKE,Cake'n Cake!_MXM": 18.5,
       "Blue Diamond_MXM": 19.6, "Blue Diamond_EXH": 18.5, "ИEXTAGE_MXM": 19.6, "L2 -Reminiscence- (SDVX ver.)_MXM": 19.4, "お返事まだカナ？おじさん構文！_MXM": 18.7,
       "Synthesis._MXM": 19.5, "snooze_MXM": 18.5, "777 (Vocal ver.)_EXH": 18.3, "Celestial Conquest_MXM": 19.8, "デッドライン症候群_MXM": 18.7,
-      "Help me, ERINNNNNN!!_MXM": 18.6, "ンポロロッカ_MXM": 19.8, "双星の冒険録_MXM": 19.3, "天泣_MXM": 19.5, "Blessed Horizon_MXM": 19.4,
+      "Help me, ERINNNNNN!!_MXM": 18.6, "ンポロロッカ_MXM": 19.8, "双星의冒険録_MXM": 19.3, "天泣_MXM": 19.5, "Blessed Horizon_MXM": 19.4,
       "FLOOD_FLOOR_MXM": 19.6, "ハートビート×スラッガー_MXM": 18.6, "FLAVOR-G_MXM": 18.7, "カジノファイヤーことみちゃん_MXM": 18.6, "Shooting Star_MXM": 18.6,
       "オーバーライド_MXM": 18.6, "Timepiece phase Ⅱ_MXM": 19.5, "ライアーダンサー_MXM": 18.8, "// If Summer Ever Comes__MXM": 19.8, "// If Summer Ever Comes__EXH": 18.5,
       "ØVER《Δ》_MXM": 19.9, "XHRONOXAPSULΞ_MXM": 20.0, "Initiating League_MXM": 18.5, "最強女神†ウーサペコラ_MXM": 18.5, "perditus†paradisus_MXM": 19.8,
@@ -427,7 +408,7 @@
 
         rawData.forEach(song => {
           let dbKey = `${song.title}_${song.diff}`;
-          let level = SONG_DB[dbKey] || 18.0; // 모르는 곡은 기본 18.0 처리
+          let level = SONG_DB[dbKey] || 18.0; 
 
           const gradeFactor = { 'S': 1.05, 'AAA+': 1.02, 'AAA': 1.00, 'AA+': 0.97, 'AA': 0.94, 'A+': 0.91, 'A': 0.88, 'B': 0.85, 'C': 0.82, 'D': 0.80 }[song.grade] || 0.80;
           let clearFactor = 0.5;
@@ -613,9 +594,6 @@
       }).catch(err => alert('이미지 캡처 실패'));
     }
 
-    // ==========================================================
-    // 가계부 로직
-    // ==========================================================
     function toggleTimeInput() {
       const isUnknown = document.getElementById('unknownTime').checked;
       const dtInput = document.getElementById('customDatetime');
@@ -763,7 +741,6 @@
       logs.forEach(log => {
         const card = document.createElement('div'); card.className = 'bg-slate-900 border border-slate-700/60 p-3 rounded-xl flex justify-between items-center';
         let timeDisplay = log.timeStr && log.timeStr !== '시간 모름' ? `<span class="text-[10px] text-slate-500 ml-1">${log.timeStr}</span>` : '';
-        
         card.innerHTML = `<div class="w-full"><div class="flex justify-between items-center mb-1"><span class="text-xs text-slate-400">${log.dateStr}${timeDisplay} <b class="text-indigo-300 ml-1">${log.arcade}</b></span><button onclick="deleteLog(${log.id})" class="text-slate-500 hover:text-rose-400 text-xs px-2 py-1 rounded bg-slate-800 transition">삭제</button></div><div class="flex justify-between items-end mt-2"><div><span class="font-bold text-sm text-slate-200">${log.game}</span></div><div class="text-right"><span class="text-xs text-slate-400 mr-2">${log.count}판</span><span class="font-bold text-rose-400 text-sm">${log.totalCost.toLocaleString()}원</span></div></div></div>`;
         listEl.appendChild(card);
       });
