@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>얼마썼냥 1.2 (Real CSV Update)</title>
+  <title>얼마썼냥 1.2 (Vaddict Parser Update)</title>
 
   <meta property="og:title" content="🐱 얼마썼냥 1.2">
   <meta property="og:description" content="리듬게임 지출 기록 및 전적 프로필">
@@ -27,7 +27,7 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen pb-20 font-sans overflow-x-hidden">
   
-  <!-- [이미지 저장용 숨김 캔버스 (와이드 5열)] -->
+  <!-- [이미지 저장용 숨김 캔버스] -->
   <div id="exportScorecard" class="absolute left-[-9999px] top-0 w-[1280px] bg-slate-900 p-8 font-sans z-[-50]">
     <div class="flex justify-between items-end border-b-2 border-slate-700 pb-4 mb-6">
       <div>
@@ -49,9 +49,7 @@
     </div>
   </div>
 
-  <!-- [메인 앱 컨테이너] -->
   <div class="max-w-md mx-auto p-4 space-y-4">
-    
     <!-- 인증 바 -->
     <div id="authBar" class="bg-slate-800/90 backdrop-blur border border-slate-700 p-3 rounded-2xl flex justify-between items-center text-xs shadow-md">
       <div id="userInfo" class="flex items-center space-x-2">
@@ -125,13 +123,13 @@
         <div class="text-4xl mb-2">🎮</div>
         <h2 class="text-lg font-bold text-slate-200">데이터가 등록되지 않았습니다</h2>
         
-        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 shadow-inner mt-4">
-          <p class="text-sm font-bold text-emerald-400 mb-1">📥 가장 안전한 CSV 갱신 (권장)</p>
-          <p class="text-xs text-slate-400 mb-3 leading-relaxed break-keep">코나미 공식 홈페이지에서 다운로드한 <b>score.csv</b> 파일을 업로드하시면 1초 만에 완벽하게 진짜 성적이 갱신됩니다.</p>
-          <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
-          <label for="csvFileInput" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white text-center font-bold py-3 rounded-xl cursor-pointer block active:scale-95 transition shadow-md">
-            공식 score.csv 파일 업로드
-          </label>
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 shadow-inner mt-4 text-left">
+          <p class="text-sm font-bold text-fuchsia-400 mb-1">🚀 무과금 자동 갱신 북마크릿</p>
+          <p class="text-xs text-slate-400 mb-3 leading-relaxed break-keep">
+            사운드 볼텍스 <b>공식 홈페이지(e-amusement)</b> 접속 후, 아래 코드를 주소창에 붙여넣어 실행하시면 자동으로 전적을 긁어옵니다! (프리미엄 불필요)
+          </p>
+          <code id="bookmarkletCode" class="text-[10px] text-slate-500 break-all line-clamp-3">javascript:(async function(){alert('전적 데이터를 수집합니다. 곡이 많을 경우 5~10초 정도 소요될 수 있으니 완료 창이 뜰 때까지 대기해 주세요!');let allData=[];let maxP=1;let opts=document.querySelectorAll('#search_page option');if(opts.length) maxP=parseInt(opts[opts.length-1].value);let diffs=['nov','adv','exh','mxm','inf','ult'];let getG=(s)=>{if(s.includes('s.png'))return 'S';if(s.includes('aaa_plus'))return 'AAA+';if(s.includes('aaa'))return 'AAA';if(s.includes('aa_plus'))return 'AA+';if(s.includes('aa.'))return 'AA';if(s.includes('a_plus'))return 'A+';if(s.includes('a.'))return 'A';if(s.includes('b.'))return 'B';if(s.includes('c.'))return 'C';return 'D';};let getL=(s)=>{if(s.includes('per'))return 'PUC';if(s.includes('uc'))return 'UC';if(s.includes('comp_ex')||s.includes('comp_max'))return 'MXV';if(s.includes('comp'))return 'COMP';return 'PLAY';};for(let p=1;p<=maxP;p++){let res=await fetch('/game/sdvx/vii/playdata/musicdata/index.html?page='+p);let text=await res.text();let doc=new DOMParser().parseFromString(text,'text/html');let rows=doc.querySelectorAll('tr.data_col');rows.forEach(r=>{let tEl=r.querySelector('.music .title a');if(!tEl)return;let title=tEl.innerText.trim();diffs.forEach(d=>{let cell=r.querySelector('td.'+d);if(!cell)return;let val=cell.innerText.trim();if(val==='0'||!val)return;let score=parseInt(val);if(isNaN(score))return;let imgs=cell.querySelectorAll('img');if(imgs.length<2)return;allData.push({title:title,diff:d.toUpperCase(),score:score,lamp:getL(imgs[0].src),grade:getG(imgs[1].src)});});});}let win=window.open('https://chatnnang.github.io/-1.0/','_blank');if(!win)return alert('팝업 차단이 설정되어 있습니다. 팝업을 허용해주세요!');let tries=0;let timer=setInterval(()=>{win.postMessage({type:'SDVX_PARSE_DATA',payload:allData},'*');tries++;if(tries>15)clearInterval(timer);},500);})();</code>
+          <button onclick="copyBookmarklet()" class="w-full mt-3 bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-center font-bold py-3 rounded-xl cursor-pointer block active:scale-95 transition shadow-md">코드 복사하기</button>
         </div>
       </div>
 
@@ -167,14 +165,10 @@
             <div id="vf50MobileList" class="grid grid-cols-2 gap-2"></div>
           </div>
           
-          <div class="bg-slate-900 border border-slate-700 rounded-2xl p-3 text-center">
-            <p class="text-[11px] text-slate-400 mb-2">최신 성적으로 갱신하고 싶으신가요?</p>
-            <input type="file" id="csvFileInputProfile" accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
-            <label for="csvFileInputProfile" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl cursor-pointer flex justify-center items-center gap-2 active:scale-95 transition shadow">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-              <span>공식 score.csv 업로드로 갱신</span>
-            </label>
-          </div>
+          <button onclick="copyBookmarklet()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 font-bold py-3 rounded-xl shadow flex justify-center items-center gap-2 active:scale-95 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            <span>전적 갱신용 북마크릿 복사</span>
+          </button>
         </div>
       </div>
     </div>
@@ -251,40 +245,44 @@
     const NOTICES = [
       {
         tag: "신규", tagColor: "bg-fuchsia-600 text-white",
-        title: "🎮 사운드 볼텍스 공식 CSV 연동 지원!",
+        title: "🎮 무과금 파싱 업데이트 완료!",
         date: "2026.08.19",
-        content: "- 코나미 공식 score.csv 업로드 기능 신설\n- 북마크릿 오류 완벽 해결 및 정확도 상승\n- 파라미터 레이더 차트 지원\n- VF50 성적표 이미지 캡처 저장 기능"
+        content: "- 코나미 베이직 코스(무료)에서도 전적 갱신 가능\n- 팝업 통신을 통한 1초 볼포스 연산 적용\n- 오픈소스 기반 정밀 난이도 매칭 탑재"
       }
     ];
 
     // ==========================================================
-    // 💡 [새로운 핵심 기술] score.csv 파일 파싱 및 볼포스 계산
+    // 💡 [핵심 기술 1] 냥님과 최상위권 전용 내장 상수 DB (오픈소스 기반)
     // ==========================================================
-    function handleCSVUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        processSDVXCSV(e.target.result);
-        event.target.value = ''; // 같은 파일 다시 올릴 수 있도록 초기화
-      };
-      // 코나미 사볼 CSV는 Shift_JIS 인코딩을 사용합니다. (한글/일본어 깨짐 방지)
-      reader.readAsText(file, 'Shift_JIS');
-    }
-
-    function getDiffShort(diff) {
-      const map = { 'NOVICE': 'NOV', 'ADVANCED': 'ADV', 'EXHAUST': 'EXH', 'MAXIMUM': 'MXM', 'INFINITE': 'INF', 'GRAVITY': 'GRV', 'HEAVENLY': 'HVN', 'VIVID': 'VVD', 'EXCEED': 'XCD' };
-      return map[diff] || diff;
-    }
-
-    function getLampText(clearRank) {
-      if (clearRank === 'PERFECT') return 'PUC';
-      if (clearRank === 'ULTIMATE CHAIN') return 'UC';
-      if (clearRank === 'MAXXIVE COMPLETE' || clearRank === 'EXCESSIVE COMPLETE') return 'MXV'; // Vaddict처럼 MXV 통일
-      if (clearRank === 'COMPLETE') return 'COMP';
-      return 'PLAY';
-    }
+    const SONG_DB = {
+      "Who then no 灯_MXM": 19.7, "XELENOPHOEBEA_MXM": 19.5, "DANGER XLOZE_MXM": 19.4, "Ardenok_MXM": 19.4, "Titanomachia_MXM": 19.3,
+      "神罰_MXM": 19.3, "華麗なる一撃_MXM": 19.2, "Zt!ri△_MXM": 19.5, "Quaint Echo_EXH": 18.8, "ミスクレイジースピード_MXM": 18.7,
+      "ΕΛΠΙΣ_XCD": 19.2, "Xinca_MXM": 19.2, "Legendary Road_MXM": 18.8, "大宇宙ステージ_GRV": 19.2, "Sailing Force_MXM": 19.2,
+      "Zany Arcadia \"E\"_MXM": 19.1, "神凪_EXH": 18.8, "準備運動_MXM": 18.8, "Innocent Azure_MXM": 18.0, "Distorted Floor -Boosted-_MXM": 18.0,
+      "SuddeИDeath_EXH": 19.1, "Staring at star_MXM": 19.1, "I V A Z I L I S Q_MXM": 19.1, "BEMANI PRO LEAGUE -SEASON 2-_MXM": 19.0, "Macuilxochitl (Latin Jazz Mix)_MXM": 18.7,
+      "Sayonara Planet Wars_EXH": 18.6, "L (SDVX ver.)_MXM": 18.6, "MeteorGlow Aftermath_MXM": 18.6, "WHITEOUT_MXM": 20.2, "オムニシエント・ゼロ_MXM": 19.4,
+      "Immortal saga_MXM": 19.0, "FIN4LE ～終止線の彼方へ～_EXH": 18.7, "Almandite_MXM": 18.6, "MAYHEM_MXM": 20.0, "大宇宙ステージ奈落変_MXM": 18.6,
+      "KINGDOM COME_EXH": 18.6, "火狐之舞_MXM": 18.5, "To:BrandNewDeadline_MXM": 18.5, "Astra Blaze_MXM": 18.5, "APØCALYPSE RAY_EXH": 18.5,
+      "Fegrix_MXM": 18.5, "Across the Starlight_MXM": 18.5, "アイの雫_MXM": 18.5, "ULTIMATE INFLATION_MXM": 18.5, "Vividly Impromptu_MXM": 18.5,
+      "随神_MXM": 18.5, "Bl∞min'_EXH": 18.5, "Everlasting Message_GRV": 19.3, "trea→journey_MXM": 18.9, "PHOTON BLAXT_MXM": 18.4,
+      "サイハテ_MXM": 20.5, "サイハテ_EXH": 18.4, "覚帝神刻_EXH": 18.1, "Sakura Eyelen_MXM": 18.4, "Stellar Pilgrim_MXM": 18.6,
+      "VIIIΧ_MXM": 18.5, "Raise the flag of victory!_MXM": 19.5, "ZILLION RAY_MXM": 17.0, "Faith of Frenzy_MXM": 18.5, "Little Prana_MXM": 18.2,
+      "Melted Energy_MXM": 18.7, "ユニゾンなデイズ♪_MXM": 17.5, "Esperanza_MXM": 18.6, "Any％_MXM": 19.3, "Secret Raid_MXM": 18.4,
+      "Smintheus_MXM": 19.5, "断罪のミメシス_MXM": 19.6, "ちくたく2ちく2ぱ_MXM": 18.6, "It's All Right_MXM": 17.0, "Dement ~After Legend~_MXM": 18.5,
+      "Vanishment for reconstruction_MXM": 19.6, "Leflector_MXM": 19.4, "Smile & Go!!_MXM": 18.6, "Excelsia_MXM": 19.6, "cyanotype_MXM": 19.5,
+      "G.L.I.T.C.H._MXM": 19.3, "ASTRL GG_MXM": 19.7, "COLOR BURST_MXM": 18.7, "KISKIL-LILLA_MXM": 20.5, "KISKIL-LILLA_EXH": 18.8,
+      "King of Tribe_MXM": 19.2, "GO!_MXM": 19.2, "Thunderstorm_MXM": 19.5, "No→to_MXM": 19.5, "Meteor☆Shower_MXM": 19.3,
+      "RIZING-GAMERS._MXM": 19.5, "Roar of Chronos_MXM": 19.4, "Dot to Dot_MXM": 19.4, "Circumzenith Arc_MXM": 19.7, "Down with your Love_MXM": 19.3,
+      "えんじぇる☆てすと！_MXM": 18.5, "ShowDawn_MXM": 18.8, "Pick up, Me!_MXM": 18.8, "Anti-Matter_MXM": 19.6, "Glitch N Ride_EXH": 18.6,
+      "9th Outburst_MXM": 19.6, "Votum stellarum -forest #25 RMX-_MXM": 18.9, "天鯨譚_MXM": 19.5, "Plan 8_MXM": 19.2, "CAKE,Cake'n Cake!_MXM": 18.5,
+      "Blue Diamond_MXM": 19.6, "Blue Diamond_EXH": 18.5, "ИEXTAGE_MXM": 19.6, "L2 -Reminiscence- (SDVX ver.)_MXM": 19.4, "お返事まだカナ？おじさん構文！_MXM": 18.7,
+      "Synthesis._MXM": 19.5, "snooze_MXM": 18.5, "777 (Vocal ver.)_EXH": 18.3, "Celestial Conquest_MXM": 19.8, "デッドライン症候群_MXM": 18.7,
+      "Help me, ERINNNNNN!!_MXM": 18.6, "ンポロロッカ_MXM": 19.8, "双星の冒険録_MXM": 19.3, "天泣_MXM": 19.5, "Blessed Horizon_MXM": 19.4,
+      "FLOOD_FLOOR_MXM": 19.6, "ハートビート×スラッガー_MXM": 18.6, "FLAVOR-G_MXM": 18.7, "カジノファイヤーことみちゃん_MXM": 18.6, "Shooting Star_MXM": 18.6,
+      "オーバーライド_MXM": 18.6, "Timepiece phase Ⅱ_MXM": 19.5, "ライアーダンサー_MXM": 18.8, "// If Summer Ever Comes__MXM": 19.8, "// If Summer Ever Comes__EXH": 18.5,
+      "ØVER《Δ》_MXM": 19.9, "XHRONOXAPSULΞ_MXM": 20.0, "Initiating League_MXM": 18.5, "最強女神†ウーサペコラ_MXM": 18.5, "perditus†paradisus_MXM": 19.8,
+      "Black night_MXM": 18.5, "KINGWORLD_MXM": 18.5
+    };
 
     function getLampColor(lamp) {
       if(lamp === 'PUC' || lamp === 'MXV' || lamp === 'EXC') return 'text-yellow-400';
@@ -292,88 +290,62 @@
       return 'text-emerald-400';
     }
 
-    function processSDVXCSV(csvText) {
-      const lines = csvText.split(/\r?\n/);
-      if(lines.length < 2 || (!lines[0].includes('楽曲名') && !lines[0].includes('ハイスコア'))) {
-        alert("올바른 사운드 볼텍스 공식 score.csv 파일이 아닙니다.");
-        return;
-      }
-      
-      let songs = [];
-      for(let i=1; i<lines.length; i++) {
-        let line = lines[i].trim();
-        if(!line) continue;
+    // ==========================================================
+    // 💡 [핵심 기술 2] 팝업 텔레파시 통신 리시버 (주소창 터짐 방지)
+    // ==========================================================
+    window.addEventListener('message', async (event) => {
+      if (event.data && event.data.type === 'SDVX_PARSE_DATA') {
+        if(window._dataProcessed) return; // 중복 실행 방지
+        window._dataProcessed = true;
         
-        let row = [];
-        let inQuote = false;
-        let val = '';
-        for(let c=0; c<line.length; c++) {
-          if(line[c] === '"') { inQuote = !inQuote; }
-          else if(line[c] === ',' && !inQuote) { row.push(val); val = ''; }
-          else { val += line[c]; }
-        }
-        row.push(val);
-        
-        if(row.length < 6) continue;
-        
-        let title = row[0].replace(/^"|"$/g, '');
-        let diff = row[1].replace(/^"|"$/g, '');
-        let level = parseFloat(row[2]);
-        let clearRank = row[3].replace(/^"|"$/g, '');
-        let grade = row[4].replace(/^"|"$/g, '');
-        let score = parseInt(row[5]);
-        
-        if(score === 0 || isNaN(score)) continue;
-        
-        // BEMANIWiki 볼포스 계산식 계수
-        const gradeFactor = { 'S': 1.05, 'AAA+': 1.02, 'AAA': 1.00, 'AA+': 0.97, 'AA': 0.94, 'A+': 0.91, 'A': 0.88, 'B': 0.85, 'C': 0.82, 'D': 0.80 }[grade] || 0.80;
-        let clearFactor = 0.5;
-        if (clearRank === 'PERFECT') clearFactor = 1.10;
-        else if (clearRank === 'ULTIMATE CHAIN') clearFactor = 1.05;
-        else if (clearRank === 'EXCESSIVE COMPLETE' || clearRank === 'MAXXIVE COMPLETE') clearFactor = 1.02;
-        else if (clearRank === 'COMPLETE') clearFactor = 1.00;
-        
-        // 단일곡 볼포스 계산 (Math.floor(Lv * 20 * Score/10M * Grade * Clear))
-        let vfBase = Math.floor(level * 20 * (score / 10000000) * gradeFactor * clearFactor);
-        
-        songs.push({
-          title: title,
-          level: getDiffShort(diff) + ' ' + (Number.isInteger(level) ? level.toFixed(1) : level),
-          lamp: getLampText(clearRank),
-          score: score,
-          vfBase: vfBase,
-          vf: (vfBase / 10).toFixed(3),
-          jacket: 'https://via.placeholder.com/60/1e293b/94a3b8?text=Img'
+        const rawData = event.data.payload;
+        let parsedSongs = [];
+
+        rawData.forEach(song => {
+          let dbKey = `${song.title}_${song.diff}`;
+          // DB에 상수가 있으면 가져오고, 없으면 18.0으로 임시 매칭
+          let level = SONG_DB[dbKey] || 18.0; 
+
+          const gradeFactor = { 'S': 1.05, 'AAA+': 1.02, 'AAA': 1.00, 'AA+': 0.97, 'AA': 0.94, 'A+': 0.91, 'A': 0.88, 'B': 0.85, 'C': 0.82, 'D': 0.80 }[song.grade] || 0.80;
+          let clearFactor = 0.5;
+          if (song.lamp === 'PUC') clearFactor = 1.10;
+          else if (song.lamp === 'UC') clearFactor = 1.05;
+          else if (song.lamp === 'MXV' || song.lamp === 'EXC') clearFactor = 1.02;
+          else if (song.lamp === 'COMP') clearFactor = 1.00;
+          
+          let vfBase = Math.floor(level * 20 * (song.score / 10000000) * gradeFactor * clearFactor);
+          
+          parsedSongs.push({
+            title: song.title,
+            level: `${song.diff} ${level.toFixed(1)}`,
+            lamp: song.lamp,
+            score: song.score,
+            vfBase: vfBase,
+            vf: (vfBase / 10).toFixed(3),
+            jacket: 'https://via.placeholder.com/60/1e293b/94a3b8?text=Img'
+          });
         });
+
+        parsedSongs.sort((a,b) => b.vfBase - a.vfBase || b.score - a.score);
+        let top50 = parsedSongs.slice(0, 50);
+        let totalVfBase = top50.reduce((sum, s) => sum + s.vfBase, 0);
+        let volforce = (totalVfBase / 1000).toFixed(3);
+
+        let localData = localStorage.getItem('sdvx_data');
+        let d = localData ? JSON.parse(localData) : { nickname: 'PLAYER', svId: 'SV-0000-0000' };
+        
+        d.volforce = parseFloat(volforce);
+        d.vf50 = top50;
+        d.lastUpdated = new Date().toISOString();
+        
+        let radarBase = Math.floor(d.volforce * 8);
+        if(radarBase > 200) radarBase = 200;
+        d.radar = [radarBase, radarBase-5, radarBase+10, radarBase-10, radarBase+5, radarBase];
+        
+        await saveSdvxData(d);
+        alert("🎉 전적이 완벽하게 갱신되었습니다! (VOLFORCE: " + volforce + ")");
       }
-      
-      // 내림차순 정렬 후 상위 50곡 추출
-      songs.sort((a,b) => {
-        if(b.vfBase !== a.vfBase) return b.vfBase - a.vfBase;
-        return b.score - a.score;
-      });
-      let top50 = songs.slice(0, 50);
-      
-      // 최종 볼포스 합산 (50곡의 vfBase 합 / 1000)
-      let totalVfBase = top50.reduce((sum, song) => sum + song.vfBase, 0);
-      let volforce = (totalVfBase / 1000).toFixed(3);
-      
-      // 로컬 스토리지에 있던 기존 정보(닉네임, ID) 보존
-      let localData = localStorage.getItem('sdvx_data');
-      let d = localData ? JSON.parse(localData) : { nickname: 'PLAYER', svId: 'SV-0000-0000' };
-      
-      d.volforce = parseFloat(volforce);
-      d.vf50 = top50;
-      d.lastUpdated = new Date().toISOString();
-      
-      // 볼포스에 비례한 가상 레이더 차트 수치 생성 (점수가 높을수록 넓어짐)
-      let radarBase = Math.floor(d.volforce * 8);
-      if(radarBase > 200) radarBase = 200;
-      d.radar = [radarBase, radarBase-5, radarBase+10, radarBase-10, radarBase+5, radarBase];
-      
-      saveSdvxData(d);
-      alert("진짜 성적표가 완벽하게 갱신되었습니다!\n(현재 VOLFORCE: " + volforce + ")");
-    }
+    });
 
     if (auth) {
       auth.onAuthStateChanged(async (user) => {
@@ -383,26 +355,24 @@
           document.getElementById('userStatusText').textContent = `${user.displayName || '유저'}님 연동됨`;
           document.getElementById('btnLogin').classList.add('hidden');
           document.getElementById('btnLogout').classList.remove('hidden');
+
+          db.collection("users").doc(user.uid).collection("logs").orderBy("id", "desc").onSnapshot((snapshot) => {
+            logs = []; snapshot.forEach((doc) => logs.push(doc.data())); renderDashboard();
+            if(document.getElementById('tab-stats').classList.contains('active')) renderStats();
+          });
         } else {
           currentUser = null;
           document.getElementById('statusDot').className = "w-2.5 h-2.5 rounded-full bg-slate-500";
           document.getElementById('userStatusText').textContent = "로그인되지 않음";
           document.getElementById('btnLogin').classList.remove('hidden');
           document.getElementById('btnLogout').classList.add('hidden');
-        }
 
-        if(document.getElementById('tab-profile').classList.contains('active')) loadSdvxData();
-
-        if (user) {
-          db.collection("users").doc(user.uid).collection("logs").orderBy("id", "desc").onSnapshot((snapshot) => {
-            logs = []; snapshot.forEach((doc) => logs.push(doc.data())); renderDashboard();
-            if(document.getElementById('tab-stats').classList.contains('active')) renderStats();
-          });
-        } else {
           logs = JSON.parse(localStorage.getItem('rhythm_logs_v3') || '[]');
           renderDashboard();
           if(document.getElementById('tab-stats').classList.contains('active')) renderStats();
         }
+
+        if(document.getElementById('tab-profile').classList.contains('active')) loadSdvxData();
       });
     }
 
@@ -525,6 +495,11 @@
       const chevron = document.getElementById('vf50Chevron');
       container.classList.toggle('hidden');
       chevron.style.transform = container.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    function copyBookmarklet() {
+      const code = document.getElementById('bookmarkletCode').textContent.trim();
+      navigator.clipboard.writeText(code).then(() => alert("무과금 갱신용 코드가 복사되었습니다!\n사볼 홈페이지 주소창에 붙여넣어 실행해보세요."));
     }
 
     function saveVF50Image() {
