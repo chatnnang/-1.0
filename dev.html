@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>얼마썼냥 (DEV 서버)</title>
 
+  <!-- PWA 및 앱 아이콘 설정 -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="icon.png">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -88,7 +93,7 @@
         </div>
         <div>
           <label class="text-xs text-slate-400 font-medium">플레이 게임</label>
-          <input type="text" id="gameInput" list="gameList" placeholder="직접 입력하거나 목록에서 선택하세요" value="" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-indigo-500 focus:outline-none">
+          <input type="text" id="gameInput" list="gameList" placeholder="직접 입력하거나 선택하세요" value="" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-indigo-500 focus:outline-none">
           <datalist id="gameList">
             <option value="사운드 볼텍스 (발키리)"></option>
             <option value="사운드 볼텍스 (구기체)"></option>
@@ -193,7 +198,7 @@
       </section>
     </div>
 
-    <!-- [탭 4: 공지 (DB 연동 + 삭제 기능)] -->
+    <!-- [탭 4: 공지] -->
     <div id="tab-notice" class="tab-content space-y-4">
       <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 flex justify-between items-center">
         <h1 class="text-lg font-bold text-slate-200">📢 공지사항</h1>
@@ -217,7 +222,22 @@
       <section id="dynamicNoticeList" class="space-y-3"></section>
     </div>
 
-    <!-- [탭 5: 설정] -->
+    <!-- 💡새로 추가된 [탭 5: 문의] -->
+    <div id="tab-inquiry" class="tab-content space-y-4">
+      <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 text-center">
+        <h1 class="text-lg font-bold text-slate-200">💬 문의 및 피드백</h1>
+      </header>
+      <section class="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700 text-center space-y-4">
+        <div class="text-5xl mb-2">👾</div>
+        <h2 class="text-lg font-bold text-slate-200">디스코드 커뮤니티</h2>
+        <p class="text-sm text-slate-400 break-keep leading-relaxed">버그 제보, 기능 추가 요청, 기타 건의 사항은<br>디스코드 서버에 편하게 남겨주세요!</p>
+        <a href="https://discord.gg/DTRMA9qsrb" target="_blank" rel="noopener noreferrer" class="block w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3.5 rounded-xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2 mt-4">
+          <span class="text-lg">💬</span> 디스코드 서버 입장하기
+        </a>
+      </section>
+    </div>
+
+    <!-- [탭 6: 설정] -->
     <div id="tab-settings" class="tab-content space-y-4">
       <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 text-center">
         <h1 class="text-lg font-bold text-slate-200">⚙️ 데이터 관리</h1>
@@ -234,16 +254,24 @@
     </div>
   </div>
 
-  <nav class="fixed bottom-0 w-full max-w-md left-1/2 -translate-x-1/2 bg-slate-800 border-t border-slate-700 flex justify-between p-2 pb-safe z-[60]">
-    <button onclick="switchTab('tab-profile')" id="btn-tab-profile" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1"><span class="text-[20px] mb-0.5">🎮</span><span class="text-[10px]">데이터</span></button>
-    <button onclick="switchTab('tab-input')" id="btn-tab-input" class="nav-btn text-indigo-400 font-bold flex flex-col items-center flex-1"><span class="text-[20px] mb-0.5">✍️</span><span class="text-[10px]">지출입력</span></button>
-    <button onclick="switchTab('tab-stats')" id="btn-tab-stats" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1"><span class="text-[20px] mb-0.5">📊</span><span class="text-[10px]">통계</span></button>
-    <button onclick="switchTab('tab-notice')" id="btn-tab-notice" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1"><span class="text-[20px] mb-0.5">📢</span><span class="text-[10px]">공지</span></button>
-    <button onclick="switchTab('tab-settings')" id="btn-tab-settings" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1"><span class="text-[20px] mb-0.5">⚙️</span><span class="text-[10px]">설정</span></button>
+  <!-- 💡하단 네비게이션 -->
+  <nav class="fixed bottom-0 w-full max-w-md left-1/2 -translate-x-1/2 bg-slate-800 border-t border-slate-700 flex justify-between p-1.5 pb-safe z-[60]">
+    <button onclick="switchTab('tab-profile')" id="btn-tab-profile" class="nav-btn text-indigo-400 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">🎮</span><span class="text-[9px]">데이터</span></button>
+    <button onclick="switchTab('tab-input')" id="btn-tab-input" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">✍️</span><span class="text-[9px]">가계부</span></button>
+    <button onclick="switchTab('tab-stats')" id="btn-tab-stats" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">📊</span><span class="text-[9px]">통계</span></button>
+    <button onclick="switchTab('tab-notice')" id="btn-tab-notice" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">📢</span><span class="text-[9px]">공지</span></button>
+    <button onclick="switchTab('tab-inquiry')" id="btn-tab-inquiry" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">💬</span><span class="text-[9px]">문의</span></button>
+    <button onclick="switchTab('tab-settings')" id="btn-tab-settings" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">⚙️</span><span class="text-[9px]">설정</span></button>
   </nav>
 
   <script>
-    // 👑 관리자 권한 이메일 설정
+    // PWA 서비스 워커 등록
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Registration Failed:', err));
+      });
+    }
+
     const ADMIN_EMAILS = [
       "junhoodemian@gmail.com" // <-- 본인 이메일로 꼭 수정하세요!
     ];
@@ -306,10 +334,7 @@
     async function deleteNotice(docId) {
       if(!isAdmin) return;
       if(confirm("이 공지를 삭제하시겠습니까?")) {
-        try {
-          await db.collection("notices").doc(docId).delete();
-          alert("삭제되었습니다.");
-        } catch(e) { alert("삭제 실패"); }
+        try { await db.collection("notices").doc(docId).delete(); alert("삭제되었습니다."); } catch(e) { alert("삭제 실패"); }
       }
     }
 
@@ -326,29 +351,15 @@
       const container = document.getElementById('dynamicNoticeList');
       if (!container) return;
       container.innerHTML = '';
-      
       if(notices.length === 0) {
         container.innerHTML = '<div class="text-center py-8 text-slate-500 text-sm">등록된 공지사항이 없습니다.</div>';
         return;
       }
-
       notices.forEach(notice => {
         const card = document.createElement('article'); 
         card.className = 'bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 space-y-2 relative';
-        
         let deleteBtn = isAdmin ? `<button onclick="deleteNotice('${notice.id}')" class="absolute top-4 right-4 text-[10px] bg-rose-900/50 text-rose-400 px-2 py-1 rounded hover:bg-rose-800/50 transition">삭제</button>` : '';
-
-        card.innerHTML = `
-          <div class="flex items-center justify-between pr-10">
-            <div>
-              <span class="text-xs px-2 py-0.5 rounded-md font-semibold ${notice.tagColor}">${notice.tag}</span>
-              <span class="text-xs text-slate-400 font-mono ml-1.5">${notice.date}</span>
-            </div>
-          </div>
-          ${deleteBtn}
-          <h2 class="font-bold text-slate-200 text-base mt-2">${notice.title}</h2>
-          <p class="text-xs text-slate-300 whitespace-pre-line leading-relaxed">${notice.content}</p>
-        `;
+        card.innerHTML = `<div class="flex items-center justify-between pr-10"><div><span class="text-xs px-2 py-0.5 rounded-md font-semibold ${notice.tagColor}">${notice.tag}</span><span class="text-xs text-slate-400 font-mono ml-1.5">${notice.date}</span></div></div>${deleteBtn}<h2 class="font-bold text-slate-200 text-base mt-2">${notice.title}</h2><p class="text-xs text-slate-300 whitespace-pre-line leading-relaxed">${notice.content}</p>`;
         container.appendChild(card);
       });
     }
@@ -358,31 +369,25 @@
         if (user) {
           currentUser = user;
           if(ADMIN_EMAILS.includes(user.email)) {
-            isAdmin = true;
-            document.getElementById('adminNoticeForm').classList.remove('hidden');
+            isAdmin = true; document.getElementById('adminNoticeForm').classList.remove('hidden');
           } else {
-            isAdmin = false;
-            document.getElementById('adminNoticeForm').classList.add('hidden');
+            isAdmin = false; document.getElementById('adminNoticeForm').classList.add('hidden');
           }
-
           document.getElementById('statusDot').className = "w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]";
           document.getElementById('userStatusText').textContent = `${user.displayName || '유저'}님 연동됨 ${isAdmin ? '👑' : ''}`;
           document.getElementById('btnLogin').classList.add('hidden');
           document.getElementById('btnLogout').classList.remove('hidden');
-
           db.collection("users").doc(user.uid).collection("logs").orderBy("id", "desc").onSnapshot((snapshot) => {
             logs = []; snapshot.forEach((doc) => logs.push(doc.data())); renderDashboard();
             if(document.getElementById('tab-stats').classList.contains('active')) renderStats();
           });
         } else {
-          currentUser = null;
-          isAdmin = false;
+          currentUser = null; isAdmin = false;
           document.getElementById('adminNoticeForm').classList.add('hidden');
           document.getElementById('statusDot').className = "w-2.5 h-2.5 rounded-full bg-slate-500";
           document.getElementById('userStatusText').textContent = "로그인되지 않음";
           document.getElementById('btnLogin').classList.remove('hidden');
           document.getElementById('btnLogout').classList.add('hidden');
-
           logs = JSON.parse(localStorage.getItem('rhythm_logs_v3') || '[]');
           renderDashboard();
           if(document.getElementById('tab-stats').classList.contains('active')) renderStats();
@@ -612,8 +617,7 @@
 
     function toggleTimeInput() {
       const isUnknown = document.getElementById('unknownTime').checked;
-      const dtInput = document.getElementById('customDatetime');
-      const dInput = document.getElementById('customDate');
+      const dtInput = document.getElementById('customDatetime'); const dInput = document.getElementById('customDate');
       if (isUnknown) {
         dtInput.classList.add('hidden'); dtInput.classList.remove('block');
         dInput.classList.remove('hidden'); dInput.classList.add('block');
@@ -626,25 +630,21 @@
     }
 
     function resetDatetimeInput() {
-      const now = new Date();
-      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
       const iso = now.toISOString();
-      document.getElementById('customDatetime').value = iso.slice(0, 16);
-      document.getElementById('customDate').value = iso.split('T')[0];
+      document.getElementById('customDatetime').value = iso.slice(0, 16); document.getElementById('customDate').value = iso.split('T')[0];
       document.getElementById('unknownTime').checked = false; toggleTimeInput();
     }
     resetDatetimeInput();
 
     function setPrice(amount) { document.getElementById('priceInput').value = amount; }
     function changeCount(val) {
-      const input = document.getElementById('countInput');
-      const next = parseInt(input.value || 1) + val;
+      const input = document.getElementById('countInput'); const next = parseInt(input.value || 1) + val;
       if (next >= 1) input.value = next;
     }
 
     function renderFavoriteArcades() {
-      const container = document.getElementById('favoriteArcadeList');
-      container.innerHTML = '';
+      const container = document.getElementById('favoriteArcadeList'); container.innerHTML = '';
       favoriteArcades.forEach(arc => {
         const chip = document.createElement('div');
         chip.className = 'flex items-center bg-slate-700/80 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1 rounded-lg cursor-pointer transition';
@@ -780,7 +780,7 @@
       if (tabId === 'tab-profile') loadSdvxData();
       else if (tabId === 'tab-stats') renderStats();
       else if (tabId === 'tab-notice') renderDynamicNotices();
-      else renderDashboard();
+      else if (tabId === 'tab-input') renderDashboard();
     }
   </script>
 </body>
