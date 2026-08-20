@@ -195,3 +195,20 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+
+// ==========================================
+// 북마크릿 클립보드 복사 함수 추가
+// ==========================================
+function copyBookmarklet() {
+  const codeElement = document.getElementById('bookmarkletCode');
+  if (!codeElement) return;
+  
+  const codeText = codeElement.innerText || codeElement.textContent;
+  
+  navigator.clipboard.writeText(codeText).then(() => {
+    alert("데이터 갱신용 코드가 복사되었습니다!\n\n사운드 볼텍스 홈페이지 주소창에 붙여넣으실 때, 맨 앞에 'javascript:' 가 지워졌다면 직접 입력해 주세요.");
+  }).catch(err => {
+    console.error('복사 실패:', err);
+    alert("복사에 실패했습니다. 수동으로 코드를 복사해 주세요.");
+  });
+}
