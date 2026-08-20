@@ -1,0 +1,17 @@
+{
+  "name": "얼마썼냥",
+  "short_name": "얼마썼냥",
+  "description": "리듬게임 지출 기록 및 전적 프로필",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
