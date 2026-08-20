@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>얼마썼냥</title>
+  <title>얼마썼냥 v1.3</title>
 
   <!-- PWA 및 앱 아이콘 설정 -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="icon.png">
 
-  <meta property="og:title" content="🐱 얼마썼냥">
+  <meta property="og:title" content="🐱 얼마썼냥 v1.3">
   <meta property="og:description" content="리듬게임 지출 기록 및 전적 프로필">
   <meta property="og:type" content="website">
 
@@ -31,6 +31,7 @@
 <body class="bg-slate-900 text-slate-100 min-h-screen pb-20 font-sans overflow-x-hidden">
   
   <div class="max-w-md mx-auto p-4 space-y-4">
+    <!-- 인증 바 -->
     <div id="authBar" class="bg-slate-800/90 backdrop-blur border border-slate-700 p-3 rounded-2xl flex justify-between items-center text-xs shadow-md">
       <div id="userInfo" class="flex items-center space-x-2">
         <span class="w-2.5 h-2.5 rounded-full bg-slate-500" id="statusDot"></span>
@@ -42,15 +43,16 @@
       </div>
     </div>
 
-    <!-- [탭 1: 지출 입력] -->
+    <!-- [탭 1: 지출 입력 & 빠른 기록] -->
     <div id="tab-input" class="tab-content active space-y-4">
       <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700">
-        <h1 class="text-lg font-bold text-slate-200">🐱 얼마썼냥</h1>
+        <h1 class="text-lg font-bold text-slate-200">🐱 얼마썼냥 v1.3</h1>
         <div class="grid grid-cols-2 gap-3 mt-3">
           <div class="bg-slate-950/60 p-3 rounded-xl"><span class="text-xs text-slate-400">오늘 지출</span><p id="todayCost" class="text-xl font-bold text-emerald-400">0원</p></div>
           <div class="bg-slate-950/60 p-3 rounded-xl"><span class="text-xs text-slate-400">오늘 판수</span><p id="todayCount" class="text-xl font-bold text-indigo-400">0판</p></div>
         </div>
       </header>
+
       <section class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 space-y-3">
         <div>
           <div class="flex justify-between items-center">
@@ -66,14 +68,14 @@
         <div>
           <label class="text-xs text-slate-400 font-medium">오락실 이름</label>
           <div class="flex gap-1.5 mt-1">
-            <input type="text" id="arcadeInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm">
+            <input type="text" id="arcadeInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm" placeholder="예: 삼보, 짱오락실">
             <button type="button" onclick="saveFavoriteArcade()" class="bg-slate-700 text-indigo-300 font-bold px-3 py-2 rounded-xl text-sm">⭐+</button>
           </div>
           <div id="favoriteArcadeList" class="flex flex-wrap gap-1.5 mt-2"></div>
         </div>
         <div>
           <label class="text-xs text-slate-400 font-medium">플레이 게임</label>
-          <input type="text" id="gameInput" list="gameList" placeholder="직접 입력하거나 선택하세요" value="" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-indigo-500 focus:outline-none">
+          <input type="text" id="gameInput" list="gameList" placeholder="직접 입력하거나 목록에서 선택하세요" value="" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-indigo-500 focus:outline-none">
           <datalist id="gameList">
             <option value="사운드 볼텍스 (발키리)"></option>
             <option value="사운드 볼텍스 (구기체)"></option>
@@ -104,9 +106,23 @@
         </div>
         <button onclick="addLog()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl mt-2 active:scale-95 transition">지출 기록하기</button>
       </section>
+
+      <!-- ⚡ 원클릭 빠른 기록 섹션 -->
+      <section class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 space-y-3">
+        <div class="flex justify-between items-center">
+          <h2 class="text-sm font-bold text-indigo-300 flex items-center gap-1.5">
+            <span>⚡</span> 원클릭 빠른 기록
+          </h2>
+          <button onclick="saveQuickPreset()" class="text-[11px] bg-slate-700 hover:bg-slate-600 text-indigo-200 font-bold px-2.5 py-1 rounded-lg transition active:scale-95">
+            + 현재 설정 저장
+          </button>
+        </div>
+        <p class="text-[11px] text-slate-400 leading-tight">자주 하는 게임/금액을 위에서 맞추고 저장해두면, 오락실에서 터치 한 번으로 즉시 저장됩니다!</p>
+        <div id="quickPresetList" class="space-y-2 pt-1"></div>
+      </section>
     </div>
 
-    <!-- [탭 2: 플레이 데이터 (점검 중)] -->
+    <!-- [탭 2: 플레이 데이터 (점검 모드)] -->
     <div id="tab-profile" class="tab-content space-y-4">
       <div class="bg-slate-800 border border-slate-700 rounded-2xl p-8 text-center space-y-5 shadow-lg mt-4">
         <div class="text-6xl mb-2">🛠️</div>
@@ -116,7 +132,7 @@
           <p class="text-xs text-slate-400 font-bold flex items-center gap-1"><span>📌</span> 점검 내용</p>
           <p class="text-[11px] text-slate-500 leading-tight">공식 사이트 연동 안정성 확보 및<br>테스트 서버 분리 작업</p>
         </div>
-        <p class="text-[10px] text-slate-500 font-bold">점검 중에는 '지출 입력'과 '통계' 등<br>기본 가계부 기능만 정상 이용 가능합니다.</p>
+        <p class="text-[10px] text-slate-500 font-bold">점검 중에는 '가계부'와 '통계' 등<br>기본 가계부 기능만 정상 이용 가능합니다.</p>
       </div>
     </div>
 
@@ -157,14 +173,14 @@
       <section id="dynamicNoticeList" class="space-y-3"></section>
     </div>
 
-    <!-- 💡새로 추가된 [탭 5: 문의] -->
+    <!-- [탭 5: 문의] -->
     <div id="tab-inquiry" class="tab-content space-y-4">
       <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 text-center">
         <h1 class="text-lg font-bold text-slate-200">💬 문의 및 피드백</h1>
       </header>
       <section class="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700 text-center space-y-4">
         <div class="text-5xl mb-2">👾</div>
-        <h2 class="text-lg font-bold text-slate-200">디스코드 커뮤니티</h2>
+        <h2 class="text-lg font-bold text-slate-200">디스코드 공식 커뮤니티</h2>
         <p class="text-sm text-slate-400 break-keep leading-relaxed">버그 제보, 기능 추가 요청, 기타 건의 사항은<br>디스코드 서버에 편하게 남겨주세요!</p>
         <a href="https://discord.gg/DTRMA9qsrb" target="_blank" rel="noopener noreferrer" class="block w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3.5 rounded-xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2 mt-4">
           <span class="text-lg">💬</span> 디스코드 서버 입장하기
@@ -189,7 +205,7 @@
     </div>
   </div>
 
-  <!-- 💡하단 네비게이션: 총 6개 탭으로 조정 -->
+  <!-- 하단 6개 탭 네비게이션 -->
   <nav class="fixed bottom-0 w-full max-w-md left-1/2 -translate-x-1/2 bg-slate-800 border-t border-slate-700 flex justify-between p-1.5 pb-safe z-[60]">
     <button onclick="switchTab('tab-profile')" id="btn-tab-profile" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">🎮</span><span class="text-[9px]">데이터</span></button>
     <button onclick="switchTab('tab-input')" id="btn-tab-input" class="nav-btn text-indigo-400 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">✍️</span><span class="text-[9px]">가계부</span></button>
@@ -200,7 +216,7 @@
   </nav>
 
   <script>
-    // PWA 서비스 워커 등록 코드
+    // PWA 서비스 워커 등록
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Registration Failed:', err));
@@ -208,7 +224,7 @@
     }
 
     const ADMIN_EMAILS = [
-      "junhoodemian@gmail.com" // <-- 본인 이메일로 꼭 수정하세요!
+      "junhoodemian@gmail.com" // <-- 본인 구글 이메일로 꼭 수정하세요!
     ];
 
     const firebaseConfig = {
@@ -226,6 +242,7 @@
     let logs = [];
     let notices = [];
     let favoriteArcades = JSON.parse(localStorage.getItem('rhythm_fav_arcades') || '["삼보", "짱오락실"]');
+    let quickPresets = JSON.parse(localStorage.getItem('rhythm_quick_presets') || '[]');
 
     try {
       firebase.initializeApp(firebaseConfig);
@@ -233,6 +250,7 @@
       db = firebase.firestore();
     } catch(e) { console.warn("Firebase Init", e); }
 
+    // 공지사항 실시간 로드
     if(db) {
       db.collection("notices").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
         notices = [];
@@ -276,7 +294,7 @@
     async function seedOldNotices() {
       if(!isAdmin) return;
       if(!confirm("이전에 등록했던 기본 공지 2개를 DB에 복구하시겠습니까?")) return;
-      const old1 = { title: "🛠️ 전적 데이터 연동 시스템 점검 안내", content: "- 현재 전적 연동 및 VF50 갱신 기능에 오류가 발생하여 긴급 점검 중입니다.\n- 안정적인 운영을 위해 '테스트 서버(베타)' 분리 작업을 진행하고 있습니다.\n- 점검 중에는 [지출 입력, 통계, 백업] 등 가계부 기능만 정상 이용하실 수 있습니다.\n\n불편을 드려 죄송합니다. 빠르게 복구하겠습니다!", tag: "점검중", tagColor: "bg-rose-600 text-white", date: "2026.08.19", timestamp: Date.now() - 1000 };
+      const old1 = { title: "🛠️ 전적 데이터 연동 시스템 점검 안내", content: "- 현재 전적 연동 및 VF50 갱신 기능에 오류가 발생하여 긴급 점검 중입니다.\n- 안정적인 운영을 위해 '테스트 서버(베타)' 분리 작업을 진행하고 있습니다.\n- 점검 중에는 [가계부, 통계, 백업] 등 지출 기록 기능만 정상 이용하실 수 있습니다.\n\n불편을 드려 죄송합니다. 빠르게 복구하겠습니다!", tag: "점검중", tagColor: "bg-rose-600 text-white", date: "2026.08.19", timestamp: Date.now() - 1000 };
       const old2 = { title: "✍️ 지출 입력 편의성 개선", content: "- 플레이 게임을 목록 선택뿐만 아니라 [직접 입력]할 수 있도록 변경되었습니다.\n- 플레이 시간을 정확히 모를 경우 [시간 모름] 체크박스를 눌러 날짜만 기록할 수 있습니다.", tag: "안내", tagColor: "bg-slate-600 text-white", date: "2026.08.19", timestamp: Date.now() - 2000 };
       await db.collection("notices").add(old1); await db.collection("notices").add(old2);
       alert("이전 공지 복구 완료!");
@@ -299,6 +317,7 @@
       });
     }
 
+    // Auth 리스너
     if (auth) {
       auth.onAuthStateChanged((user) => {
         if (user) {
@@ -338,6 +357,86 @@
     }
     function logoutGoogle() { if (auth) auth.signOut(); }
 
+    // ⚡ 빠른 기록 프리셋 저장/삭제/실행
+    function saveQuickPreset() {
+      const game = document.getElementById('gameInput').value.trim();
+      if(!game) return alert('플레이 게임 이름을 입력해주세요!');
+      const arcade = document.getElementById('arcadeInput').value.trim() || '이름 모를 오락실';
+      const unitPrice = parseInt(document.getElementById('priceInput').value || 0);
+      const count = parseInt(document.getElementById('countInput').value || 1);
+
+      const preset = { id: Date.now(), arcade: arcade, game: game, unitPrice: unitPrice, count: count };
+      quickPresets.push(preset);
+      localStorage.setItem('rhythm_quick_presets', JSON.stringify(quickPresets));
+      renderQuickPresets();
+      alert(`'${game} (${unitPrice.toLocaleString()}원 / ${count}판)' 빠른 기록이 저장되었습니다!`);
+    }
+
+    function deleteQuickPreset(id) {
+      quickPresets = quickPresets.filter(p => p.id !== id);
+      localStorage.setItem('rhythm_quick_presets', JSON.stringify(quickPresets));
+      renderQuickPresets();
+    }
+
+    async function quickAddLog(id) {
+      const preset = quickPresets.find(p => p.id === id);
+      if(!preset) return;
+
+      const now = new Date();
+      const log = {
+        id: Date.now(),
+        date: now.toISOString(),
+        dateStr: now.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+        timeStr: now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+        arcade: preset.arcade,
+        game: preset.game,
+        mode: '일반',
+        unitPrice: preset.unitPrice,
+        count: preset.count,
+        totalCost: preset.unitPrice * preset.count
+      };
+
+      if (currentUser && db) {
+        await db.collection("users").doc(currentUser.uid).collection("logs").doc(String(log.id)).set(log);
+      } else {
+        logs.unshift(log);
+        localStorage.setItem('rhythm_logs_v3', JSON.stringify(logs));
+        renderDashboard();
+      }
+      alert(`⚡ [${preset.game}] 즉시 기록 완료!\n(${log.timeStr} / ${log.totalCost.toLocaleString()}원)`);
+    }
+
+    function renderQuickPresets() {
+      const container = document.getElementById('quickPresetList');
+      if(!container) return;
+      container.innerHTML = '';
+      if(quickPresets.length === 0) {
+        container.innerHTML = '<div class="text-[11px] text-slate-500 py-1">등록된 빠른 기록이 없습니다. 위에서 게임을 맞춘 후 저장해 보세요!</div>';
+        return;
+      }
+
+      quickPresets.forEach(preset => {
+        const card = document.createElement('div');
+        card.className = 'flex items-center justify-between bg-slate-900 border border-slate-700/80 p-2.5 rounded-xl text-xs gap-2 shadow-sm';
+        card.innerHTML = `
+          <div class="flex-1 min-w-0">
+            <div class="font-bold text-slate-200 truncate">${preset.game}</div>
+            <div class="text-[10px] text-slate-400 mt-0.5">
+              <span class="text-indigo-300 font-medium">${preset.arcade}</span> · ${preset.unitPrice.toLocaleString()}원 (${preset.count}판)
+            </div>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="quickAddLog(${preset.id})" class="bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1 shadow">
+              <span>⚡</span> 기록
+            </button>
+            <button onclick="deleteQuickPreset(${preset.id})" class="text-slate-500 hover:text-rose-400 p-1 font-bold text-sm">×</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // 일반 가계부 로직
     function toggleTimeInput() {
       const isUnknown = document.getElementById('unknownTime').checked;
       const dtInput = document.getElementById('customDatetime'); const dInput = document.getElementById('customDate');
@@ -386,6 +485,7 @@
       localStorage.setItem('rhythm_fav_arcades', JSON.stringify(favoriteArcades)); renderFavoriteArcades();
     }
     renderFavoriteArcades();
+    renderQuickPresets();
 
     async function addLog() {
       const isUnknown = document.getElementById('unknownTime').checked;
