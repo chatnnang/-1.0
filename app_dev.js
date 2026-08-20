@@ -45,14 +45,14 @@ function calculateSingleVolforce(level, score) {
 
 // 3. 볼포스 총합에 따른 티어 계산
 function getVolforceTier(totalVf) {
-  if (totalVf >= 20.0) return { name: "IMPERIAL (임페리얼)", color: "text-rose-400" };
-  if (totalVf >= 19.0) return { name: "CRIMSON (크림슨)", color: "text-red-500" };
-  if (totalVf >= 18.0) return { name: "SCARLET (스칼렛)", color: "text-amber-500" };
-  if (totalVf >= 17.0) return { name: "CORAL (코랄)", color: "text-pink-400" };
-  if (totalVf >= 16.0) return { name: "ARGENTO (아르젠토)", color: "text-slate-300" };
-  if (totalVf >= 15.0) return { name: "ELDORA (엘ドラ)", color: "text-yellow-400" };
-  if (totalVf >= 14.0) return { name: "VOLTE (볼테)", color: "text-cyan-400" };
-  return { name: "SIENNA (시에나)", color: "text-amber-700" };
+  if (totalVf >= 20.0) return { name: "IMPERIAL", color: "text-rose-400" };
+  if (totalVf >= 19.0) return { name: "CRIMSON", color: "text-red-500" };
+  if (totalVf >= 18.0) return { name: "SCARLET", color: "text-amber-500" };
+  if (totalVf >= 17.0) return { name: "CORAL", color: "text-pink-400" };
+  if (totalVf >= 16.0) return { name: "ARGENTO", color: "text-slate-300" };
+  if (totalVf >= 15.0) return { name: "ELDORA", color: "text-yellow-400" };
+  if (totalVf >= 14.0) return { name: "VOLTE", color: "text-cyan-400" };
+  return { name: "SIENNA", color: "text-amber-700" };
 }
 
 // 4. 모달 컨트롤
@@ -97,16 +97,20 @@ async function processSdvxData(scores) {
   const top50 = calculatedList.slice(0, 50);
   const totalVf = top50.reduce((acc, cur) => acc + cur.vf, 0);
 
+  // 화면 전환 (빈 화면 숨기고, 프로필 상태 표시)
+  document.getElementById('sdvxEmptyState').classList.remove('block');
+  document.getElementById('sdvxEmptyState').classList.add('hidden');
+  document.getElementById('sdvxProfileState').classList.remove('hidden');
+
   // 상단 요약 대시보드 갱신
-  document.getElementById('vfSummaryCard').classList.remove('hidden');
   document.getElementById('totalVfDisplay').textContent = totalVf.toFixed(3);
   
   const tier = getVolforceTier(totalVf);
   const tierEl = document.getElementById('tierDisplay');
   tierEl.textContent = tier.name;
-  tierEl.className = `text-xl sm:text-2xl font-black mt-1 ${tier.color}`;
+  tierEl.className = `text-xl font-black mt-2 ${tier.color}`;
 
-  // 그리드 렌더링
+  // 그리드 렌더링 (자켓 이미지 로직 포함)
   const grid = document.getElementById('top50Grid');
   grid.innerHTML = top50.map((song, idx) => {
     let badgeColor = "bg-red-600 text-white";
@@ -115,20 +119,26 @@ async function processSdvxData(scores) {
     else if (song.diff === "MXM") badgeColor = "bg-slate-100 text-slate-900";
     else if (["INF", "GRV", "HVN", "VVD", "XCD"].includes(song.diff)) badgeColor = "bg-fuchsia-600 text-white";
 
+    // 자켓 이미지 경로 설정 (jackets 폴더 내부의 곡ID.png)
+    // 에러 발생 시 onerror 이벤트로 이미지를 숨기고 글자(NO ID)를 보여주도록 처리
+    const jacketPath = `./jackets/${song.id}.png`;
+
     return `
-      <div class="flex items-center gap-3.5 p-3.5 bg-slate-900/80 rounded-xl border border-slate-700/70 shadow-sm hover:border-fuchsia-500/50 transition">
-        <span class="text-sm font-black text-slate-500 w-6 text-center">#${idx + 1}</span>
+      <div class="flex items-center gap-3 p-3 bg-slate-900/80 rounded-xl border border-slate-700/70 shadow-sm hover:border-fuchsia-500/50 transition">
+        <span class="text-xs font-black text-slate-500 w-5 text-center">#${idx + 1}</span>
         
-        <div class="w-14 h-14 bg-slate-800 rounded-lg flex-shrink-0 flex items-center justify-center border border-slate-700 overflow-hidden text-xs text-slate-500 font-bold">
-          ${song.id ? song.id : "NO ID"}
+        <div class="w-12 h-12 bg-slate-800 rounded-md flex-shrink-0 flex items-center justify-center border border-slate-700 overflow-hidden text-[10px] text-slate-500 font-bold relative">
+          <!-- 자켓 이미지 출력부 -->
+          <img src="${jacketPath}" onerror="this.style.display='none'" alt="Jacket" class="w-full h-full object-cover absolute inset-0 z-10" />
+          <span class="z-0 px-1 text-center">${song.id ? song.id : "NO ID"}</span>
         </div>
 
         <div class="flex-grow min-w-0">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="px-1.5 py-0.5 text-[10px] font-black rounded ${badgeColor}">
+          <div class="flex items-center gap-1.5 mb-1">
+            <span class="px-1.5 py-0.5 text-[9px] font-black rounded ${badgeColor}">
               ${song.diff || "DIFF"} ${song.level !== null ? song.level : "-"}
             </span>
-            <h4 class="text-sm font-bold text-slate-100 truncate">${song.title}</h4>
+            <h4 class="text-[13px] font-bold text-slate-100 truncate">${song.title}</h4>
           </div>
           <div class="flex justify-between items-center text-xs text-slate-400">
             <span class="font-mono">${song.score.toLocaleString()}</span>
@@ -154,7 +164,22 @@ function processSdvxScores() {
   }
 }
 
-// 6. URL 해시(#import=...) 자동 감지 및 즉시 실행 (원클릭 연동)
+// 6. 북마크릿 데이터 수신 (postMessage 이벤트 감지)
+window.addEventListener('message', (event) => {
+  // 스크래퍼(북마크릿)에서 보낸 'SDVX_PARSE_DATA' 타입인지 확인
+  if (event.data && event.data.type === 'SDVX_PARSE_DATA') {
+    try {
+      const scores = event.data.payload;
+      if (Array.isArray(scores)) {
+        processSdvxData(scores);
+      }
+    } catch (err) {
+      console.error("북마크릿 데이터 수신 실패:", err);
+    }
+  }
+});
+
+// 7. URL 해시(#import=...) 자동 감지 및 즉시 실행 (원클릭 연동 백업)
 window.addEventListener('DOMContentLoaded', () => {
   if (window.location.hash.startsWith('#import=')) {
     try {
