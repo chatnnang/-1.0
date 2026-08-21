@@ -70,6 +70,19 @@ function getVolforceTier(totalVf) {
 function openSdvxModal() { document.getElementById('sdvxModal').classList.remove('hidden'); }
 function closeSdvxModal() { document.getElementById('sdvxModal').classList.add('hidden'); }
 
+// 타이틀 정규화 함수 (대소문자, 띄어쓰기, 특수기호 무시)
+function normalizeTitle(title) {
+  if (!title) return "";
+  // 전각 영숫자를 반각으로 변환
+  let str = title.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+  });
+  // 소문자 변환 후 공백 및 특수기호 제거
+  return str.toLowerCase().replace(/[\s\-_・。、！？!?♥♡★☆"'\(\)\[\]『』「」~～]/g, '');
+}
+
+function closeSdvxModal() { document.getElementById('sdvxModal').classList.add('hidden'); }
+
 // 5. 성적 데이터 분석 및 렌더링
 async function processSdvxData(scores) {
   const db = await loadSdvxDB();
@@ -78,10 +91,17 @@ async function processSdvxData(scores) {
     return;
   }
 
+  // 정규화된 DB 맵 생성 (제목 불일치 방지)
+  const normalizedDb = {};
+  for (const key in db) {
+    normalizedDb[normalizeTitle(key)] = db[key];
+  }
+
   let calculatedList = [];
 
   scores.forEach(item => {
-    const songInfo = db[item.title];
+    // 1순위: 원본 제목 매칭, 2순위: 정규화 제목 매칭
+    const songInfo = db[item.title] || normalizedDb[normalizeTitle(item.title)];
     let level = null;
     let songId = null;
     let diff = item.diff || "EXH";
