@@ -95,14 +95,15 @@ async function processSdvxData(scores) {
   // 볼포스 내림차순 정렬 후 TOP 50 추출
   calculatedList.sort((a, b) => b.vf - a.vf);
   const top50 = calculatedList.slice(0, 50);
-  const totalVf = top50.reduce((acc, cur) => acc + cur.vf, 0);
+  const totalVfRaw = top50.reduce((acc, cur) => acc + cur.vf, 0);
+  const totalVf = totalVfRaw / 100; // 인게임 볼포스 수치 (예: 20.700)
 
   // 화면 전환 (빈 화면 숨기고, 프로필 상태 표시)
   document.getElementById('sdvxEmptyState').classList.remove('block');
   document.getElementById('sdvxEmptyState').classList.add('hidden');
   document.getElementById('sdvxProfileState').classList.remove('hidden');
 
-  // 상단 요약 대시보드 갱신
+  // 상단 요약 대시보드 갱신 (인게임 볼포스 표기: 22.001 형태)
   document.getElementById('totalVfDisplay').textContent = totalVf.toFixed(3);
   
   const tier = getVolforceTier(totalVf);
@@ -119,9 +120,9 @@ async function processSdvxData(scores) {
     else if (song.diff === "MXM") badgeColor = "bg-slate-100 text-slate-900";
     else if (["INF", "GRV", "HVN", "VVD", "XCD"].includes(song.diff)) badgeColor = "bg-fuchsia-600 text-white";
 
-    // 자켓 이미지 경로 설정 (jackets 폴더 내부의 곡ID.png)
+    // 자켓 이미지 경로 설정 (jackets 폴더 내부의 곡ID.webp)
     // 에러 발생 시 onerror 이벤트로 이미지를 숨기고 글자(NO ID)를 보여주도록 처리
-    const jacketPath = `./jackets/${song.id}.png`;
+    const jacketPath = `./jackets/${song.id}.webp`;
 
     return `
       <div class="flex items-center gap-3 p-3 bg-slate-900/80 rounded-xl border border-slate-700/70 shadow-sm hover:border-fuchsia-500/50 transition">
