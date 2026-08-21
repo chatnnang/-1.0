@@ -1,28 +1,28 @@
 // ==========================================
-// SDVX 볼포스 정밀 계산 및 VF50 렌더링 모듈
+// SDVX 볼포???��? 계산 �?VF50 ?�더�?모듈
 // ==========================================
 
 let sdvxDatabase = null;
 
-// 1. sdvx_db.json 비동기 로드
+// 1. sdvx_db.json 비동�?로드
 async function loadSdvxDB() {
   if (sdvxDatabase) return sdvxDatabase;
   try {
     const res = await fetch('./sdvx_db.json');
-    if (!res.ok) throw new Error("DB 로드 실패");
+    if (!res.ok) throw new Error("DB 로드 ?�패");
     sdvxDatabase = await res.json();
     return sdvxDatabase;
   } catch (err) {
-    console.error("⚠️ sdvx_db.json 로드 실패:", err);
+    console.error("?�️ sdvx_db.json 로드 ?�패:", err);
     return null;
   }
 }
 
-// 2. VF50 공식 규격 볼포스 계산식
+// 2. VF50 공식 규격 볼포??계산??
 function calculateSingleVolforce(level, score, lamp) {
   if (level === null || !score || score < 7000000) return 0;
 
-  // 점수 등급 계수 (Grade Multiplier)
+  // ?�수 ?�급 계수 (Grade Multiplier)
   let gradeMult = 0.80;
   if (score >= 9900000) gradeMult = 1.05;      // S
   else if (score >= 9800000) gradeMult = 1.02; // AAA+
@@ -33,7 +33,7 @@ function calculateSingleVolforce(level, score, lamp) {
   else if (score >= 8700000) gradeMult = 0.88; // A
   else if (score >= 7500000) gradeMult = 0.85; // B
 
-  // 클리어 계수 (Clear Multiplier) - Exceed Gear 공식 배율
+  // ?�리??계수 (Clear Multiplier) - Exceed Gear 공식 배율
   let clearMult = 1.00;
   
   if (lamp === "PUC") clearMult = 1.10;
@@ -43,18 +43,18 @@ function calculateSingleVolforce(level, score, lamp) {
   else if (lamp === "CLEAR") clearMult = 1.00;
   else if (lamp === "PLAYED" || lamp === "PLAY") clearMult = 0.50;
   else {
-    // 램프 정보가 없을 경우 점수 기반으로 추정 (기존 로직 유지, 안전하게 보수적 추정)
+    // ?�프 ?�보가 ?�을 경우 ?�수 기반?�로 추정 (기존 로직 ?��?, ?�전?�게 보수??추정)
     if (score === 10000000) clearMult = 1.10; // PUC
-    else if (score >= 9900000) clearMult = 1.06; // S랭크 이상은 UC로 추정
-    else if (score >= 9800000) clearMult = 1.02; // AAA+ 이상은 HARD로 추정
+    else if (score >= 9900000) clearMult = 1.06; // S??�� ?�상?� UC�?추정
+    else if (score >= 9800000) clearMult = 1.02; // AAA+ ?�상?� HARD�?추정
   }
 
-  // 공식 계산: (상수 * 20) * (점수 / 1000만) * 등급계수 * 클리어계수
+  // 공식 계산: (?�수 * 20) * (?�수 / 1000�? * ?�급계수 * ?�리?�계??
   const rawVf = (level * 20) * (score / 10000000) * gradeMult * clearMult;
   return Math.floor(rawVf) / 10;
 }
 
-// 3. 볼포스 총합에 따른 티어 계산
+// 3. 볼포??총합???�른 ?�어 계산
 function getVolforceTier(totalVf) {
   if (totalVf >= 20.0) return { name: "IMPERIAL", color: "text-rose-400" };
   if (totalVf >= 19.0) return { name: "CRIMSON", color: "text-red-500" };
@@ -66,32 +66,32 @@ function getVolforceTier(totalVf) {
   return { name: "SIENNA", color: "text-amber-700" };
 }
 
-// 4. 모달 컨트롤
+// 4. 모달 컨트�?
 function openSdvxModal() { document.getElementById('sdvxModal').classList.remove('hidden'); }
 function closeSdvxModal() { document.getElementById('sdvxModal').classList.add('hidden'); }
 
-// 타이틀 정규화 함수 (대소문자, 띄어쓰기, 특수기호 무시)
+// ?�?��? ?�규???�수 (?�?�문?? ?�어?�기, ?�수기호 무시)
 function normalizeTitle(title) {
   if (!title) return "";
-  // 전각 영숫자를 반각으로 변환
-  let str = title.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+  // ?�각 ?�숫?��? 반각?�로 변??
+  let str = title.replace(/[�?Ｚａ-ｚ０-�?/g, function(s) {
     return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
   });
-  // 소문자 변환 후 공백 및 특수기호 제거
-  return str.toLowerCase().replace(/[\s\-_・。、！？!?♥♡★☆"'\(\)\[\]『』「」~～]/g, '');
+  // ?�문??변????공백 �??�수기호 ?�거
+  return str.toLowerCase().replace(/[\s\-_?�。、！�???�♡?�☆"'\(\)\[\]?�』「�?�?/g, '');
 }
 
 function closeSdvxModal() { document.getElementById('sdvxModal').classList.add('hidden'); }
 
-// 5. 성적 데이터 분석 및 렌더링
+// 5. ?�적 ?�이??분석 �??�더�?
 async function processSdvxData(scores) {
   const db = await loadSdvxDB();
   if (!db) {
-    alert("sdvx_db.json 파일을 불러오지 못했습니다.");
+    alert("sdvx_db.json ?�일??불러?��? 못했?�니??");
     return;
   }
 
-  // 정규화된 DB 맵 생성 (제목 불일치 방지)
+  // ?�규?�된 DB �??�성 (?�목 불일�?방�?)
   const normalizedDb = {};
   for (const key in db) {
     normalizedDb[normalizeTitle(key)] = db[key];
@@ -100,7 +100,7 @@ async function processSdvxData(scores) {
   let calculatedList = [];
 
   scores.forEach(item => {
-    // 1순위: 원본 제목 매칭, 2순위: 정규화 제목 매칭
+    // 1?�위: ?�본 ?�목 매칭, 2?�위: ?�규???�목 매칭
     const songInfo = db[item.title] || normalizedDb[normalizeTitle(item.title)];
     let level = null;
     let songId = null;
@@ -108,7 +108,7 @@ async function processSdvxData(scores) {
 
     if (songInfo) {
       songId = songInfo.id || null;
-      // DB 내부에서는 특수 난이도(GRV, HVN, VVD, XCD)가 모두 'INF'로 통합 저장되어 있음 (music_db.xml 구조상)
+      // DB ?��??�서???�수 ?�이??GRV, HVN, VVD, XCD)가 모두 'INF'�??�합 ?�?�되???�음 (music_db.xml 구조??
       let dbDiff = diff;
       if (["GRV", "HVN", "VVD", "XCD", "INF"].includes(diff)) {
         dbDiff = songInfo.levels[diff] ? diff : "INF"; 
@@ -129,11 +129,11 @@ async function processSdvxData(scores) {
     });
   });
 
-  // 6. 볼포스 내림차순 정렬 후 TOP 50 추출
-  // 주의: 공식 볼포스 룰에 따라 "한 곡당 가장 높은 VF를 가진 채보 1개"만 인정됩니다.
+  // 6. 볼포???�림차순 ?�렬 ??TOP 50 추출
+  // 주의: 공식 볼포??룰에 ?�라 "??곡당 가???��? VF�?가�?채보 1�?�??�정?�니??
   const uniqueSongs = new Map();
   calculatedList.forEach(item => {
-    const key = item.id || item.title; // id가 없으면 제목으로 식별
+    const key = item.id || item.title; // id가 ?�으�??�목?�로 ?�별
     if (!uniqueSongs.has(key) || uniqueSongs.get(key).vf < item.vf) {
       uniqueSongs.set(key, item);
     }
@@ -143,14 +143,14 @@ async function processSdvxData(scores) {
   finalValidList.sort((a, b) => b.vf - a.vf);
   const top50 = finalValidList.slice(0, 50);
   const totalVfRaw = top50.reduce((acc, cur) => acc + cur.vf, 0);
-  const totalVf = totalVfRaw / 100; // 최종 볼포스 수치 (예: 20.700)
+  const totalVf = totalVfRaw / 100; // 최종 볼포???�치 (?? 20.700)
 
-  // 화면 전환 (빈 화면 숨기고, 프로필 상태 표시)
+  // ?�면 ?�환 (�??�면 ?�기�? ?�로???�태 ?�시)
   document.getElementById('sdvxEmptyState').classList.remove('block');
   document.getElementById('sdvxEmptyState').classList.add('hidden');
   document.getElementById('sdvxProfileState').classList.remove('hidden');
 
-  // 상단 요약 대시보드 갱신 (인게임 볼포스 표기: 22.001 형태)
+  // ?�단 ?�약 ?�?�보??갱신 (?�게??볼포???�기: 22.001 ?�태)
   document.getElementById('totalVfDisplay').textContent = totalVf.toFixed(3);
   
   const tier = getVolforceTier(totalVf);
@@ -158,7 +158,7 @@ async function processSdvxData(scores) {
   tierEl.textContent = tier.name;
   tierEl.className = `text-xl font-black mt-2 ${tier.color}`;
 
-  // exportScorecard (베딕트 스타일 이미지) 렌더링
+  // exportScorecard (베딕???��????��?지) ?�더�?
   const expGrid = document.getElementById('expGrid');
   const expVf = document.getElementById('expVolforce');
   const expName = document.getElementById('expName');
@@ -191,7 +191,7 @@ async function processSdvxData(scores) {
                 <span class="px-1 py-0.5 text-[7px] font-black rounded ${badgeColor}">${song.diff || "?"} ${song.level !== null ? song.level : "-"}</span>
                 <span class="text-[7px] text-slate-400 font-mono">${song.score.toLocaleString()}</span>
               </div>
-              <div class="text-[9px] text-slate-300 font-bold truncate mt-0.5">┃${song.title}</div>
+              <div class="text-[9px] text-slate-300 font-bold truncate mt-0.5">??{song.title}</div>
             </div>
           </div>
           <div class="absolute top-1 right-2 text-[8px] text-slate-500 font-bold">Rank #${idx + 1}</div>
@@ -200,25 +200,25 @@ async function processSdvxData(scores) {
     }).join('');
   }
 
-  // TOP 50 데이터를 전역 변수에 저장 (뷰어에서 사용)
+  // TOP 50 ?�이?��? ?�역 변?�에 ?�??(뷰어?�서 ?�용)
   window._vf50Data = { top50, totalVf, tier };
 
   closeSdvxModal();
 }
 
-// VF50 뷰어 모달 열기 (html2canvas로 이미지 생성)
+// VF50 뷰어 모달 ?�기 (html2canvas�??��?지 ?�성)
 async function openVf50Viewer() {
   if (!window._vf50Data) {
-    alert('먼저 성적 데이터를 불러와 주세요.');
+    alert('먼�? ?�적 ?�이?��? 불러?� 주세??');
     return;
   }
 
   const modal = document.getElementById('vf50ViewerModal');
   const container = document.getElementById('vf50ImageContainer');
   modal.classList.remove('hidden');
-  container.innerHTML = '<div class="text-center py-8 text-slate-400 text-sm">이미지 생성 중...</div>';
+  container.innerHTML = '<div class="text-center py-8 text-slate-400 text-sm">?��?지 ?�성 �?..</div>';
 
-  // exportScorecard를 html2canvas로 캡쳐
+  // exportScorecard�?html2canvas�?캡쳐
   const scorecard = document.getElementById('exportScorecard');
   try {
     const canvas = await html2canvas(scorecard, {
@@ -234,7 +234,7 @@ async function openVf50Viewer() {
     canvas.style.height = 'auto';
     container.appendChild(canvas);
   } catch (err) {
-    container.innerHTML = '<div class="text-center py-8 text-rose-400 text-sm">이미지 생성 실패: ' + err.message + '</div>';
+    container.innerHTML = '<div class="text-center py-8 text-rose-400 text-sm">?��?지 ?�성 ?�패: ' + err.message + '</div>';
   }
 }
 
@@ -242,12 +242,12 @@ function closeVf50Viewer() {
   document.getElementById('vf50ViewerModal').classList.add('hidden');
 }
 
-// VF50 이미지 저장
+// VF50 ?��?지 ?�??
 function saveVf50Image() {
   const container = document.getElementById('vf50ImageContainer');
   const canvas = container.querySelector('canvas');
   if (!canvas) {
-    alert('이미지가 아직 생성되지 않았습니다.');
+    alert('?��?지가 ?�직 ?�성?��? ?�았?�니??');
     return;
   }
   const link = document.createElement('a');
@@ -256,7 +256,7 @@ function saveVf50Image() {
   link.click();
 }
 
-// 수동 입력창 제출 처리
+// ?�동 ?�력�??�출 처리
 function processSdvxScores() {
   const rawInput = document.getElementById('sdvxRawInput').value.trim();
   if (!rawInput) return;
@@ -264,13 +264,13 @@ function processSdvxScores() {
     const scores = JSON.parse(rawInput);
     processSdvxData(scores);
   } catch (e) {
-    alert("데이터 형식이 올바르지 않습니다.");
+    alert("?�이???�식???�바르�? ?�습?�다.");
   }
 }
 
-// 6. 북마크릿 데이터 수신 (postMessage 이벤트 감지)
+// 6. 북마?�릿 ?�이???�신 (postMessage ?�벤??감�?)
 window.addEventListener('message', (event) => {
-  // 스크래퍼(북마크릿)에서 보낸 'SDVX_PARSE_DATA' 타입인지 확인
+  // ?�크?�퍼(북마?�릿)?�서 보낸 'SDVX_PARSE_DATA' ?�?�인지 ?�인
   if (event.data && event.data.type === 'SDVX_PARSE_DATA') {
     try {
       const scores = event.data.payload;
@@ -278,12 +278,12 @@ window.addEventListener('message', (event) => {
         processSdvxData(scores);
       }
     } catch (err) {
-      console.error("북마크릿 데이터 수신 실패:", err);
+      console.error("북마?�릿 ?�이???�신 ?�패:", err);
     }
   }
 });
 
-// 7. URL 해시(#import=...) 자동 감지 및 즉시 실행 (원클릭 연동 백업)
+// 7. URL ?�시(#import=...) ?�동 감�? �?즉시 ?�행 (?�클�??�동 백업)
 window.addEventListener('DOMContentLoaded', () => {
   if (window.location.hash.startsWith('#import=')) {
     try {
@@ -291,17 +291,17 @@ window.addEventListener('DOMContentLoaded', () => {
       const scores = JSON.parse(rawData);
       if (Array.isArray(scores)) {
         processSdvxData(scores);
-        // URL 해시 정리
+        // URL ?�시 ?�리
         history.replaceState(null, null, ' ');
       }
     } catch (err) {
-      console.error("자동 임포트 파싱 실패:", err);
+      console.error("?�동 ?�포???�싱 ?�패:", err);
     }
   }
 });
 
 // ==========================================
-// 북마크릿 클립보드 복사 함수 추가
+// 북마?�릿 ?�립보드 복사 ?�수 추�?
 // ==========================================
 function copyBookmarklet() {
   const codeElement = document.getElementById('bookmarkletCode');
@@ -310,9 +310,9 @@ function copyBookmarklet() {
   const codeText = codeElement.innerText || codeElement.textContent;
   
   navigator.clipboard.writeText(codeText).then(() => {
-    alert("데이터 갱신용 코드가 복사되었습니다!\n\n사운드 볼텍스 홈페이지 주소창에 붙여넣으실 때, 맨 앞에 'javascript:' 가 지워졌다면 직접 입력해 주세요.");
+    alert("?�이??갱신??코드가 복사?�었?�니??\n\n?�운??볼텍???�페?��? 주소창에 붙여?�으???? �??�에 'javascript:' 가 지?�졌?�면 직접 ?�력??주세??");
   }).catch(err => {
-    console.error('복사 실패:', err);
-    alert("복사에 실패했습니다. 수동으로 코드를 복사해 주세요.");
+    console.error('복사 ?�패:', err);
+    alert("복사???�패?�습?�다. ?�동?�로 코드�?복사??주세??");
   });
 }
