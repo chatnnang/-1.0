@@ -12,34 +12,55 @@
     let userScores = [];
 
     // 2. 화면 내 곡 성적 블록 탐색
-    const musicBoxes = document.querySelectorAll(".music, .play_data_music, tr");
+    const musicBlocks = document.querySelectorAll('.music_box, tr.music_row, .music, .play_data_music, tr');
     
-    musicBoxes.forEach(box => {
-        const titleEl = box.querySelector(".title_name, .music_name, h3, .name, .title, .music_title");
+    musicBlocks.forEach(box => {
+        const titleEl = box.querySelector('.title_name, .music_name, h3, .name, .title, .music_title, td.title');
         if (!titleEl) return;
         const title = titleEl.textContent.trim();
         if (!title) return;
 
-        const diffEls = box.querySelectorAll(".diff, .difficulty_block, .score_block, .score, .play_score");
-        if (diffEls.length === 1 && diffEls[0].classList.contains("score")) {
-            // 단일 테이블 행 형태 대응
-            const score = parseInt(diffEls[0].textContent.replace(/[^0-9]/g, ""), 10);
-            if (!isNaN(score) && score > 0) {
-                userScores.push({ title: title, diff: null, score: score });
-            }
-        } else {
-            // 블록 형태 대응
-            diffEls.forEach((diffEl, idx) => {
-                const scoreText = diffEl.textContent.replace(/[^0-9]/g, "");
+        // 각 난이도 아이템 탐색
+        const diffItems = box.querySelectorAll('.diff_item, td.diff');
+        
+        if (diffItems.length > 0) {
+            diffItems.forEach(item => {
+                const diffClassMatch = item.className.match(/(nov|adv|exh|mxm|inf|grv|hvn|vvd|xcd)/i);
+                const diffClass = diffClassMatch ? diffClassMatch[0].toUpperCase() : null;
+                
+                const scoreText = item.querySelector('.score')?.textContent.replace(/[^0-9]/g, '') || '0';
                 const score = parseInt(scoreText, 10);
-                if (!isNaN(score) && score > 0) {
-                    userScores.push({
-                        title: title,
-                        diff: difficultyMap[idx] || null,
-                        score: score
-                    });
+                
+                // 클리어 램프 추출
+                let lamp = 'NO_PLAY';
+                const markEl = item.querySelector('.clear_mark, .med, img');
+                if (markEl) {
+                    const str = (markEl.className + ' ' + (markEl.src || '') + ' ' + (markEl.alt || '')).toLowerCase();
+                    if (str.includes('puc') || str.includes('perfect')) lamp = 'PUC';
+                    else if (str.includes('uc') || str.includes('ultimate')) lamp = 'UC';
+                    else if (str.includes('hard') || str.includes('excomp')) lamp = 'HARD';
+                    else if (str.includes('comp') || str.includes('clear')) lamp = 'CLEAR';
+                    else if (str.includes('play') || str.includes('crash')) lamp = 'PLAYED';
+                }
+
+                if (score > 0 && diffClass) {
+                    userScores.push({ title, diff: diffClass, score, lamp });
                 }
             });
+        } else {
+            // 구버전/대체 HTML 구조 대응 (점수 텍스트만 있는 경우)
+            const diffEls = box.querySelectorAll(".score, .play_score");
+            if (diffEls.length === 1) {
+                const score = parseInt(diffEls[0].textContent.replace(/[^0-9]/g, ""), 10);
+                if (!isNaN(score) && score > 0) userScores.push({ title, diff: null, score, lamp: null });
+            } else {
+                diffEls.forEach((diffEl, idx) => {
+                    const score = parseInt(diffEl.textContent.replace(/[^0-9]/g, ""), 10);
+                    if (!isNaN(score) && score > 0) {
+                        userScores.push({ title, diff: difficultyMap[idx] || null, score, lamp: null });
+                    }
+                });
+            }
         }
     });
 

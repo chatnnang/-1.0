@@ -19,7 +19,7 @@ async function loadSdvxDB() {
 }
 
 // 2. VF50 공식 규격 볼포스 계산식
-function calculateSingleVolforce(level, score) {
+function calculateSingleVolforce(level, score, lamp) {
   if (level === null || !score || score < 7000000) return 0;
 
   // 점수 등급 계수 (Grade Multiplier)
@@ -35,10 +35,20 @@ function calculateSingleVolforce(level, score) {
 
   // 클리어 계수 (Clear Multiplier)
   let clearMult = 1.00;
-  if (score === 10000000) clearMult = 1.10; // PUC
-  else if (score >= 9900000) clearMult = 1.05; // UC 추정 안전 계수
+  
+  if (lamp === "PUC") clearMult = 1.10;
+  else if (lamp === "UC") clearMult = 1.05;
+  else if (lamp === "HARD") clearMult = 1.02;
+  else if (lamp === "CLEAR") clearMult = 1.00;
+  else if (lamp === "PLAYED") clearMult = 0.50;
+  else {
+    // 램프 정보가 없을 경우 점수 기반으로 추정 (기존 로직 유지)
+    if (score === 10000000) clearMult = 1.10; // PUC
+    else if (score >= 9900000) clearMult = 1.05; // S랭크 이상은 보통 UC를 많이 하므로 1.05로 추정
+    else if (score >= 9800000) clearMult = 1.02; // AAA+ 이상은 보통 HARD를 하므로 1.02로 추정
+  }
 
-  // 공식 계산: (상수 * 20) * (점수 / 1000만) * 등급계수 * 클리어계수 / 10 (소수점 1자리 버림)
+  // 공식 계산: (상수 * 20) * (점수 / 1000만) * 등급계수 * 클리어계수
   const rawVf = (level * 20) * (score / 10000000) * gradeMult * clearMult;
   return Math.floor(rawVf) / 10;
 }
@@ -80,7 +90,7 @@ async function processSdvxData(scores) {
       level = songInfo.levels[diff] || songInfo.levels["MXM"] || songInfo.levels["EXH"] || null;
     }
 
-    const vf = calculateSingleVolforce(level, item.score);
+    const vf = calculateSingleVolforce(level, item.score, item.lamp);
 
     calculatedList.push({
       title: item.title,
@@ -88,7 +98,8 @@ async function processSdvxData(scores) {
       score: item.score,
       level: level,
       vf: vf,
-      id: songId
+      id: songId,
+      lamp: item.lamp
     });
   });
 
@@ -111,46 +122,102 @@ async function processSdvxData(scores) {
   tierEl.textContent = tier.name;
   tierEl.className = `text-xl font-black mt-2 ${tier.color}`;
 
-  // 그리드 렌더링 (자켓 이미지 로직 포함)
-  const grid = document.getElementById('top50Grid');
-  grid.innerHTML = top50.map((song, idx) => {
-    let badgeColor = "bg-red-600 text-white";
-    if (song.diff === "NOV") badgeColor = "bg-blue-500 text-white";
-    else if (song.diff === "ADV") badgeColor = "bg-yellow-500 text-slate-900";
-    else if (song.diff === "MXM") badgeColor = "bg-slate-100 text-slate-900";
-    else if (["INF", "GRV", "HVN", "VVD", "XCD"].includes(song.diff)) badgeColor = "bg-fuchsia-600 text-white";
+  // exportScorecard (베딕트 스타일 이미지) 렌더링
+  const expGrid = document.getElementById('expGrid');
+  const expVf = document.getElementById('expVolforce');
+  const expName = document.getElementById('expName');
+  const expDate = document.getElementById('expDate');
 
-    // 자켓 이미지 경로 설정 (jackets 폴더 내부의 곡ID.webp)
-    // 에러 발생 시 onerror 이벤트로 이미지를 숨기고 글자(NO ID)를 보여주도록 처리
-    const jacketPath = `./jackets/${song.id}.webp`;
+  if (expVf) expVf.textContent = totalVf.toFixed(3);
+  if (expName && currentUser) expName.textContent = currentUser.displayName || 'PLAYER';
+  if (expDate) expDate.textContent = new Date().toISOString().slice(0, 10);
 
-    return `
-      <div class="flex items-center gap-3 p-3 bg-slate-900/80 rounded-xl border border-slate-700/70 shadow-sm hover:border-fuchsia-500/50 transition">
-        <span class="text-xs font-black text-slate-500 w-5 text-center">#${idx + 1}</span>
-        
-        <div class="w-12 h-12 bg-slate-800 rounded-md flex-shrink-0 flex items-center justify-center border border-slate-700 overflow-hidden text-[10px] text-slate-500 font-bold relative">
-          <!-- 자켓 이미지 출력부 -->
-          <img src="${jacketPath}" onerror="this.style.display='none'" alt="Jacket" class="w-full h-full object-cover absolute inset-0 z-10" />
-          <span class="z-0 px-1 text-center">${song.id ? song.id : "NO ID"}</span>
-        </div>
+  if (expGrid) {
+    expGrid.innerHTML = top50.map((song, idx) => {
+      let badgeColor = "bg-red-600 text-white";
+      if (song.diff === "NOV") badgeColor = "bg-blue-500 text-white";
+      else if (song.diff === "ADV") badgeColor = "bg-yellow-500 text-slate-900";
+      else if (song.diff === "MXM") badgeColor = "bg-slate-100 text-slate-900";
+      else if (["INF", "GRV", "HVN", "VVD", "XCD"].includes(song.diff)) badgeColor = "bg-fuchsia-600 text-white";
 
-        <div class="flex-grow min-w-0">
-          <div class="flex items-center gap-1.5 mb-1">
-            <span class="px-1.5 py-0.5 text-[9px] font-black rounded ${badgeColor}">
-              ${song.diff || "DIFF"} ${song.level !== null ? song.level : "-"}
-            </span>
-            <h4 class="text-[13px] font-bold text-slate-100 truncate">${song.title}</h4>
+      const jacketPath = `./jackets/${song.id}.webp`;
+
+      return `
+        <div class="bg-slate-800 rounded-lg p-2 border border-slate-700 relative">
+          <div class="flex gap-2">
+            <div class="w-16 h-16 bg-slate-700 rounded flex-shrink-0 overflow-hidden relative flex items-center justify-center text-[8px] text-slate-500">
+              <img src="${jacketPath}" onerror="this.style.display='none'" class="w-full h-full object-cover absolute inset-0 z-10" />
+              <span class="z-0">${song.id || '?'}</span>
+            </div>
+            <div class="flex-grow min-w-0">
+              <div class="text-2xl font-black text-slate-100 leading-none">${song.vf.toFixed(1)}</div>
+              <div class="flex items-center gap-1 mt-1">
+                <span class="px-1 py-0.5 text-[7px] font-black rounded ${badgeColor}">${song.diff || "?"} ${song.level !== null ? song.level : "-"}</span>
+                <span class="text-[7px] text-slate-400 font-mono">${song.score.toLocaleString()}</span>
+              </div>
+              <div class="text-[9px] text-slate-300 font-bold truncate mt-0.5">┃${song.title}</div>
+            </div>
           </div>
-          <div class="flex justify-between items-center text-xs text-slate-400">
-            <span class="font-mono">${song.score.toLocaleString()}</span>
-            <span class="font-bold text-fuchsia-400">VF ${song.vf.toFixed(1)}</span>
-          </div>
+          <div class="absolute top-1 right-2 text-[8px] text-slate-500 font-bold">Rank #${idx + 1}</div>
         </div>
-      </div>
-    `;
-  }).join('');
+      `;
+    }).join('');
+  }
+
+  // TOP 50 데이터를 전역 변수에 저장 (뷰어에서 사용)
+  window._vf50Data = { top50, totalVf, tier };
 
   closeSdvxModal();
+}
+
+// VF50 뷰어 모달 열기 (html2canvas로 이미지 생성)
+async function openVf50Viewer() {
+  if (!window._vf50Data) {
+    alert('먼저 성적 데이터를 불러와 주세요.');
+    return;
+  }
+
+  const modal = document.getElementById('vf50ViewerModal');
+  const container = document.getElementById('vf50ImageContainer');
+  modal.classList.remove('hidden');
+  container.innerHTML = '<div class="text-center py-8 text-slate-400 text-sm">이미지 생성 중...</div>';
+
+  // exportScorecard를 html2canvas로 캡쳐
+  const scorecard = document.getElementById('exportScorecard');
+  try {
+    const canvas = await html2canvas(scorecard, {
+      backgroundColor: '#0f172a',
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      width: scorecard.scrollWidth,
+      height: scorecard.scrollHeight
+    });
+    container.innerHTML = '';
+    canvas.style.width = '100%';
+    canvas.style.height = 'auto';
+    container.appendChild(canvas);
+  } catch (err) {
+    container.innerHTML = '<div class="text-center py-8 text-rose-400 text-sm">이미지 생성 실패: ' + err.message + '</div>';
+  }
+}
+
+function closeVf50Viewer() {
+  document.getElementById('vf50ViewerModal').classList.add('hidden');
+}
+
+// VF50 이미지 저장
+function saveVf50Image() {
+  const container = document.getElementById('vf50ImageContainer');
+  const canvas = container.querySelector('canvas');
+  if (!canvas) {
+    alert('이미지가 아직 생성되지 않았습니다.');
+    return;
+  }
+  const link = document.createElement('a');
+  link.download = `VF50_${new Date().toISOString().slice(0,10)}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
 }
 
 // 수동 입력창 제출 처리
