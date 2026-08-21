@@ -38,8 +38,9 @@
                     const str = (markEl.className + ' ' + (markEl.src || '') + ' ' + (markEl.alt || '')).toLowerCase();
                     if (str.includes('puc') || str.includes('perfect')) lamp = 'PUC';
                     else if (str.includes('uc') || str.includes('ultimate')) lamp = 'UC';
-                    else if (str.includes('hard') || str.includes('excomp')) lamp = 'HARD';
-                    else if (str.includes('comp') || str.includes('clear')) lamp = 'CLEAR';
+                    else if (str.includes('excomp') || str.includes('ex_hard') || str.includes('ex-hard')) lamp = 'EX-HARD';
+                    else if (str.includes('hard') || str.includes('comp')) lamp = 'HARD';
+                    else if (str.includes('clear')) lamp = 'CLEAR';
                     else if (str.includes('play') || str.includes('crash')) lamp = 'PLAYED';
                 }
 

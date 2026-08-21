@@ -33,19 +33,20 @@ function calculateSingleVolforce(level, score, lamp) {
   else if (score >= 8700000) gradeMult = 0.88; // A
   else if (score >= 7500000) gradeMult = 0.85; // B
 
-  // 클리어 계수 (Clear Multiplier)
+  // 클리어 계수 (Clear Multiplier) - Exceed Gear 공식 배율
   let clearMult = 1.00;
   
   if (lamp === "PUC") clearMult = 1.10;
-  else if (lamp === "UC") clearMult = 1.05;
+  else if (lamp === "UC") clearMult = 1.06;
+  else if (lamp === "EX-HARD" || lamp === "EXC") clearMult = 1.04;
   else if (lamp === "HARD") clearMult = 1.02;
   else if (lamp === "CLEAR") clearMult = 1.00;
   else if (lamp === "PLAYED") clearMult = 0.50;
   else {
-    // 램프 정보가 없을 경우 점수 기반으로 추정 (기존 로직 유지)
+    // 램프 정보가 없을 경우 점수 기반으로 추정 (기존 로직 유지, 안전하게 보수적 추정)
     if (score === 10000000) clearMult = 1.10; // PUC
-    else if (score >= 9900000) clearMult = 1.05; // S랭크 이상은 보통 UC를 많이 하므로 1.05로 추정
-    else if (score >= 9800000) clearMult = 1.02; // AAA+ 이상은 보통 HARD를 하므로 1.02로 추정
+    else if (score >= 9900000) clearMult = 1.06; // S랭크 이상은 UC로 추정
+    else if (score >= 9800000) clearMult = 1.02; // AAA+ 이상은 HARD로 추정
   }
 
   // 공식 계산: (상수 * 20) * (점수 / 1000만) * 등급계수 * 클리어계수
