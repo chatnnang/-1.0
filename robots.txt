@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://chatnnang.github.io/-1.0/sitemap.xml
