@@ -129,11 +129,21 @@ async function processSdvxData(scores) {
     });
   });
 
-  // 볼포스 내림차순 정렬 후 TOP 50 추출
-  calculatedList.sort((a, b) => b.vf - a.vf);
-  const top50 = calculatedList.slice(0, 50);
+  // 6. 볼포스 내림차순 정렬 후 TOP 50 추출
+  // 주의: 공식 볼포스 룰에 따라 "한 곡당 가장 높은 VF를 가진 채보 1개"만 인정됩니다.
+  const uniqueSongs = new Map();
+  calculatedList.forEach(item => {
+    const key = item.id || item.title; // id가 없으면 제목으로 식별
+    if (!uniqueSongs.has(key) || uniqueSongs.get(key).vf < item.vf) {
+      uniqueSongs.set(key, item);
+    }
+  });
+
+  const finalValidList = Array.from(uniqueSongs.values());
+  finalValidList.sort((a, b) => b.vf - a.vf);
+  const top50 = finalValidList.slice(0, 50);
   const totalVfRaw = top50.reduce((acc, cur) => acc + cur.vf, 0);
-  const totalVf = totalVfRaw / 100; // 인게임 볼포스 수치 (예: 20.700)
+  const totalVf = totalVfRaw / 100; // 최종 볼포스 수치 (예: 20.700)
 
   // 화면 전환 (빈 화면 숨기고, 프로필 상태 표시)
   document.getElementById('sdvxEmptyState').classList.remove('block');
