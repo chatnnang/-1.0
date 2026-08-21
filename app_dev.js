@@ -38,10 +38,10 @@ function calculateSingleVolforce(level, score, lamp) {
   
   if (lamp === "PUC") clearMult = 1.10;
   else if (lamp === "UC") clearMult = 1.06;
-  else if (lamp === "EX-HARD" || lamp === "EXC") clearMult = 1.04;
-  else if (lamp === "HARD") clearMult = 1.02;
+  else if (lamp === "EX-HARD" || lamp === "EXC" || lamp === "MXV") clearMult = 1.04;
+  else if (lamp === "HARD" || lamp === "COMP") clearMult = 1.02;
   else if (lamp === "CLEAR") clearMult = 1.00;
-  else if (lamp === "PLAYED") clearMult = 0.50;
+  else if (lamp === "PLAYED" || lamp === "PLAY") clearMult = 0.50;
   else {
     // 램프 정보가 없을 경우 점수 기반으로 추정 (기존 로직 유지, 안전하게 보수적 추정)
     if (score === 10000000) clearMult = 1.10; // PUC
