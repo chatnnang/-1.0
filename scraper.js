@@ -1,5 +1,5 @@
 /**
- * 얼마썼냥 x SDVX 베딕트 원클릭 파서 (scraper.js)
+ * 얼마썼냥 x SDVX VF50 원클릭 파서 (scraper.js)
  */
 (async function() {
     // 1. 코나미 공식 사볼 페이지 확인

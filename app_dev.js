@@ -1,5 +1,5 @@
 // ==========================================
-// SDVX 볼포스 정밀 계산 및 베딕트 렌더링 모듈
+// SDVX 볼포스 정밀 계산 및 VF50 렌더링 모듈
 // ==========================================
 
 let sdvxDatabase = null;
@@ -18,7 +18,7 @@ async function loadSdvxDB() {
   }
 }
 
-// 2. 베딕트 공식 규격 볼포스 계산식
+// 2. VF50 공식 규격 볼포스 계산식
 function calculateSingleVolforce(level, score) {
   if (level === null || !score || score < 7000000) return 0;
 
