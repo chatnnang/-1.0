@@ -108,7 +108,12 @@ async function processSdvxData(scores) {
 
     if (songInfo) {
       songId = songInfo.id || null;
-      level = songInfo.levels[diff] || songInfo.levels["MXM"] || songInfo.levels["EXH"] || null;
+      // DB 내부에서는 특수 난이도(GRV, HVN, VVD, XCD)가 모두 'INF'로 통합 저장되어 있음 (music_db.xml 구조상)
+      let dbDiff = diff;
+      if (["GRV", "HVN", "VVD", "XCD", "INF"].includes(diff)) {
+        dbDiff = songInfo.levels[diff] ? diff : "INF"; 
+      }
+      level = songInfo.levels[dbDiff] || songInfo.levels["MXM"] || songInfo.levels["EXH"] || null;
     }
 
     const vf = calculateSingleVolforce(level, item.score, item.lamp);
