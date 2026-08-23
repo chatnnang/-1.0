@@ -50,8 +50,8 @@ function calculateSingleVolforce(level, score, lamp) {
   }
 
   // 공식 계산: (상수 * 20) * (점수 / 1000만) * 등급계수 * 클리어계수
-  const rawVf = (level * 20) * (score / 10000000) * gradeMult * clearMult;
-  return Math.floor(rawVf) / 10;
+  let vf = Math.floor(level * 2 * (score / 1000000) * gradeMult * clearMult * 10 + 0.0001) / 10;
+  return vf;
 }
 
 // 3. 볼포스 총합에 따른 티어 계산
@@ -136,11 +136,22 @@ async function processSdvxData(scores) {
     const key = item.id || item.title; // id가 없으면 제목으로 식별
     if (!uniqueSongs.has(key) || uniqueSongs.get(key).vf < item.vf) {
       uniqueSongs.set(key, item);
+    } else if (uniqueSongs.get(key).vf === item.vf) {
+      // 동점이면 점수가 더 높은 것을 우선 (타이기브레이커)
+      if (item.score > uniqueSongs.get(key).score) {
+        uniqueSongs.set(key, item);
+      }
     }
   });
 
   const finalValidList = Array.from(uniqueSongs.values());
-  finalValidList.sort((a, b) => b.vf - a.vf);
+  // VF 내림차순 정렬, 동점시 점수 내림차순, 그다음 레벨 내림차순
+  finalValidList.sort((a, b) => {
+    if (b.vf !== a.vf) return b.vf - a.vf;
+    if (b.score !== a.score) return b.score - a.score;
+    if (b.level !== a.level) return b.level - a.level;
+    return 0;
+  });
   const top50 = finalValidList.slice(0, 50);
   const totalVfRaw = top50.reduce((acc, cur) => acc + cur.vf, 0);
   const totalVf = totalVfRaw / 100; // 최종 볼포스 수치 (예: 20.700)
