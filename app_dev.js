@@ -77,8 +77,8 @@ function normalizeTitle(title) {
   let str = title.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
     return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
   });
-  // 소문자 변환 후 공백 및 특수기호 제거
-  return str.toLowerCase().replace(/[\s\-_・。、！？!?♥♡★☆"'\(\)\[\]『』「」~～]/g, '');
+  // 공백, 특수기호, 그리스문자, 인코딩 깨짐문자(驩驧驫驪) 등 모두 제거
+  return str.toLowerCase().replace(/[\s\-_・。、！？!?♥♡★☆"'\(\)\[\]『』「」~～〜ØΞ∞Λ△ΩИΣ驩驧驫驪]/g, '');
 }
 
 function closeSdvxModal() { document.getElementById('sdvxModal').classList.add('hidden'); }
