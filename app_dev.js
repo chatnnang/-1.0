@@ -50,8 +50,8 @@ function calculateSingleVolforce(level, score, lamp) {
   }
 
   // 공식 계산: (상수 * 20) * (점수 / 1000만) * 등급계수 * 클리어계수
-  let vf = Math.floor(level * 2 * (score / 1000000) * gradeMult * clearMult * 10 + 0.0001) / 10;
-  return vf;
+  const rawVf = (level * 20) * (score / 10000000) * gradeMult * clearMult;
+  return Math.floor(rawVf + 0.0001) / 10;
 }
 
 // 3. 볼포스 총합에 따른 티어 계산
