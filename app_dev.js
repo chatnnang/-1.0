@@ -104,10 +104,12 @@ async function processSdvxData(scores) {
     const songInfo = db[item.title] || normalizedDb[normalizeTitle(item.title)];
     let level = null;
     let songId = null;
+    let imageName = null;
     let diff = item.diff || "EXH";
 
     if (songInfo) {
       songId = songInfo.id || null;
+      imageName = songInfo.imageName || null;
       // DB 내부에서는 특수 난이도(GRV, HVN, VVD, XCD)가 모두 'INF'로 통합 저장되어 있음 (music_db.xml 구조상)
       let dbDiff = diff;
       if (["GRV", "HVN", "VVD", "XCD", "INF"].includes(diff)) {
@@ -125,6 +127,7 @@ async function processSdvxData(scores) {
       level: level,
       vf: vf,
       id: songId,
+      imageName: imageName,
       lamp: item.lamp
     });
   });
@@ -187,13 +190,15 @@ async function processSdvxData(scores) {
       else if (song.diff === "MXM") badgeColor = "bg-slate-100 text-slate-900";
       else if (["INF", "GRV", "HVN", "VVD", "XCD"].includes(song.diff)) badgeColor = "bg-fuchsia-600 text-white";
 
-      const jacketPath = `./jackets/${song.id}.webp`;
+      const cdnCover = song.imageName ? `https://dp4p6x0xfi5o9.cloudfront.net/sdvx/img/cover/${song.imageName}` : '';
+      const localCover = song.id ? `./jackets/${song.id}.webp` : '';
+      const initialCover = localCover || cdnCover;
 
       return `
         <div class="bg-slate-800 rounded-lg p-2 border border-slate-700 relative">
           <div class="flex gap-2">
             <div class="w-16 h-16 bg-slate-700 rounded flex-shrink-0 overflow-hidden relative flex items-center justify-center text-[8px] text-slate-500">
-              <img src="${jacketPath}" onerror="this.style.display='none'" class="w-full h-full object-cover absolute inset-0 z-10" />
+              <img src="${initialCover}" onerror="if(!this.dataset.tried && '${cdnCover}'){this.dataset.tried='1'; this.src='${cdnCover}';} else {this.style.display='none';}" class="w-full h-full object-cover absolute inset-0 z-10" />
               <span class="z-0">${song.id || '?'}</span>
             </div>
             <div class="flex-grow min-w-0">
