@@ -280,7 +280,6 @@ function clearAllLogs() {
 }
 
 function switchTab(tabId) {
-  if (tabId === 'tab-profile') alert('🛠️ 시스템 점검 중입니다. 불편을 드려 죄송합니다.');
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active')); document.getElementById(tabId).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(btn => { btn.classList.remove('text-indigo-400'); btn.classList.add('text-slate-500'); });
   document.getElementById('btn-' + tabId).classList.add('text-indigo-400'); document.getElementById('btn-' + tabId).classList.remove('text-slate-500');
