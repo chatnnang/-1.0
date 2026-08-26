@@ -191,27 +191,37 @@ async function processSdvxData(scores) {
       else if (song.diff === "MXM") badgeColor = "bg-slate-100 text-slate-900";
       else if (["INF", "GRV", "HVN", "VVD", "XCD"].includes(song.diff)) badgeColor = "bg-fuchsia-600 text-white";
 
+      let lampColor = "text-slate-400";
+      if (song.lamp === "PUC") lampColor = "text-amber-300";
+      else if (song.lamp === "UC") lampColor = "text-rose-400";
+      else if (song.lamp === "EX-HARD" || song.lamp === "MXV") lampColor = "text-yellow-400";
+      else if (song.lamp === "HARD") lampColor = "text-pink-400";
+      else if (song.lamp === "CLEAR") lampColor = "text-emerald-400";
+
       const cdnCover = song.imageName ? `https://dp4p6x0xfi5o9.cloudfront.net/sdvx/img/cover/${song.imageName}` : '';
       const localCover = song.id ? `./jackets/${song.id}.webp` : '';
       const initialCover = localCover || cdnCover;
 
       return `
-        <div class="bg-slate-800 rounded-lg p-2 border border-slate-700 relative">
-          <div class="flex gap-2">
-            <div class="w-16 h-16 bg-slate-700 rounded flex-shrink-0 overflow-hidden relative flex items-center justify-center text-[8px] text-slate-500">
-              <img src="${initialCover}" crossorigin="anonymous" onerror="if(!this.dataset.tried && '${cdnCover}'){this.dataset.tried='1'; this.src='${cdnCover}';} else {this.style.display='none';}" class="w-full h-full object-cover absolute inset-0 z-10" />
-              <span class="z-0">${song.id || '?'}</span>
+        <div class="bg-slate-800/90 rounded-xl p-2.5 border border-slate-700/80 relative shadow flex gap-2.5 items-center">
+          <div class="w-16 h-16 bg-slate-900 rounded-lg flex-shrink-0 overflow-hidden relative flex items-center justify-center text-[8px] text-slate-500 border border-slate-700/60 shadow-inner">
+            <img src="${initialCover}" crossorigin="anonymous" onerror="if(!this.dataset.tried && '${cdnCover}'){this.dataset.tried='1'; this.src='${cdnCover}';} else {this.style.display='none';}" class="w-full h-full object-cover absolute inset-0 z-10" />
+            <span class="z-0">${song.id || '?'}</span>
+          </div>
+          <div class="flex-grow min-w-0 flex flex-col justify-between h-16 py-0.5">
+            <div class="flex items-center justify-between gap-1">
+              <div class="text-2xl font-black text-slate-100 tracking-tight leading-none">${song.vf.toFixed(1)}</div>
+              <span class="px-1.5 py-0.5 text-[8px] font-black rounded ${badgeColor} shadow-sm shrink-0 tracking-wider">${song.diff || "?"} ${song.level !== null ? song.level : "-"}</span>
             </div>
-            <div class="flex-grow min-w-0">
-              <div class="text-2xl font-black text-slate-100 leading-none">${song.vf.toFixed(1)}</div>
-              <div class="flex items-center gap-1 mt-1">
-                <span class="px-1 py-0.5 text-[7px] font-black rounded ${badgeColor}">${song.diff || "?"} ${song.level !== null ? song.level : "-"}</span>
-                <span class="text-[7px] text-slate-400 font-mono">${song.score.toLocaleString()}</span>
-              </div>
-              <div class="text-[9px] text-slate-300 font-bold truncate mt-0.5">┃${song.title}</div>
+            <div class="flex items-center justify-between text-[8px] font-mono mt-0.5">
+              <span class="text-slate-400 font-bold">${song.score.toLocaleString()}</span>
+              <span class="text-[8px] font-black ${lampColor} uppercase px-1 py-0.2 rounded bg-slate-900/60">${song.lamp || ''}</span>
+            </div>
+            <div class="text-[9px] text-slate-200 font-bold truncate mt-0.5" title="${song.title}">
+              ${song.title}
             </div>
           </div>
-          <div class="absolute top-1 right-2 text-[8px] text-slate-500 font-bold">Rank #${idx + 1}</div>
+          <div class="absolute top-1 right-2 text-[7px] text-slate-500 font-extrabold tracking-wider">#${idx + 1}</div>
         </div>
       `;
     }).join('');
@@ -220,7 +230,179 @@ async function processSdvxData(scores) {
   // TOP 50 데이터를 전역 변수에 저장 (뷰어에서 사용)
   window._vf50Data = { top50, totalVf, tier };
 
+  // 클라우드 및 로컬스토리지 영구 저장
+  saveSdvxUserData(scores, totalVf, top50);
+
   closeSdvxModal();
+}
+
+// ==========================================
+// 볼포스 히스토리 차트 및 클라우드 연동
+// ==========================================
+let vfHistoryChartInstance = null;
+
+// 히스토리 그래프 렌더링
+function renderVfHistoryChart(historyList) {
+  const ctx = document.getElementById('vfHistoryChart');
+  if (!ctx || !window.Chart) return;
+
+  const countEl = document.getElementById('vfHistoryCount');
+  if (countEl) countEl.textContent = `기록 ${historyList.length}개`;
+
+  if (historyList.length === 0) {
+    if (vfHistoryChartInstance) vfHistoryChartInstance.destroy();
+    return;
+  }
+
+  // 시간순 정렬
+  const sorted = [...historyList].sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+  const labels = sorted.map(h => h.dateStr || new Date(h.timestamp || Date.now()).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }));
+  const dataPoints = sorted.map(h => parseFloat(h.volforce || h.totalVf || 0));
+
+  if (vfHistoryChartInstance) vfHistoryChartInstance.destroy();
+
+  vfHistoryChartInstance = new Chart(ctx.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '볼포스',
+        data: dataPoints,
+        borderColor: '#e879f9',
+        backgroundColor: 'rgba(232, 121, 249, 0.15)',
+        borderWidth: 3,
+        pointBackgroundColor: '#f43f5e',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 1.5,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        fill: true,
+        tension: 0.35
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          titleColor: '#e2e8f0',
+          bodyColor: '#f43f5e',
+          bodyFont: { weight: 'bold' },
+          callbacks: {
+            label: (ctx) => `VOLFORCE: ${ctx.parsed.y.toFixed(3)}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(51, 65, 85, 0.3)' },
+          ticks: { color: '#94a3b8', font: { size: 9 } }
+        },
+        y: {
+          grid: { color: 'rgba(51, 65, 85, 0.3)' },
+          ticks: {
+            color: '#cbd5e1',
+            font: { size: 9 },
+            callback: (v) => v.toFixed(2)
+          }
+        }
+      }
+    }
+  });
+}
+
+// 클라우드/로컬 저장
+async function saveSdvxUserData(scores, totalVf, top50) {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  const timestamp = Date.now();
+
+  const saveData = {
+    scores: scores,
+    totalVf: totalVf,
+    updatedAt: timestamp,
+    dateStr: dateStr
+  };
+
+  // 1. 로컬스토리지에 캐시
+  localStorage.setItem('sdvx_latest_data', JSON.stringify(saveData));
+
+  let localHistory = JSON.parse(localStorage.getItem('sdvx_vf_history') || '[]');
+  // 같은 날짜/볼포스 중복 방지
+  const lastEntry = localHistory[localHistory.length - 1];
+  if (!lastEntry || Math.abs(lastEntry.totalVf - totalVf) > 0.0005) {
+    localHistory.push({ totalVf: totalVf, dateStr: dateStr, timestamp: timestamp });
+    localStorage.setItem('sdvx_vf_history', JSON.stringify(localHistory));
+  }
+  renderVfHistoryChart(localHistory);
+
+  // 2. 구글 로그인 상태면 Firestore 동기화
+  if (currentUser && typeof db !== 'undefined' && db) {
+    try {
+      await db.collection("users").doc(currentUser.uid).collection("sdvx_data").doc("latest").set(saveData);
+      await db.collection("users").doc(currentUser.uid).collection("sdvx_history").add({
+        totalVf: totalVf,
+        dateStr: dateStr,
+        timestamp: timestamp
+      });
+      console.log("☁️ SDVX 성적 및 볼포스 히스토리가 클라우드에 저장되었습니다.");
+    } catch (err) {
+      console.error("클라우드 저장 실패:", err);
+    }
+  }
+}
+
+// 클라우드/로컬에서 성적 불러오기
+async function loadSdvxUserData(user) {
+  // 1. Firestore에서 불러오기 시도
+  if (user && typeof db !== 'undefined' && db) {
+    try {
+      const docSnap = await db.collection("users").doc(user.uid).collection("sdvx_data").doc("latest").get();
+      if (docSnap.exists) {
+        const data = docSnap.data();
+        if (data && data.scores) {
+          processSdvxData(data.scores);
+        }
+      }
+
+      const histSnap = await db.collection("users").doc(user.uid).collection("sdvx_history").orderBy("timestamp", "asc").get();
+      if (!histSnap.empty) {
+        const cloudHistory = [];
+        histSnap.forEach(d => cloudHistory.push(d.data()));
+        localStorage.setItem('sdvx_vf_history', JSON.stringify(cloudHistory));
+        renderVfHistoryChart(cloudHistory);
+        return;
+      }
+    } catch (err) {
+      console.error("클라우드 데이터 로드 오류:", err);
+    }
+  }
+
+  // 2. 로컬 캐시에서 불러오기 (비로그인 또는 오프라인)
+  const cached = localStorage.getItem('sdvx_latest_data');
+  if (cached) {
+    try {
+      const parsed = JSON.parse(cached);
+      if (parsed && parsed.scores) {
+        processSdvxData(parsed.scores);
+      }
+    } catch (e) {}
+  }
+
+  const cachedHistory = JSON.parse(localStorage.getItem('sdvx_vf_history') || '[]');
+  renderVfHistoryChart(cachedHistory);
+}
+
+// 가이드 모달 열기 / 닫기
+function openGuideModal() {
+  const modal = document.getElementById('guideModal');
+  if (modal) modal.classList.remove('hidden');
+}
+function closeGuideModal() {
+  const modal = document.getElementById('guideModal');
+  if (modal) modal.classList.add('hidden');
 }
 
 // VF50 뷰어 모달 열기 (html2canvas로 이미지 생성)
@@ -310,12 +492,23 @@ window.addEventListener('DOMContentLoaded', () => {
         processSdvxData(scores);
         // URL 해시 정리
         history.replaceState(null, null, ' ');
+        return;
       }
     } catch (err) {
       console.error("자동 임포트 파싱 실패:", err);
     }
   }
+
+  // 초기 저장 데이터 복원
+  loadSdvxUserData(currentUser);
 });
+
+// 8. Auth State 변화 시 자동 로드 연동
+if (typeof auth !== 'undefined' && auth) {
+  auth.onAuthStateChanged((user) => {
+    loadSdvxUserData(user);
+  });
+}
 
 // ==========================================
 // 북마크릿 클립보드 복사 함수 추가
@@ -327,7 +520,7 @@ function copyBookmarklet() {
   const codeText = codeElement.innerText || codeElement.textContent;
   
   navigator.clipboard.writeText(codeText).then(() => {
-    alert("데이터 갱신용 코드가 복사되었습니다!\n\n사운드 볼텍스 홈페이지 주소창에 붙여넣으실 때, 맨 앞에 'javascript:' 가 지워졌다면 직접 입력해 주세요.");
+    alert("데이터 갱신용 코드가 복사되었습니다!\n\n반드시 사볼 공식 사이트의 [음악 데이터 (Music Data)] 창에서 실행해 주세요.");
   }).catch(err => {
     console.error('복사 실패:', err);
     alert("복사에 실패했습니다. 수동으로 코드를 복사해 주세요.");
