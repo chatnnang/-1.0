@@ -70,11 +70,12 @@ function getVolforceTier(totalVf) {
 function openSdvxModal() { document.getElementById('sdvxModal').classList.remove('hidden'); }
 function closeSdvxModal() { document.getElementById('sdvxModal').classList.add('hidden'); }
 
-// 타이틀 정규화 함수 (대소문자, 띄어쓰기, 특수기호 무시)
+// 5. 제목 정규화 함수 (전각/반각, 특수문자, 대소문자, 악센트 통일)
 function normalizeTitle(title) {
-  if (!title) return "";
-  // 전각 영숫자를 반각으로 변환
-  let str = title.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+  if (!title) return '';
+  // 악센트 분해 (à -> a, é -> e 등) 및 전각 -> 반각 변환
+  let str = title.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  str = str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
     return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
   });
   // 공백, 특수기호, 그리스문자, 인코딩 깨짐문자(驩驧驫驪) 등 모두 제거

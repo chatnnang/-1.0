@@ -10059,6 +10059,16 @@
     },
     "imageName": "7e1807aa3c25a303723d5597c886683b4e017c02a77f9a197c1da8d84d601b81.png"
   },
+  "FIN4LE ～終止線の彼方へ～": {
+    "id": "FIN4LE ～終止線の彼方へ～",
+    "imageName": "68f8a383f1300fe74a567ce1f2872507353f6004fb1142da1709c3094e7c04aa.png",
+    "levels": {
+      "NOV": 7.0,
+      "ADV": 15.0,
+      "EXH": 18.7,
+      "MXM": 20.5
+    }
+  },
   "FIN4LE 〜終止線の彼方へ〜": {
     "id": "1099",
     "levels": {
@@ -11730,6 +11740,16 @@
       "MXM": 17.5
     },
     "imageName": "cfe6327c00953ebf5d39e38777586cefc280d60461dec6e8859b117ad09ff5c9.png"
+  },
+  "Xronièr": {
+    "id": "Xronièr",
+    "imageName": "fe9753699a09a2d00f9f0a36c0abb569c39ebb72017cac082ab0bdad9d69cf0a.png",
+    "levels": {
+      "NOV": 7.0,
+      "ADV": 15.0,
+      "EXH": 18.8,
+      "MXM": 20.1
+    }
   },
   "Xroni曩r": {
     "id": "1270",
@@ -14169,6 +14189,15 @@
       "MXM": 19.6
     },
     "imageName": "05fb4a7aaafa60e75937fa8da402caf5807ae03e09ced8905eebe12146f3c9ae.png"
+  },
+  "Xroniàl Xéro": {
+    "id": "1548",
+    "levels": {
+      "NOV": 7.0,
+      "ADV": 14.0,
+      "EXH": 17.5,
+      "MXM": 19.8
+    }
   },
   "Xroni曦l X齷ro": {
     "id": "1548",
@@ -18890,6 +18919,16 @@
       "MXM": 19.1
     },
     "imageName": "222dc65e4b62c8c28e64f001595ba1b63622638677a308973576804a2255b7e3.png"
+  },
+  "APØCALYPSE RAY": {
+    "id": "APØCALYPSE RAY",
+    "imageName": "36b28d0cc446ed44241bc829b698c7b83cef26e5be5420c58eb748adce83594d.png",
+    "levels": {
+      "NOV": 8.0,
+      "ADV": 15.0,
+      "EXH": 18.5,
+      "MXM": 20.3
+    }
   },
   "AP驩CALYPSE RAY": {
     "id": "2037",
@@ -23755,16 +23794,6 @@
       "MXM": 20.0
     }
   },
-  "FIN4LE ～終止線の彼方へ～": {
-    "id": "FIN4LE ～終止線の彼方へ～",
-    "imageName": "68f8a383f1300fe74a567ce1f2872507353f6004fb1142da1709c3094e7c04aa.png",
-    "levels": {
-      "NOV": 7.0,
-      "ADV": 15.0,
-      "EXH": 18.7,
-      "MXM": 20.5
-    }
-  },
   "セイレーン ～悲壮の竪琴～": {
     "id": "セイレーン ～悲壮の竪琴～",
     "imageName": "a1da00523d6d67076ea4af5448e022c096de9610607ae0e3d81556540217dd9b.png",
@@ -23913,16 +23942,6 @@
       "ADV": 13.0,
       "EXH": 16.0,
       "MXM": 18.4
-    }
-  },
-  "Xronièr": {
-    "id": "Xronièr",
-    "imageName": "fe9753699a09a2d00f9f0a36c0abb569c39ebb72017cac082ab0bdad9d69cf0a.png",
-    "levels": {
-      "NOV": 7.0,
-      "ADV": 15.0,
-      "EXH": 18.8,
-      "MXM": 20.1
     }
   },
   "Liévre -blanche-": {
@@ -24583,16 +24602,6 @@
       "ADV": 9.0,
       "EXH": 14.0,
       "MXM": 17.0
-    }
-  },
-  "APØCALYPSE RAY": {
-    "id": "APØCALYPSE RAY",
-    "imageName": "36b28d0cc446ed44241bc829b698c7b83cef26e5be5420c58eb748adce83594d.png",
-    "levels": {
-      "NOV": 8.0,
-      "ADV": 15.0,
-      "EXH": 18.5,
-      "MXM": 20.3
     }
   },
   "ませまてぃっく♡ま＋ま＝まじっく！　～徹夜の追込みエナジーまっくす！～": {
