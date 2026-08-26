@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<link rel="preconnect" href="//cdnjs.cloudflare.com/">
+	<link rel="preconnect" href="//www.googletagmanager.com/">
+	<link rel="preconnect" href="//images.vaddict.b35.jp">
+	<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+	<link rel="dns-prefetch" href="//sdvx.maya2silence.com/">
+	<meta charset="UTF-8">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="robots" content="noindex, nofollow">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta name="theme-color" content="#ffffff">
+	<meta name="description" content="Vaddictは「SOUND VOLTEX ∇」向けのスコアツールです。 / Vaddict is community score tool for SOUND VOLTEX ∇.">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@Vaddict2022">
+	<meta name="twitter:title" content="Vaddict | VOLFORCE対象楽曲表示 ver10">
+	<meta name="twitter:description" content="Vaddictは「SOUND VOLTEX ∇」向けのスコアツールです。 / Vaddict is community score tool for SOUND VOLTEX ∇.">
+	<meta name="twitter:image" content="https://vaddict.b35.jp/data/images/common/ogp_v7.png">
+	<meta property="og:title" content="Vaddict | VOLFORCE対象楽曲表示 ver10">
+	<meta property="og:description" content="Vaddictは「SOUND VOLTEX ∇」向けのスコアツールです。 / Vaddict is community score tool for SOUND VOLTEX ∇.">
+	<meta property="og:site_name" content="Vaddict">
+	<meta property="og:url" content="https://vaddict.b35.jp/">
+	<meta property="og:image" content="https://vaddict.b35.jp/data/images/common/ogp_v7.png">
+	<meta property="og:locale" content="ja_JP">
+	<meta property="og:type" content="article">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/plugins/unveilhooks/ls.unveilhooks.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/choices.js/11.1.0/choices.min.js"></script>
+	<script src="https://sdvx.maya2silence.com/script/main/long-press-event.min.js"></script>
+	<script src="/data/jquery.colorbox-min.js"></script>
+	<script src="/data/common.js?1771343338"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZERL2MN2QM"></script>
+	<script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-ZERL2MN2QM');</script>
+	<link rel="stylesheet" type="text/css" href="/data/style_new.css?1764911064">
+	<link rel="stylesheet" type="text/css" href="/data/colorbox.css?1749587077">
+	<link rel="stylesheet" type="text/css" href="/data/choices.css?1749892886">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/android-chrome-192x192.png">
+	<title>Vaddict | VOLFORCE対象楽曲表示 ver10</title>
+</head>
+
+<body>
+
+<header>
+	<div class="header_container">
+		<div class="logo">
+			<a href="https://vaddict.b35.jp/"><img src="/data/images/common/logo_new.png"></a>
+		</div>
+		<div class="shortcuts"></div>
+	</div>
+</header>
+
+<nav class="nav">
+	<div class="nav_inner">
+		<div class="menu_header bold">ユーザーメニュー 一覧</div>
+		<ul class="nav_menu">
+			<li><a class="nav_link" href="/user.php?player_id=SV-1255-6810"><i class="fa-solid fa-user"></i>ユーザーページTOP</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=1&player_id=SV-1255-6810"><i class="fa-solid fa-arrow-up-right-dots"></i>前回登録時との差分</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=2&player_id=SV-1255-6810"><i class="fa-regular fa-id-card"></i>VOLFORCE対象楽曲表示</a></li>
+			<li><a class="nav_link2" href="/news/2024/020200.php"><i class="fa-solid fa-angles-right"></i>VOLFORCE対象楽曲ランキング</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=3&player_id=SV-1255-6810"><i class="fa-regular fa-id-card"></i>S-VOLFORCE対象楽曲表示</a></li>
+			<li><div class="nav_section"><i class="fa-solid fa-file-signature"></i>各種難易度表塗りつぶし</div></li>
+			<li><a class="nav_link2" href="/jump.php?mid=6"><i class="fa-solid fa-angles-right"></i>★レベル別一覧表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=160&player_id=SV-1255-6810"><i class="fa-solid fa-angles-right"></i>Lv16 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=170&player_id=SV-1255-6810"><i class="fa-solid fa-angles-right"></i>Lv17 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=171&player_id=SV-1255-6810"><i class="fa-solid fa-angles-right"></i>Lv17 S難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=175&player_id=SV-1255-6810"><i class="fa-solid fa-angles-right"></i>Lv17.5 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=176&player_id=SV-1255-6810"><i class="fa-solid fa-angles-right"></i>Lv17.5 S難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=180&player_id=SV-1255-6810"><i class="fa-solid fa-angles-right"></i>Lv18 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=181&player_id=SV-1255-6810"><i class="fa-solid fa-angles-right"></i>Lv18 S難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=190&player_id=SV-1255-6810"><i class="fa-solid fa-angles-right"></i>Lv19 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=191&player_id=SV-1255-6810"><i class="fa-solid fa-angles-right"></i>Lv19/20 S難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=200&player_id=SV-1255-6810"><i class="fa-solid fa-angles-right"></i>Lv20 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=10"><i class="fa-solid fa-angles-right"></i>難易度表 Tier別出力</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=4&player_id=SV-1255-6810"><i class="fa-solid fa-clock-rotate-left"></i>プレイヒストリー</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=5&player_id=SV-1255-6810"><i class="fa-solid fa-dice"></i>楽曲ランダム選曲</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=7&player_id=SV-1255-6810"><i class="fa-solid fa-users"></i>スコア比較</a></li>
+			<li><a class="nav_link2" href="/news/2024/020200.php"><i class="fa-solid fa-angles-right"></i>VF帯別 仮想プレイヤー機能</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=8&player_id=SV-1255-6810"><i class="fa-solid fa-signal"></i>スコア統計 (通常スコア)</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=9&player_id=SV-1255-6810"><i class="fa-solid fa-signal"></i>スコア統計 (EXスコア)</a></li>
+			<li><a class="nav_link" href="/not_obtained.php"><i class="fa-solid fa-clipboard-question"></i>未解禁／未所持楽曲表示</a></li>
+			<li><a class="nav_link" href="/list.php"><i class="fa-solid fa-list"></i>ユーザーオリジナルリスト</a></li>
+			<li><a class="nav_link" href="/megamix.php"><i class="fa-solid fa-list"></i>メガミックスバトル 選曲リスト作成</a></li>
+			<li><a class="nav_link" href="/my9tracks.php"><i class="fa-solid fa-list"></i>My 9 tracks</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=11"><i class="fa-solid fa-gear"></i>設定変更</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=12&player_id=SV-1255-6810"><i class="fa-solid fa-door-open"></i>このユーザーの公式データ</a></li>
+		</ul>
+	</div>
+</nav>
+
+<script>
+const s = document.querySelector(".shortcuts");
+
+const b2 = document.createElement("div");
+b2.className = "button_menu";
+const i2 = document.createElement("i");
+i2.className = "fa-solid fa-bars";
+
+b2.appendChild(i2);
+s.appendChild(b2);
+let scrollPosition = 0;
+
+document.addEventListener("click", function (e) {
+	const nav = document.querySelector(".nav");
+
+	if(e.target.closest(".button_menu")) {
+		nav.classList.toggle("active");
+
+		if(nav.classList.contains("active")) {
+			scrollPosition = window.scrollY;
+			document.body.style.position = 'fixed';
+			document.body.style.top = `-${scrollPosition}px`;
+			document.body.style.width = '100%';
+		} else {
+			document.body.style.position = '';
+			document.body.style.top = '';
+			window.scrollTo(0, scrollPosition);
+		}
+
+		return;
+	}
+
+	if(e.target.closest(".nav a")) {
+		nav.classList.remove("active");
+		document.body.style.position = '';
+		document.body.style.top = '';
+		window.scrollTo(0, scrollPosition);
+		return;
+	}
+
+	if(nav.classList.contains("active") && !e.target.closest(".nav_inner") && !e.target.closest(".button_menu")) {
+		nav.classList.remove("active");
+		document.body.style.position = '';
+		document.body.style.top = '';
+		window.scrollTo(0, scrollPosition);
+	}
+});
+</script>
+<main id="contents">
+<div class="section">
+	<h4>VOLFORCE対象楽曲表示 ver10</h4>
+	画像を出力しました。<br>
+	以下のURLにアクセスすることで画像を表示できます。<br>
+	（出力した画像は右クリックまたは長押しで端末に保存することが可能です）<br>
+	<br>
+	<span class="red bold">いずれのデザインにおいても画像デザインの流用は固くお断りします。また、各ジャケット画像は全ての版権元に帰属します。</span><br>
+	<br>
+	出力された画像・結果は固有のURLを持ちません。出力から60分以上経過で自動で削除され、アクセスができなくなります。<br>
+	SNSへの共有やブログなどへの掲載の際は、スクリーンショットを撮るか一度画像を端末に保存してからご利用ください。<br>
+	<br>
+	出力するデザインを変えたい場合は <a href="setting.php">設定変更</a> のページより変更できます。<br>
+<br>
+	<div style="background-color: #ffe4e4; color: red;">
+		<span class="bold">【必ずお読みください】</span><br>
+		データが∇のものである場合、VOLFORCEの算出に自動的に新難易度・新計算式が適用されます。<br>
+		そのため、公式サイト・筐体上でのVOLFORCE値と、この機能を利用して算出したVOLFORCE値に差異が出る場合があります。<br>
+		公式サイトでは∇稼働以降の譜面ごとのプレイ回数の情報が取れないため、差異が出るのは仕様となります。<br>
+		この機能を利用して出力した結果を元に、対象となっている譜面をPREMIUM TIME機能を使って即落ちすることで差異はなくなります。</span><br>
+	</div>
+	<div style="display: none;"><input type="checkbox" id="c1" checked><label for="c1" class="ccb">上記の仕様を確認した</label></div>
+	<br>
+	<div id="image_url" style="display: block;"><a href="https://vaddict.b35.jp/temp/10dba9a296.png">→ https://vaddict.b35.jp/temp/10dba9a296.png</a></div>
+	<div id="need_check" style="display: none;">（上の「上記の仕様を確認した」にチェックを入れると画像へのリンクが表示されます）</div>
+	<br>
+	<span class="bold navy">&#9654; EXCEED GEAR換算表示</span> <span class="bold red">（2026年9月30日まで）</span><br>
+	<a href="disp_volforce_nabla.php?player_id=SV-1255-6810&ver=10&disp_as_ver6=1">● EXCEED GEARでのレベル情報を使用して表示</a><br>
+	（∇の楽曲についてはレベルの小数点以下を切り捨てて表示）<br>
+	<br>
+	<a href="disp_volforce_nabla.php?player_id=SV-1255-6810&ver=10&disp_as_ver6=2">● EXCEED GEARでのレベル情報を使用し、かつ∇の楽曲を除外して表示</a><br>
+	（EXCEED GEAR稼働時と同等の表示）<br>
+
+</div>
+
+</main>
+
+<script>
+const checkbox = document.getElementById('c1');
+
+checkbox.addEventListener('change', function () {
+	if(this.checked) {
+		this.disabled = true;
+		document.cookie = "vdn_agree=2; path=/; max-age=86400";
+		document.getElementById('image_url').style.display = "block";
+		document.getElementById('need_check').style.display = "none";
+	}
+});
+</script>
+
+<footer>
+サイトのご利用時は利用規約をご確認ください。<br>
+Copyright &copy; 2022-2026 Vaddict. Some rights are reserved.
+</footer>
+
+</body>
+</html>

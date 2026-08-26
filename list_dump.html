@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<link rel="preconnect" href="//cdnjs.cloudflare.com/">
+	<link rel="preconnect" href="//www.googletagmanager.com/">
+	<link rel="preconnect" href="//images.vaddict.b35.jp">
+	<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+	<link rel="dns-prefetch" href="//sdvx.maya2silence.com/">
+	<meta charset="UTF-8">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="robots" content="noindex, nofollow">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta name="theme-color" content="#ffffff">
+	<meta name="description" content="Vaddictは「SOUND VOLTEX ∇」向けのスコアツールです。 / Vaddict is community score tool for SOUND VOLTEX ∇.">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:site" content="@Vaddict2022">
+	<meta name="twitter:title" content="Vaddict | ユーザーオリジナルリスト">
+	<meta name="twitter:description" content="Vaddictは「SOUND VOLTEX ∇」向けのスコアツールです。 / Vaddict is community score tool for SOUND VOLTEX ∇.">
+	<meta name="twitter:image" content="https://vaddict.b35.jp/data/images/common/ogp_v7.png">
+	<meta property="og:title" content="Vaddict | ユーザーオリジナルリスト">
+	<meta property="og:description" content="Vaddictは「SOUND VOLTEX ∇」向けのスコアツールです。 / Vaddict is community score tool for SOUND VOLTEX ∇.">
+	<meta property="og:site_name" content="Vaddict">
+	<meta property="og:url" content="https://vaddict.b35.jp/">
+	<meta property="og:image" content="https://vaddict.b35.jp/data/images/common/ogp_v7.png">
+	<meta property="og:locale" content="ja_JP">
+	<meta property="og:type" content="article">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/plugins/unveilhooks/ls.unveilhooks.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/choices.js/11.1.0/choices.min.js"></script>
+	<script src="https://sdvx.maya2silence.com/script/main/long-press-event.min.js"></script>
+	<script src="/data/jquery.colorbox-min.js"></script>
+	<script src="/data/common.js?1771343338"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZERL2MN2QM"></script>
+	<script>window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-ZERL2MN2QM');</script>
+	<link rel="stylesheet" type="text/css" href="/data/style_new.css?1764911064">
+	<link rel="stylesheet" type="text/css" href="/data/colorbox.css?1749587077">
+	<link rel="stylesheet" type="text/css" href="/data/choices.css?1749892886">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="/android-chrome-192x192.png">
+	<title>Vaddict | ユーザーオリジナルリスト</title>
+</head>
+
+<body>
+
+<header>
+	<div class="announce priority-4">
+		&#10697; <a href="/news/2025/123000.php" class="bold">Vaddictではご支援をお待ちしております</a>
+	</div>
+	<div class="header_container">
+		<div class="logo">
+			<a href="https://vaddict.b35.jp/"><img src="/data/images/common/logo_new.png"></a>
+		</div>
+		<div class="shortcuts"></div>
+	</div>
+</header>
+
+<nav class="nav">
+	<div class="nav_inner">
+		<div class="menu_header bold">ユーザーメニュー 一覧</div>
+		<ul class="nav_menu">
+			<li><a class="nav_link" href="/user.php?player_id="><i class="fa-solid fa-user"></i>ユーザーページTOP</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=2&player_id="><i class="fa-regular fa-id-card"></i>VOLFORCE対象楽曲表示</a></li>
+			<li><a class="nav_link2" href="/news/2024/020200.php"><i class="fa-solid fa-angles-right"></i>VOLFORCE対象楽曲ランキング</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=3&player_id="><i class="fa-regular fa-id-card"></i>S-VOLFORCE対象楽曲表示</a></li>
+			<li><div class="nav_section"><i class="fa-solid fa-file-signature"></i>各種難易度表塗りつぶし</div></li>
+			<li><a class="nav_link2" href="/jump.php?mid=6"><i class="fa-solid fa-angles-right"></i>★レベル別一覧表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=160&player_id="><i class="fa-solid fa-angles-right"></i>Lv16 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=170&player_id="><i class="fa-solid fa-angles-right"></i>Lv17 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=171&player_id="><i class="fa-solid fa-angles-right"></i>Lv17 S難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=175&player_id="><i class="fa-solid fa-angles-right"></i>Lv17.5 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=176&player_id="><i class="fa-solid fa-angles-right"></i>Lv17.5 S難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=180&player_id="><i class="fa-solid fa-angles-right"></i>Lv18 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=181&player_id="><i class="fa-solid fa-angles-right"></i>Lv18 S難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=190&player_id="><i class="fa-solid fa-angles-right"></i>Lv19 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=191&player_id="><i class="fa-solid fa-angles-right"></i>Lv19/20 S難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=200&player_id="><i class="fa-solid fa-angles-right"></i>Lv20 PUC難易度表</a></li>
+			<li><a class="nav_link2" href="/jump.php?mid=10"><i class="fa-solid fa-angles-right"></i>難易度表 Tier別出力</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=7&player_id="><i class="fa-solid fa-users"></i>スコア比較</a></li>
+			<li><a class="nav_link2" href="/news/2024/020200.php"><i class="fa-solid fa-angles-right"></i>VF帯別 仮想プレイヤー機能</a></li>
+			<li><a class="nav_link" href="/not_obtained.php"><i class="fa-solid fa-clipboard-question"></i>未解禁／未所持楽曲表示</a></li>
+			<li><a class="nav_link" href="/list.php"><i class="fa-solid fa-list"></i>ユーザーオリジナルリスト</a></li>
+			<li><a class="nav_link" href="/megamix.php"><i class="fa-solid fa-list"></i>メガミックスバトル 選曲リスト作成</a></li>
+			<li><a class="nav_link" href="/my9tracks.php"><i class="fa-solid fa-list"></i>My 9 tracks</a></li>
+			<li><a class="nav_link" href="/jump.php?mid=11"><i class="fa-solid fa-gear"></i>設定変更</a></li>
+		</ul>
+	</div>
+</nav>
+
+<script>
+let scrollPosition = 0;
+
+document.addEventListener("click", function (e) {
+	const nav = document.querySelector(".nav");
+
+	if(e.target.closest(".button_menu")) {
+		nav.classList.toggle("active");
+
+		if(nav.classList.contains("active")) {
+			scrollPosition = window.scrollY;
+			document.body.style.position = 'fixed';
+			document.body.style.top = `-${scrollPosition}px`;
+			document.body.style.width = '100%';
+		} else {
+			document.body.style.position = '';
+			document.body.style.top = '';
+			window.scrollTo(0, scrollPosition);
+		}
+
+		return;
+	}
+
+	if(e.target.closest(".nav a")) {
+		nav.classList.remove("active");
+		document.body.style.position = '';
+		document.body.style.top = '';
+		window.scrollTo(0, scrollPosition);
+		return;
+	}
+
+	if(nav.classList.contains("active") && !e.target.closest(".nav_inner") && !e.target.closest(".button_menu")) {
+		nav.classList.remove("active");
+		document.body.style.position = '';
+		document.body.style.top = '';
+		window.scrollTo(0, scrollPosition);
+	}
+});
+</script>
+
+<main id="contents">
+
+<div class="section" id="dt_setting">
+	<h4>ユーザーオリジナルリスト</h4>
+	<div class="breadcrumb"><i class="fas fa-home"></i> ユーザーオリジナルリスト　/　<span class="bold">TOP</span></div>
+	このページではユーザーが作成したオリジナルのリストの表示が行えます。<br>
+	<br>
+		<hr class="diff">
+
+	<form action="list.php" method="GET">
+	<div class="item">
+		<div class="item_name">キーワード検索</div>
+	</div>
+	<div class="value">
+		<input type="text" name="keyword" value="" placeholder="検索語句を入力" size="45" autocomplete="off"><br>
+		検索語句に user:SV-****-**** と入れると、そのPlayer IDのユーザーが作ったリストが表示されます。
+	</div>
+	<input type="submit" value="検　　　索">
+	</form>
+	<br>
+	<hr class="diff">
+
+	<div class="list_count">対象リスト件数： <span class="bold">89</span></div>
+<br>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/msXYe1niiCLd1-p9YksQ9g_2.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=nianoa.img">ニアノア楽曲</a></div>
+	<div class="list_author">作成者： <span style="color: rgb(204, 204, 204);">（非公開）</span></div>
+	<div class="list_number">（トラック数： 82）</div>
+	<div class="description">ニアノア可愛いね<br>（全員集合楽曲等入ってないのもあります。）</div>
+	<div class="info">アクセス数： 264</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/DSxVy28kTGypVk0WL4kWbA_3.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=hotoke_vo">仏曲</a></div>
+	<div class="list_author">作成者： えぐチ</div>
+	<div class="list_number">（トラック数： 132）</div>
+	<div class="description">SDVXに収録されている中で最もいい曲を集めました。<br>全部ボーカル曲、Lv16まで、更新日順です。PiecesだけADVなのは仕様です</div>
+	<div class="info">アクセス数： 300</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/FkzCeUBfVkd1Pt07A8GCTg_4.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=3e34b04f70c1d56de546">18おすすめ</a></div>
+	<div class="list_author">作成者： ともやん</div>
+	<div class="list_number">（トラック数： 16）</div>
+	<div class="description">個人的神曲神譜面です。</div>
+	<div class="info">アクセス数： 54</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/cMhxpamYNIvbfYJiyX5TuQ_3.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=a7feafa156d4aa775aa6">がんばれサッカー日本代表</a></div>
+	<div class="list_author">作成者： <span style="color: rgb(204, 204, 204);">（非公開）</span></div>
+	<div class="list_number">（トラック数： 21）</div>
+	<div class="description"><span style="color: rgb(204, 204, 204);">（リストの説明がありません）</span></div>
+	<div class="info">アクセス数： 53</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/T6vZyN9fvoLEmj2viUHQTg_4.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=9cc0bc3a73fa18fd031f">I like metomate</a></div>
+	<div class="list_author">作成者： <a href="list.php?search=user:SV-5075-0329">kirial</a></div>
+	<div class="list_number">（トラック数： 13）</div>
+	<div class="description"><3<br></div>
+	<div class="info">アクセス数： 119</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/UU9vHcr7pWw0PwlX__LCcA_2.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=894968fc3cd4c05770f4">氷雪ちゃん</a></div>
+	<div class="list_author">作成者： <a href="list.php?search=user:SV-4506-3592">SEAS</a></div>
+	<div class="list_number">（トラック数： 49）</div>
+	<div class="description">イラコンでネタに困ってる方、金脈がありますよ</div>
+	<div class="info">アクセス数： 73</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/8dRr9y3KnXkEZKML5D4ovg_4.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=8937d341334285927d16">偏見で選ぶ神譜面(Lv18)</a></div>
+	<div class="list_author">作成者： <a href="list.php?search=user:SV-1816-6043">しゆぎん</a></div>
+	<div class="list_number">（トラック数： 37）</div>
+	<div class="description">スコアの出やすさに関係なく、個人的に打鍵感とか配置が好みな譜面を集めました</div>
+	<div class="info">アクセス数： 176</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/-C9sJeHfhMKqk5vkrpSHNA_4.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=f02346acabc41c430734">ゴミ箱</a></div>
+	<div class="list_author">作成者： <a href="list.php?search=user:SV-6433-3367">僻地</a></div>
+	<div class="list_number">（トラック数： 30）</div>
+	<div class="description">おススメの曲です。(18中心)<br>苦情は www.twitch.tv/heki_field もしくは x.com/nodananoda0228 まで<br>概ねアリーナ向けでもあります</div>
+	<div class="info">アクセス数： 62</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/o_Dj3echnPgN28IeruZPuw_2.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=5a6864a1b3d6da03d22a">初心者に送る</a></div>
+	<div class="list_author">作成者： <a href="list.php?search=user:SV-4136-1166">yu98?!</a></div>
+	<div class="list_number">（トラック数： 11）</div>
+	<div class="description">リア友向け</div>
+	<div class="info">アクセス数： 62</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/QyGU4dBwtKuOkBlNF_g_Sw_4.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=2678c107a744d1e84468">ユーシャくんと魔王くん詰め合わせ</a></div>
+	<div class="list_author">作成者： <a href="list.php?search=user:SV-3179-0507">Ash</a></div>
+	<div class="list_number">（トラック数： 18）</div>
+	<div class="description">公式キャラページの配置に強いメッセージを感じる<br><br>（それはそれとして、相手がわりと怖がるメガミックスが組めるかもしれません）</div>
+	<div class="info">アクセス数： 53</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/NXZBYcDpb82bpro-Eey1fw_4.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=8be744bcb7a9306ee956">17</a></div>
+	<div class="list_author">作成者： <a href="list.php?search=user:SV-3758-4351">SV-3758-4351</a></div>
+	<div class="list_number">（トラック数： 9）</div>
+	<div class="description"><span style="color: rgb(204, 204, 204);">（リストの説明がありません）</span></div>
+	<div class="info">アクセス数： 31</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/wIUtPkNqMh9ah868_L3FRA_3.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=9615f55860069d6adde9">おどる</a></div>
+	<div class="list_author">作成者： <span style="color: rgb(204, 204, 204);">（非公開）</span></div>
+	<div class="list_number">（トラック数： 80）</div>
+	<div class="description">某おどる紲星あかり動画で使用されていた曲</div>
+	<div class="info">アクセス数： 34</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/no_jacket.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=6876c2b56c6a18b3870e">まつえもんおすすめ譜面</a></div>
+	<div class="list_author">作成者： <span style="color: rgb(204, 204, 204);">（非公開）</span></div>
+	<div class="list_number">（トラック数： 0）</div>
+	<div class="description"><span style="color: rgb(204, 204, 204);">（リストの説明がありません）</span></div>
+	<div class="info">アクセス数： 22</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/RKyTWMYY2alLz2s3FgPA3Q_4.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=925753de5c5710e34af5">対アリーナで勝ちを取りに行く曲</a></div>
+	<div class="list_author">作成者： <span style="color: rgb(204, 204, 204);">（非公開）</span></div>
+	<div class="list_number">（トラック数： 9）</div>
+	<div class="description">友達を無くすので程々に投げてやりましょう、責任は取りません</div>
+	<div class="info">アクセス数： 154</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/VUxfJXVzkDc9BP9JeRxOXw_3.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=bpl_megamix_kubun1">BPLS5 メガミックス区分1</a></div>
+	<div class="list_author">作成者： 運営チーム</div>
+	<div class="list_number">（トラック数： 116）</div>
+	<div class="description">BPLS5の公式サイトよりデータを引用しています。</div>
+	<div class="info">アクセス数： 327</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/5R7p1VuO0f2rDRCS1mMnPQ_4.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=bpl_megamix_kubun2">BPLS5 メガミックス区分2</a></div>
+	<div class="list_author">作成者： 運営チーム</div>
+	<div class="list_number">（トラック数： 116）</div>
+	<div class="description">BPLS5の公式サイトよりデータを引用しています。</div>
+	<div class="info">アクセス数： 232</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/D76MYlwdFwc1jYGMrGUeMA_4.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=bpl_megamix_kubun3">BPLS5 メガミックス区分3</a></div>
+	<div class="list_author">作成者： 運営チーム</div>
+	<div class="list_number">（トラック数： 116）</div>
+	<div class="description">BPLS5の公式サイトよりデータを引用しています。</div>
+	<div class="info">アクセス数： 163</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/Tl72ktDw8WpjfR7uX0XfIg_4.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=bpl_megamix_kubun4">BPLS5 メガミックス区分4</a></div>
+	<div class="list_author">作成者： 運営チーム</div>
+	<div class="list_number">（トラック数： 116）</div>
+	<div class="description">BPLS5の公式サイトよりデータを引用しています。</div>
+	<div class="info">アクセス数： 235</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/Z7nwNGD4XN0pLNMt5OHaGA_4.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=bpl_megamix_kubun5">BPLS5 メガミックス区分5</a></div>
+	<div class="list_author">作成者： 運営チーム</div>
+	<div class="list_number">（トラック数： 115）</div>
+	<div class="description">BPLS5の公式サイトよりデータを引用しています。</div>
+	<div class="info">アクセス数： 166</div>
+</div>
+<div class="list_loop_container">
+	<div class="jacket"><img src="https://images.vaddict.b35.jp/jackets/VWN9gfULHpZ1C5-qBHN6XQ_3.jpg" class="jacket lazyload" oncontextmenu="return false;" loading="lazy"></div>
+	<div class="list_name"><a href="list.php?mode=show&name=bpl_megamix_kubun6">BPLS5 メガミックス区分6</a></div>
+	<div class="list_author">作成者： 運営チーム</div>
+	<div class="list_number">（トラック数： 115）</div>
+	<div class="description">BPLS5の公式サイトよりデータを引用しています。</div>
+	<div class="info">アクセス数： 154</div>
+</div>
+
+<div class="pager">
+	<div>
+		<span class="pager_prev disable"><i class="fa-solid fa-angles-left"></i> prev</span>
+	</div>
+
+	<div>
+		<form action="list.php" method="GET">
+		<label class="select"><select name="offset" onchange="this.form.submit()">
+			<option value="0" selected>ページ 1</option>
+			<option value="20">ページ 2</option>
+			<option value="40">ページ 3</option>
+			<option value="60">ページ 4</option>
+			<option value="80">ページ 5</option>
+		</form>
+		</select></label>
+	</div>
+
+	<div>
+		<a href="list.php?offset=20" class="pager_prev able">next <i class="fa-solid fa-angles-right"></i></a>
+	</div>
+</div>
+
+</div>
+
+</main>
+<footer>
+サイトのご利用時は利用規約をご確認ください。<br>
+Copyright &copy; 2022-2026 Vaddict. Some rights are reserved.
+</footer>
+
+</body>
+</html>

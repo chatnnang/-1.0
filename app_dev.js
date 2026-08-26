@@ -54,17 +54,7 @@ function calculateSingleVolforce(level, score, lamp) {
   return Math.floor(rawVf + 0.0001) / 10;
 }
 
-// 3. 볼포스 총합에 따른 티어 계산
-function getVolforceTier(totalVf) {
-  if (totalVf >= 20.0) return { name: "IMPERIAL", color: "text-rose-400" };
-  if (totalVf >= 19.0) return { name: "CRIMSON", color: "text-red-500" };
-  if (totalVf >= 18.0) return { name: "SCARLET", color: "text-amber-500" };
-  if (totalVf >= 17.0) return { name: "CORAL", color: "text-pink-400" };
-  if (totalVf >= 16.0) return { name: "ARGENTO", color: "text-slate-300" };
-  if (totalVf >= 15.0) return { name: "ELDORA", color: "text-yellow-400" };
-  if (totalVf >= 14.0) return { name: "VOLTE", color: "text-cyan-400" };
-  return { name: "SIENNA", color: "text-amber-700" };
-}
+
 
 // 4. 모달 컨트롤
 function openSdvxModal() { document.getElementById('sdvxModal').classList.remove('hidden'); }
@@ -134,21 +124,9 @@ async function processSdvxData(scores) {
   });
 
   // 6. 볼포스 내림차순 정렬 후 TOP 50 추출
-  // 주의: 공식 볼포스 룰에 따라 "한 곡당 가장 높은 VF를 가진 채보 1개"만 인정됩니다.
-  const uniqueSongs = new Map();
-  calculatedList.forEach(item => {
-    const key = item.id || item.title; // id가 없으면 제목으로 식별
-    if (!uniqueSongs.has(key) || uniqueSongs.get(key).vf < item.vf) {
-      uniqueSongs.set(key, item);
-    } else if (uniqueSongs.get(key).vf === item.vf) {
-      // 동점이면 점수가 더 높은 것을 우선 (타이기브레이커)
-      if (item.score > uniqueSongs.get(key).score) {
-        uniqueSongs.set(key, item);
-      }
-    }
-  });
-
-  const finalValidList = Array.from(uniqueSongs.values());
+  // 사볼은 동일 곡이더라도 난이도가 다르면(예: MXM, EXH) 탑 50에 중복해서 들어갈 수 있습니다.
+  const finalValidList = [...calculatedList];
+  
   // VF 내림차순 정렬, 동점시 점수 내림차순, 그다음 레벨 내림차순
   finalValidList.sort((a, b) => {
     if (b.vf !== a.vf) return b.vf - a.vf;
@@ -157,8 +135,10 @@ async function processSdvxData(scores) {
     return 0;
   });
   const top50 = finalValidList.slice(0, 50);
-  const totalVfRaw = top50.reduce((acc, cur) => acc + cur.vf, 0);
-  const totalVf = totalVfRaw / 100; // 최종 볼포스 수치 (예: 20.700)
+  
+  // 부동소수점 오차 방지를 위해 정수(예: 416)로 변환하여 합산
+  const totalVfRaw = top50.reduce((acc, cur) => acc + Math.round(cur.vf * 10), 0);
+  const totalVf = totalVfRaw / 1000; // 최종 볼포스 수치 (예: 20.700)
 
   // 화면 전환 (빈 화면 숨기고, 프로필 상태 표시)
   document.getElementById('sdvxEmptyState').classList.remove('block');
@@ -167,18 +147,13 @@ async function processSdvxData(scores) {
 
   // 상단 요약 대시보드 갱신 (인게임 볼포스 표기: 22.001 형태)
   document.getElementById('totalVfDisplay').textContent = totalVf.toFixed(3);
-  
-  const tier = getVolforceTier(totalVf);
-  const tierEl = document.getElementById('tierDisplay');
-  tierEl.textContent = tier.name;
-  tierEl.className = `text-xl font-black mt-2 ${tier.color}`;
 
   // exportScorecard (베딕트 스타일 이미지) 렌더링
   const expGrid = document.getElementById('expGrid');
   const expVf = document.getElementById('expVolforce');
   const expName = document.getElementById('expName');
   if (expVf) expVf.textContent = totalVf.toFixed(3);
-  const playerDjName = localStorage.getItem('sdvx_dj_name') || (currentUser ? currentUser.displayName : '') || 'NYAN';
+  const playerDjName = localStorage.getItem('sdvx_dj_name') || 'PLAYER';
   if (expName) expName.textContent = playerDjName;
   if (expDate) expDate.textContent = new Date().toISOString().slice(0, 10);
   updateDjNameDisplays(playerDjName);
@@ -211,19 +186,19 @@ async function processSdvxData(scores) {
             ${coverSrc ? `<img src="${coverSrc}" crossorigin="anonymous" onerror="this.onerror=null; if(this.src.includes('cloudfront')) { this.src='./jackets/${song.id}.webp'; } else { this.style.display='none'; }" class="w-full h-full object-cover absolute inset-0 z-10" />` : ''}
             <div class="text-[12px] text-slate-600 font-black tracking-tighter">SDVX</div>
           </div>
-          <div class="flex-grow min-w-0 flex flex-col justify-between h-16 py-0.5">
+          <div class="flex-grow min-w-0 flex flex-col justify-center h-auto min-h-[64px] py-1">
             <!-- 1행: 볼포스 & 난이도 레벨 -->
-            <div class="flex items-center justify-between gap-1">
+            <div class="flex items-center justify-between gap-1 mb-2">
               <div class="text-[28px] font-black text-slate-100 font-mono tracking-tight leading-none drop-shadow-sm">${song.vf.toFixed(1)}</div>
               <span class="text-[12px] ${diffTextColor} tracking-wider shrink-0">${song.diff || "?"} ${song.level !== null ? song.level : "-"}</span>
             </div>
             <!-- 2행: 점수 & 클리어 램프 -->
-            <div class="flex items-center justify-between gap-1">
-              <span class="text-[11px] text-slate-300 font-mono font-bold tracking-tight">${song.score.toLocaleString()}</span>
-              <span class="text-[11px] ${lampTextColor} uppercase tracking-wider shrink-0">${song.lamp || 'PLAY'}</span>
+            <div class="flex items-center justify-between gap-1 mb-0.5">
+              <span class="text-[11px] text-slate-300 font-mono font-bold tracking-tight leading-none">${song.score.toLocaleString()}</span>
+              <span class="text-[11px] ${lampTextColor} uppercase tracking-wider shrink-0 leading-none">${song.lamp || 'PLAY'}</span>
             </div>
             <!-- 3행: 곡 제목 -->
-            <div class="text-[11px] text-slate-200 font-bold truncate leading-tight" title="${song.title}">
+            <div class="text-[11px] text-slate-200 font-bold truncate leading-normal pb-0.5" title="${song.title}">
               ${song.title}
             </div>
           </div>
@@ -234,7 +209,7 @@ async function processSdvxData(scores) {
   }
 
   // TOP 50 데이터를 전역 변수에 저장 (뷰어에서 사용)
-  window._vf50Data = { top50, totalVf, tier };
+  window._vf50Data = { top50, totalVf };
 
   // 클라우드 및 로컬스토리지 영구 저장
   saveSdvxUserData(scores, totalVf, top50);
@@ -403,7 +378,7 @@ async function loadSdvxUserData(user) {
 
 // DJ Name 관리 함수
 function getPlayerDjName() {
-  return localStorage.getItem('sdvx_dj_name') || (currentUser ? currentUser.displayName : '') || 'NYAN';
+  return localStorage.getItem('sdvx_dj_name') || 'PLAYER';
 }
 
 function editDjName() {

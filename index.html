@@ -1,29 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko">
-<<head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🐱 얼마썼냥 v2.0 - 리듬게임 가계부 & 볼포스봤냥</title>
+  <title>?�마?�냥 (DEV v2.0)</title>
 
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="icon.png">
-
-  <!-- Google Search Console 소유권 확인 -->
-  <meta name="google-site-verification" content="Utz3RiyWrD1MII6fJIEd4P6tuLXJMP59SYBWqFoFB8Y" />
-
-  <!-- SEO 메타태그 -->
-  <meta name="description" content="리듬게임 오락실 지출 기록 가계부 & 사운드 볼텍스(SDVX) 볼포스 VF50 성적 분석 트래커. 오락실 판수, 금액을 기록하고 볼포스를 정밀 계산하세요.">
-  <meta name="keywords" content="얼마썼냥, 리듬게임, 가계부, 사운드볼텍스, SDVX, 볼포스, Volforce, VF50, 볼포스봤냥, 오락실, 지출기록">
-  <link rel="canonical" href="https://chatnnang.github.io/-1.0/">
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="🐱 얼마썼냥 - 리듬게임 가계부 & 볼포스봤냥">
-  <meta property="og:description" content="오락실 지출 기록 + 사운드 볼텍스 볼포스 VF50 정밀 분석. 북마크릿 원클릭으로 성적을 불러오세요!">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://chatnnang.github.io/-1.0/">
-  <meta property="og:image" content="https://chatnnang.github.io/-1.0/icon.png">
-
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -59,70 +43,70 @@
     <div id="expGrid" class="grid grid-cols-5 gap-3.5"></div>
     <div class="mt-6 text-right text-slate-600 font-bold tracking-widest flex justify-between items-center">
       <span>SOUND VOLTEX EXCEED GEAR (NABLA)</span>
-      <span>Produced by 얼마썼냥 v2.0 (볼포스봤냥)</span>
+      <span>Produced by ?�마?�냥 v2.0 (볼포?�봤??</span>
     </div>
   </div>
 
   <div class="max-w-md mx-auto p-4 space-y-4">
-    
+    <div class="bg-fuchsia-600 text-white text-center text-[10px] font-bold py-1 rounded-full shadow-lg">?�️ ?�재 [DEV ?�버 v2.0]?�서 ?�스??중입?�다.</div>
 
     <div id="authBar" class="bg-slate-800/90 backdrop-blur border border-slate-700 p-3 rounded-2xl flex justify-between items-center text-xs shadow-md">
       <div id="userInfo" class="flex items-center space-x-2">
         <span class="w-2.5 h-2.5 rounded-full bg-slate-500" id="statusDot"></span>
-        <span id="userStatusText" class="text-slate-400 font-medium">로그인되지 않음</span>
+        <span id="userStatusText" class="text-slate-400 font-medium">로그?�되지 ?�음</span>
       </div>
       <div id="authButtons">
-        <button onclick="loginWithGoogle()" id="btnLogin" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl transition shadow flex gap-1 active:scale-95">구글 로그인</button>
-        <button onclick="logoutGoogle()" id="btnLogout" class="hidden bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold px-3 py-1.5 rounded-xl transition active:scale-95">로그아웃</button>
+        <button onclick="loginWithGoogle()" id="btnLogin" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl transition shadow flex gap-1 active:scale-95">구�? 로그??/button>
+        <button onclick="logoutGoogle()" id="btnLogout" class="hidden bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold px-3 py-1.5 rounded-xl transition active:scale-95">로그?�웃</button>
       </div>
     </div>
 
-    <!-- [탭 1: 지출 입력 & 빠른 기록] -->
-    <div id="tab-input" class="tab-content active space-y-4">
+    <!-- [??1: 지�??�력 & 빠른 기록] -->
+    <div id="tab-input" class="tab-content space-y-4">
       <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700">
-        <h1 class="text-lg font-bold text-slate-200">🐱 얼마썼냥 v2.0</h1>
+        <h1 class="text-lg font-bold text-slate-200">?�� ?�마?�냥 v2.0 (DEV)</h1>
         <div class="grid grid-cols-2 gap-3 mt-3">
-          <div class="bg-slate-950/60 p-3 rounded-xl"><span class="text-xs text-slate-400">오늘 지출</span><p id="todayCost" class="text-xl font-bold text-emerald-400">0원</p></div>
-          <div class="bg-slate-950/60 p-3 rounded-xl"><span class="text-xs text-slate-400">오늘 판수</span><p id="todayCount" class="text-xl font-bold text-indigo-400">0판</p></div>
+          <div class="bg-slate-950/60 p-3 rounded-xl"><span class="text-xs text-slate-400">?�늘 지�?/span><p id="todayCost" class="text-xl font-bold text-emerald-400">0??/p></div>
+          <div class="bg-slate-950/60 p-3 rounded-xl"><span class="text-xs text-slate-400">?�늘 ?�수</span><p id="todayCount" class="text-xl font-bold text-indigo-400">0??/p></div>
         </div>
       </header>
 
       <section class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 space-y-3">
-        <!-- 기존 지출 입력 폼 요소들 (생략 없이 유지) -->
+        <!-- 기존 지�??�력 ???�소??(?�략 ?�이 ?��?) -->
         <div>
           <div class="flex justify-between items-center">
-            <label class="text-xs text-slate-400 font-medium">플레이 일시</label>
+            <label class="text-xs text-slate-400 font-medium">?�레???�시</label>
             <label class="flex items-center space-x-1.5 cursor-pointer">
               <input type="checkbox" id="unknownTime" onchange="toggleTimeInput()" class="w-3.5 h-3.5 rounded border-slate-600 bg-slate-900 text-indigo-500">
-              <span class="text-[11px] text-slate-400 font-bold">시간 모름</span>
+              <span class="text-[11px] text-slate-400 font-bold">?�간 모름</span>
             </label>
           </div>
           <input type="datetime-local" id="customDatetime" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 block transition-all">
           <input type="date" id="customDate" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 hidden transition-all">
         </div>
         <div>
-          <label class="text-xs text-slate-400 font-medium">오락실 이름</label>
+          <label class="text-xs text-slate-400 font-medium">?�락???�름</label>
           <div class="flex gap-1.5 mt-1">
-            <input type="text" id="arcadeInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm" placeholder="예: 삼보, 짱오락실">
-            <button type="button" onclick="saveFavoriteArcade()" class="bg-slate-700 text-indigo-300 font-bold px-3 py-2 rounded-xl text-sm">⭐+</button>
+            <input type="text" id="arcadeInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm" placeholder="?? ?�보, 짱오?�실">
+            <button type="button" onclick="saveFavoriteArcade()" class="bg-slate-700 text-indigo-300 font-bold px-3 py-2 rounded-xl text-sm">�?</button>
           </div>
           <div id="favoriteArcadeList" class="flex flex-wrap gap-1.5 mt-2"></div>
         </div>
         <div>
-          <label class="text-xs text-slate-400 font-medium">플레이 게임</label>
-          <input type="text" id="gameInput" list="gameList" placeholder="직접 입력하거나 목록에서 선택하세요" value="" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-indigo-500 focus:outline-none">
+          <label class="text-xs text-slate-400 font-medium">?�레??게임</label>
+          <input type="text" id="gameInput" list="gameList" placeholder="직접 ?�력?�거??목록?�서 ?�택?�세?? value="" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:border-indigo-500 focus:outline-none">
           <datalist id="gameList">
-            <option value="사운드 볼텍스 (발키리)"></option>
-            <option value="사운드 볼텍스 (구기체)"></option>
-            <option value="비트매니아 IIDX (라이트닝)"></option>
+            <option value="?�운??볼텍??(발키�?"></option>
+            <option value="?�운??볼텍??(구기�?"></option>
+            <option value="비트매니??IIDX (?�이?�닝)"></option>
             <option value="마이마이 DX"></option>
-            <option value="츄니즘"></option>
-            <option value="팝픈뮤직"></option>
-            <option value="이지투아케이드"></option>
+            <option value="츄니�?></option>
+            <option value="?�픈뮤직"></option>
+            <option value="?��??�아케?�드"></option>
           </datalist>
         </div>
         <div>
-          <label class="text-xs text-slate-400 font-medium">판당 금액 (원)</label>
+          <label class="text-xs text-slate-400 font-medium">?�당 금액 (??</label>
           <div class="grid grid-cols-4 gap-1.5 mt-1 mb-2">
             <button type="button" onclick="setPrice(500)" class="bg-slate-700 text-xs py-1.5 rounded-lg">500</button>
             <button type="button" onclick="setPrice(1000)" class="bg-slate-700 text-xs py-1.5 rounded-lg">1000</button>
@@ -132,114 +116,110 @@
           <input type="number" id="priceInput" value="1000" step="500" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-right font-bold">
         </div>
         <div>
-          <label class="text-xs text-slate-400 font-medium">플레이 판수</label>
+          <label class="text-xs text-slate-400 font-medium">?�레???�수</label>
           <div class="flex items-center space-x-2 mt-1">
             <button type="button" onclick="changeCount(-1)" class="w-12 h-10 bg-slate-700 rounded-xl font-bold">-</button>
             <input type="number" id="countInput" value="1" min="1" class="w-full text-center bg-slate-900 border border-slate-700 rounded-xl h-10 font-bold">
             <button type="button" onclick="changeCount(1)" class="w-12 h-10 bg-indigo-600 rounded-xl font-bold">+</button>
           </div>
         </div>
-        <button onclick="addLog()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl mt-2 active:scale-95 transition">지출 기록하기</button>
+        <button onclick="addLog()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl mt-2 active:scale-95 transition">지�?기록?�기</button>
       </section>
 
-      <!-- ⚡ 빠른 기록 섹션 -->
+      <!-- ??빠른 기록 ?�션 -->
       <section class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 space-y-3">
         <div class="flex justify-between items-center">
           <h2 class="text-sm font-bold text-indigo-300 flex items-center gap-1.5">
-            <span>⚡</span> 원클릭 빠른 기록
+            <span>??/span> ?�클�?빠른 기록
           </h2>
           <button onclick="saveQuickPreset()" class="text-[11px] bg-slate-700 hover:bg-slate-600 text-indigo-200 font-bold px-2.5 py-1 rounded-lg transition active:scale-95">
-            + 현재 설정 저장
+            + ?�재 ?�정 ?�??
           </button>
         </div>
         <div id="quickPresetList" class="space-y-2 pt-1"></div>
       </section>
     </div>
 
-    <!-- [탭 2: 플레이 데이터 (사볼 VF50 연동 UI 병합 완료)] -->
-    <div id="tab-profile" class="tab-content space-y-4">
+    <!-- [??2: ?�레???�이??(?�볼 VF50 ?�동 UI 병합 ?�료)] -->
+    <div id="tab-profile" class="tab-content active space-y-4">
       <div class="flex overflow-x-auto hide-scrollbar space-x-2 py-1">
-        <button class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md whitespace-nowrap">사운드 볼텍스</button>
+        <button class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md whitespace-nowrap">?�운??볼텍??/button>
         <button class="bg-slate-800 text-slate-400 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap opacity-50 cursor-not-allowed">마이마이 DX (준비중)</button>
       </div>
 
-      <!-- 성적이 없을 때 보여줄 안내 화면 -->
+      <!-- ?�적???�을 ??보여�??�내 ?�면 -->
       <div id="sdvxEmptyState" class="bg-slate-800 border border-slate-700 rounded-2xl p-5 text-center space-y-4 shadow-lg block">
-        <div class="text-4xl mb-2">🎮</div>
-        <h2 class="text-lg font-bold text-slate-200">데이터가 등록되지 않았습니다</h2>
-        <p class="text-xs text-slate-400 leading-relaxed break-keep">사운드 볼텍스 공식 홈페이지 접속 후, 아래 코드를 주소창에 붙여넣어 실행하시면 전적을 긁어옵니다!</p>
+        <div class="text-4xl mb-2">?��</div>
+        <h2 class="text-lg font-bold text-slate-200">?�이?��? ?�록?��? ?�았?�니??/h2>
+        <p class="text-xs text-slate-400 leading-relaxed break-keep">?�운??볼텍??공식 ?�페?��? ?�속 ?? ?�래 코드�?주소창에 붙여?�어 ?�행?�시�??�적??긁어?�니??</p>
         <div class="bg-slate-900 p-3 rounded-xl border border-slate-700 text-left">
-          <code id="bookmarkletCode" class="text-[10px] text-slate-500 break-all line-clamp-3">javascript:(async function(){alert('성적 데이터를 수집합니다.
-서버 튕김 방지를 위해 천천히 수집하므로 약 40~50초 정도 소요됩니다.
-브라우저 탭 제목에 진행도가 표시되니 완료될 때까지 기다려주세요!');let allData=[];let pName='';try{let pEl=document.querySelector('#profile_name, .profile_name, .player_name, #profile .name, .name');if(pEl)pName=pEl.innerText.trim();if(!pName){let pRes=await fetch('/game/sdvx/vii/playdata/profile/index.html');if(pRes.ok){let pDoc=new DOMParser().parseFromString(await pRes.text(),'text/html');let nEl=pDoc.querySelector('#profile_name, .profile_name, .player_name, #profile .name, .name, .user_name');if(nEl)pName=nEl.innerText.trim();}}}catch(e){}let maxP=1;let opts=document.querySelectorAll('#search_page option');if(opts.length) maxP=parseInt(opts[opts.length-1].value);let diffs=['nov','adv','exh','mxm','inf','grv','hvn','vvd','xcd'];let getG=(s)=>{if(s.includes('s.png'))return 'S';if(s.includes('aaa_plus'))return 'AAA+';if(s.includes('aaa'))return 'AAA';if(s.includes('aa_plus'))return 'AA+';if(s.includes('aa.'))return 'AA';if(s.includes('a_plus'))return 'A+';if(s.includes('a.'))return 'A';if(s.includes('b.'))return 'B';if(s.includes('c.'))return 'C';return 'D';};let getL=(s)=>{if(s.includes('per'))return 'PUC';if(s.includes('uc'))return 'UC';if(s.includes('comp_max'))return 'MXV';if(s.includes('comp_ex'))return 'HARD';if(s.includes('comp'))return 'CLEAR';return 'PLAY';};let origTitle=document.title;for(let p=1;p<=maxP;p++){document.title='('+p+'/'+maxP+') 수집중...';let res=await fetch('/game/sdvx/vii/playdata/musicdata/index.html?page='+p);let text=await res.text();let doc=new DOMParser().parseFromString(text,'text/html');let rows=doc.querySelectorAll('tr.data_col');rows.forEach(r=>{let tEl=r.querySelector('.music .title a');if(!tEl)return;let title=tEl.innerText.trim();diffs.forEach(d=>{let cell=r.querySelector('td.'+d);if(!cell)return;let val=cell.innerText.trim();if(val==='0'||!val)return;let score=parseInt(val);if(isNaN(score))return;let imgs=cell.querySelectorAll('img');if(imgs.length<2)return;allData.push({title:title,diff:d.toUpperCase(),score:score,lamp:getL(imgs[0].src),grade:getG(imgs[1].src)});});});await new Promise(r=>setTimeout(r,1200));}document.title=origTitle;let win=window.open('https://chatnnang.github.io/-1.0/index.html','_blank');if(!win)return alert('팝업 차단이 설정되어 있습니다. 팝업을 허용해주세요!');let tries=0;let timer=setInterval(()=>{win.postMessage({type:'SDVX_PARSE_DATA',payload:allData,playerName:pName},'*');tries++;if(tries>15)clearInterval(timer);},500);})();</code>
+          <code id="bookmarkletCode" class="text-[10px] text-slate-500 break-all line-clamp-3">javascript:(async function(){alert('?�적 ?�이?��? ?�집?�니??
+?�버 ?��? 방�?�??�해 천천???�집?��?�???40~50�??�도 ?�요?�니??
+브라?��? ???�목??진행?��? ?�시?�니 ?�료???�까지 기다?�주?�요!');let allData=[];let pName='';try{let pEl=document.querySelector('#profile_name, .profile_name, .player_name, #profile .name, .name');if(pEl)pName=pEl.innerText.trim();if(!pName){let pRes=await fetch('/game/sdvx/vii/playdata/profile/index.html');if(pRes.ok){let pDoc=new DOMParser().parseFromString(await pRes.text(),'text/html');let nEl=pDoc.querySelector('#profile_name, .profile_name, .player_name, #profile .name, .name, .user_name');if(nEl)pName=nEl.innerText.trim();}}}catch(e){}let maxP=1;let opts=document.querySelectorAll('#search_page option');if(opts.length) maxP=parseInt(opts[opts.length-1].value);let diffs=['nov','adv','exh','mxm','inf','grv','hvn','vvd','xcd'];let getG=(s)=>{if(s.includes('s.png'))return 'S';if(s.includes('aaa_plus'))return 'AAA+';if(s.includes('aaa'))return 'AAA';if(s.includes('aa_plus'))return 'AA+';if(s.includes('aa.'))return 'AA';if(s.includes('a_plus'))return 'A+';if(s.includes('a.'))return 'A';if(s.includes('b.'))return 'B';if(s.includes('c.'))return 'C';return 'D';};let getL=(s)=>{if(s.includes('per'))return 'PUC';if(s.includes('uc'))return 'UC';if(s.includes('comp_max'))return 'MXV';if(s.includes('comp_ex'))return 'HARD';if(s.includes('comp'))return 'CLEAR';return 'PLAY';};let origTitle=document.title;for(let p=1;p<=maxP;p++){document.title='('+p+'/'+maxP+') ?�집�?..';let res=await fetch('/game/sdvx/vii/playdata/musicdata/index.html?page='+p);let text=await res.text();let doc=new DOMParser().parseFromString(text,'text/html');let rows=doc.querySelectorAll('tr.data_col');rows.forEach(r=>{let tEl=r.querySelector('.music .title a');if(!tEl)return;let title=tEl.innerText.trim();diffs.forEach(d=>{let cell=r.querySelector('td.'+d);if(!cell)return;let val=cell.innerText.trim();if(val==='0'||!val)return;let score=parseInt(val);if(isNaN(score))return;let imgs=cell.querySelectorAll('img');if(imgs.length<2)return;allData.push({title:title,diff:d.toUpperCase(),score:score,lamp:getL(imgs[0].src),grade:getG(imgs[1].src)});});});await new Promise(r=>setTimeout(r,1200));}document.title=origTitle;let win=window.open('https://chatnnang.github.io/-1.0/dev.html','_blank');if(!win)return alert('?�업 차단???�정?�어 ?�습?�다. ?�업???�용?�주?�요!');let tries=0;let timer=setInterval(()=>{win.postMessage({type:'SDVX_PARSE_DATA',payload:allData,playerName:pName},'*');tries++;if(tries>15)clearInterval(timer);},500);})();</code>
         </div>
-        <button onclick="copyBookmarklet()" class="w-full bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold py-3 rounded-xl active:scale-95 transition">데이터 갱신용 코드 복사</button>
+        <button onclick="copyBookmarklet()" class="w-full bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold py-3 rounded-xl active:scale-95 transition">?�이??갱신??코드 복사</button>
         <div class="grid grid-cols-2 gap-2 mt-2">
           <button onclick="openGuideModal()" class="bg-indigo-600/80 hover:bg-indigo-600 text-indigo-100 font-bold py-2.5 rounded-xl shadow flex justify-center items-center gap-1.5 text-xs active:scale-95 transition">
-            <span>📖 등록하는 법 가이드</span>
+            <span>?�� ?�록?�는 �?가?�드</span>
           </button>
           <button onclick="openSdvxModal()" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-slate-300 font-bold py-2.5 rounded-xl shadow flex justify-center items-center gap-1.5 text-xs active:scale-95 transition">
-            <span>📋 수동 데이터 입력</span>
+            <span>?�� ?�동 ?�이???�력</span>
           </button>
         </div>
       </div>
 
-      <!-- 성적이 있을 때 보여줄 VF50 UI 화면 (기존 분리된 코드를 이곳으로 병합) -->
+      <!-- ?�적???�을 ??보여�?VF50 UI ?�면 (기존 분리??코드�??�곳?�로 병합) -->
       <div id="sdvxProfileState" class="hidden space-y-4">
         <section class="p-5 bg-slate-800/90 rounded-2xl border border-slate-700 shadow-xl backdrop-blur relative overflow-hidden">
-          <!-- 배경 장식 효과 -->
+          <!-- 배경 ?�식 ?�과 -->
           <div class="absolute -right-6 -top-6 w-32 h-32 bg-fuchsia-600/20 rounded-full blur-2xl pointer-events-none"></div>
 
           <div class="flex justify-between items-center mb-5 relative z-10">
             <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500">
-              🐱 볼포스봤냥
+              ?�� 볼포?�봤??
             </h2>
             <div class="flex items-center gap-1.5">
-              <button onclick="openGuideModal()" class="text-[10px] bg-indigo-900/60 hover:bg-indigo-800 text-indigo-200 border border-indigo-700/50 px-2 py-1 rounded transition font-bold">가이드</button>
-              <button onclick="copyBookmarklet()" class="text-[10px] bg-slate-700 hover:bg-slate-600 text-slate-300 px-2 py-1 rounded transition">코드 재복사</button>
+              <button onclick="openGuideModal()" class="text-[10px] bg-indigo-900/60 hover:bg-indigo-800 text-indigo-200 border border-indigo-700/50 px-2 py-1 rounded transition font-bold">가?�드</button>
+              <button onclick="copyBookmarklet()" class="text-[10px] bg-slate-700 hover:bg-slate-600 text-slate-300 px-2 py-1 rounded transition">코드 ?�복??/button>
             </div>
           </div>
 
-          <!-- 플레이어 닉네임 표시 & 변경 -->
+          <!-- ?�레?�어 ?�네???�시 & 변�?-->
           <div class="flex items-center justify-between bg-slate-900/60 px-3.5 py-2 rounded-xl border border-slate-700/60 mb-4 text-xs">
             <div class="flex items-center gap-2">
               <span class="text-slate-400 font-bold">DJ NAME:</span>
               <span id="playerDjNameDisplay" class="font-black text-slate-100 font-mono text-sm tracking-wider">NYAN</span>
             </div>
-            <button onclick="editDjName()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-indigo-300 font-bold px-2.5 py-1 rounded-lg transition border border-slate-700 active:scale-95">✏️ 닉네임 변경</button>
+            <button onclick="editDjName()" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-indigo-300 font-bold px-2.5 py-1 rounded-lg transition border border-slate-700 active:scale-95">?�️ ?�네??변�?/button>
           </div>
 
-          <!-- 볼포스 요약 대시보드 카드 -->
+          <!-- 볼포???�약 ?�?�보??카드 -->
           <div id="vfSummaryCard" class="grid grid-cols-2 gap-3 mb-6">
-            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 text-center col-span-2 sm:col-span-1">
+            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 text-center flex flex-col justify-center">
               <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Total Volforce</span>
               <div id="totalVfDisplay" class="text-4xl font-black text-fuchsia-400 mt-1 drop-shadow-md">0.000</div>
             </div>
-            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 text-center">
-              <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Class Tier</span>
-              <div id="tierDisplay" class="text-xl font-black text-amber-300 mt-2">-</div>
-            </div>
-            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 text-center">
+            <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 text-center flex flex-col justify-center">
               <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Target Songs</span>
-              <div id="targetCountDisplay" class="text-xl font-bold text-slate-200 mt-2">TOP 50</div>
+              <div id="targetCountDisplay" class="text-2xl font-black text-slate-200 mt-1 drop-shadow-sm">TOP 50</div>
             </div>
           </div>
 
-          <!-- VF50 데이터 조회 버튼 -->
+          <!-- VF50 ?�이??조회 버튼 -->
           <div class="text-center mt-2">
             <button onclick="openVf50Viewer()" class="w-full bg-gradient-to-r from-fuchsia-600 to-indigo-600 hover:from-fuchsia-500 hover:to-indigo-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition active:scale-95 text-sm">
-              📊 VF50 데이터 조회
+              ?�� VF50 ?�이??조회
             </button>
           </div>
         </section>
 
-        <!-- 📈 볼포스 변동 추이 (히스토리 그래프) -->
+        <!-- ?�� 볼포??변??추이 (?�스?�리 그래?? -->
         <section class="p-4 bg-slate-800/90 rounded-2xl border border-slate-700 shadow-xl backdrop-blur">
           <div class="flex justify-between items-center mb-3">
             <h3 class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
-              <span>📈</span> 볼포스 갱신 히스토리
+              <span>?��</span> 볼포??갱신 ?�스?�리
             </h3>
-            <span id="vfHistoryCount" class="text-[10px] text-slate-400 font-mono">기록 0개</span>
+            <span id="vfHistoryCount" class="text-[10px] text-slate-400 font-mono">기록 0�?/span>
           </div>
           <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700/60">
             <canvas id="vfHistoryChart" height="150"></canvas>
@@ -247,168 +227,168 @@
         </section>
       </div>
 
-      <!-- VF50 데이터 조회 모달 (베딕트 스타일 이미지 뷰) -->
+      <!-- VF50 ?�이??조회 모달 (베딕???��????��?지 �? -->
       <div id="vf50ViewerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[80] hidden flex flex-col items-center p-4 overflow-y-auto">
         <div class="w-full max-w-4xl">
           <div class="flex justify-between items-center mb-3 sticky top-0 bg-black/60 backdrop-blur p-2 rounded-xl z-10">
             <h3 class="text-sm font-bold text-slate-300">VOLFORCE TARGET TRACKS</h3>
-            <button onclick="closeVf50Viewer()" class="text-slate-400 hover:text-white text-xl font-bold px-2">✕</button>
+            <button onclick="closeVf50Viewer()" class="text-slate-400 hover:text-white text-xl font-bold px-2">??/button>
           </div>
-          <!-- 이미지 렌더링 영역 -->
+          <!-- ?��?지 ?�더�??�역 -->
           <div id="vf50ImageContainer" class="bg-slate-900 rounded-xl overflow-hidden"></div>
-          <!-- 저장 버튼 -->
+          <!-- ?�??버튼 -->
           <div class="text-center mt-4 mb-8">
             <button onclick="saveVf50Image()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition active:scale-95 text-sm">
-              💾 이미지 저장
+              ?�� ?��?지 ?�??
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- [탭 3: 통계] -->
+    <!-- [??3: ?�계] -->
     <div id="tab-stats" class="tab-content space-y-4">
       <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700">
-        <h1 class="text-lg font-bold text-slate-200 mb-2">📊 월별 지출 현황</h1>
+        <h1 class="text-lg font-bold text-slate-200 mb-2">?�� ?�별 지�??�황</h1>
         <div class="bg-slate-950/60 p-4 rounded-xl mb-4 text-center">
-          <span class="text-sm text-slate-400 block mb-1">이번 달 오락실 지출</span><span id="thisMonthTotalCost" class="text-3xl font-bold text-rose-400">0원</span>
+          <span class="text-sm text-slate-400 block mb-1">?�번 ???�락??지�?/span><span id="thisMonthTotalCost" class="text-3xl font-bold text-rose-400">0??/span>
         </div>
         <div class="bg-slate-900 p-3 rounded-xl mb-4"><canvas id="monthlyChart" height="200"></canvas></div>
       </header>
       <section class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700">
-        <h2 class="text-sm font-bold text-slate-400 mb-3">전체 상세 기록</h2>
+        <h2 class="text-sm font-bold text-slate-400 mb-3">?�체 ?�세 기록</h2>
         <div id="fullLogList" class="space-y-2 max-h-96 overflow-y-auto pr-1"></div>
       </section>
     </div>
 
-    <!-- [탭 4: 공지] -->
+    <!-- [??4: 공�?] -->
     <div id="tab-notice" class="tab-content space-y-4">
       <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 flex justify-between items-center">
-        <h1 class="text-lg font-bold text-slate-200">📢 공지사항</h1>
+        <h1 class="text-lg font-bold text-slate-200">?�� 공�??�항</h1>
       </header>
       <section id="adminNoticeForm" class="hidden bg-indigo-900/30 p-4 rounded-2xl shadow-lg border border-indigo-700 space-y-3 mb-4">
         <div class="flex justify-between items-center">
-          <h2 class="text-sm font-bold text-indigo-300">👑 관리자 공지 작성</h2>
-          <button onclick="seedOldNotices()" class="text-[10px] bg-indigo-800 text-indigo-200 px-2 py-1 rounded hover:bg-indigo-700 transition">이전 기본공지 복구</button>
+          <h2 class="text-sm font-bold text-indigo-300">?�� 관리자 공�? ?�성</h2>
+          <button onclick="seedOldNotices()" class="text-[10px] bg-indigo-800 text-indigo-200 px-2 py-1 rounded hover:bg-indigo-700 transition">?�전 기본공�? 복구</button>
         </div>
-        <input type="text" id="noticeTitle" placeholder="공지 제목" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200">
+        <input type="text" id="noticeTitle" placeholder="공�? ?�목" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200">
         <select id="noticeTag" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200">
-          <option value="안내|bg-slate-600">일반 안내 (회색)</option>
-          <option value="신규|bg-fuchsia-600">신규 업데이트 (보라색)</option>
-          <option value="점검중|bg-rose-600">점검/오류 (빨간색)</option>
+          <option value="?�내|bg-slate-600">?�반 ?�내 (?�색)</option>
+          <option value="?�규|bg-fuchsia-600">?�규 ?�데?�트 (보라??</option>
+          <option value="?��?�?bg-rose-600">?��?/?�류 (빨간??</option>
         </select>
-        <textarea id="noticeContent" rows="3" placeholder="공지 내용" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200"></textarea>
-        <button onclick="addNotice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-sm transition">DB에 공지 등록하기</button>
+        <textarea id="noticeContent" rows="3" placeholder="공�? ?�용" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200"></textarea>
+        <button onclick="addNotice()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-xl text-sm transition">DB??공�? ?�록?�기</button>
       </section>
       <section id="dynamicNoticeList" class="space-y-3"></section>
     </div>
 
-    <!-- [탭 5: 문의] -->
+    <!-- [??5: 문의] -->
     <div id="tab-inquiry" class="tab-content space-y-4">
       <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 text-center">
-        <h1 class="text-lg font-bold text-slate-200">💬 문의 및 피드백</h1>
+        <h1 class="text-lg font-bold text-slate-200">?�� 문의 �??�드�?/h1>
       </header>
       <section class="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700 text-center space-y-4">
-        <div class="text-5xl mb-2">👾</div>
-        <h2 class="text-lg font-bold text-slate-200">디스코드 공식 커뮤니티</h2>
-        <p class="text-sm text-slate-400 break-keep leading-relaxed">버그 제보, 기능 추가 요청, 기타 건의 사항은<br>디스코드 서버에 편하게 남겨주세요!</p>
+        <div class="text-5xl mb-2">?��</div>
+        <h2 class="text-lg font-bold text-slate-200">?�스코드 공식 커�??�티</h2>
+        <p class="text-sm text-slate-400 break-keep leading-relaxed">버그 ?�보, 기능 추�? ?�청, 기�? 건의 ?�항?�<br>?�스코드 ?�버???�하�??�겨주세??</p>
         <a href="https://discord.gg/DTRMA9qsrb" target="_blank" rel="noopener noreferrer" class="block w-full bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold py-3.5 rounded-xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2 mt-4">
-          <span class="text-lg">💬</span> 디스코드 서버 입장하기
+          <span class="text-lg">?��</span> ?�스코드 ?�버 ?�장?�기
         </a>
       </section>
     </div>
 
-    <!-- [탭 6: 설정] -->
+    <!-- [??6: ?�정] -->
     <div id="tab-settings" class="tab-content space-y-4">
       <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 text-center">
-        <h1 class="text-lg font-bold text-slate-200">⚙️ 데이터 관리</h1>
+        <h1 class="text-lg font-bold text-slate-200">?�️ ?�이??관�?/h1>
       </header>
       <section class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 space-y-3">
-        <button onclick="exportData()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl shadow-md">📥 데이터 파일 추출 (다운로드)</button>
+        <button onclick="exportData()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl shadow-md">?�� ?�이???�일 추출 (?�운로드)</button>
         <div class="relative w-full">
           <input type="file" id="importFile" accept=".json" onchange="importData(event)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-          <div class="w-full bg-slate-900 border border-slate-600 text-slate-300 font-bold py-3 rounded-xl text-center">📤 복구 파일 불러오기</div>
+          <div class="w-full bg-slate-900 border border-slate-600 text-slate-300 font-bold py-3 rounded-xl text-center">?�� 복구 ?�일 불러?�기</div>
         </div>
-        <button onclick="clearAllLogs()" class="w-full bg-rose-900/40 text-rose-400 border border-rose-900/50 font-bold py-3 rounded-xl mt-4">🚨 데이터 전체 초기화</button>
+        <button onclick="clearAllLogs()" class="w-full bg-rose-900/40 text-rose-400 border border-rose-900/50 font-bold py-3 rounded-xl mt-4">?�� ?�이???�체 초기??/button>
       </section>
     </div>
   </div>
 
   <nav class="fixed bottom-0 w-full max-w-md left-1/2 -translate-x-1/2 bg-slate-800 border-t border-slate-700 flex justify-between p-1.5 pb-safe z-[60]">
-    <button onclick="switchTab('tab-profile')" id="btn-tab-profile" class="nav-btn text-indigo-400 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">🎮</span><span class="text-[9px]">데이터</span></button>
-    <button onclick="switchTab('tab-input')" id="btn-tab-input" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">✍️</span><span class="text-[9px]">가계부</span></button>
-    <button onclick="switchTab('tab-stats')" id="btn-tab-stats" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">📊</span><span class="text-[9px]">통계</span></button>
-    <button onclick="switchTab('tab-notice')" id="btn-tab-notice" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">📢</span><span class="text-[9px]">공지</span></button>
-    <button onclick="switchTab('tab-inquiry')" id="btn-tab-inquiry" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">💬</span><span class="text-[9px]">문의</span></button>
-    <button onclick="switchTab('tab-settings')" id="btn-tab-settings" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">⚙️</span><span class="text-[9px]">설정</span></button>
+    <button onclick="switchTab('tab-profile')" id="btn-tab-profile" class="nav-btn text-indigo-400 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">?��</span><span class="text-[9px]">?�이??/span></button>
+    <button onclick="switchTab('tab-input')" id="btn-tab-input" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">?�️</span><span class="text-[9px]">가계�?</span></button>
+    <button onclick="switchTab('tab-stats')" id="btn-tab-stats" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">?��</span><span class="text-[9px]">?�계</span></button>
+    <button onclick="switchTab('tab-notice')" id="btn-tab-notice" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">?��</span><span class="text-[9px]">공�?</span></button>
+    <button onclick="switchTab('tab-inquiry')" id="btn-tab-inquiry" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">?��</span><span class="text-[9px]">문의</span></button>
+    <button onclick="switchTab('tab-settings')" id="btn-tab-settings" class="nav-btn text-slate-500 font-bold flex flex-col items-center flex-1 py-1"><span class="text-[18px] mb-0.5">?�️</span><span class="text-[9px]">?�정</span></button>
   </nav>
 
-  <!-- 성적 입력 모달창 -->
+  <!-- ?�적 ?�력 모달�?-->
   <div id="sdvxModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[70] hidden flex items-center justify-center p-4">
     <div class="bg-slate-800 border border-slate-700 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative">
-      <h3 class="text-lg font-bold text-slate-100 mb-2">📥 성적 데이터 붙여넣기</h3>
-      <p class="text-xs text-slate-400 mb-4">코나미 공식 사이트에서 복사기(scraper.js)로 복사한 성적 텍스트를 그대로 붙여넣어 주세요.</p>
+      <h3 class="text-lg font-bold text-slate-100 mb-2">?�� ?�적 ?�이??붙여?�기</h3>
+      <p class="text-xs text-slate-400 mb-4">코나�?공식 ?�이?�에??복사�?scraper.js)�?복사???�적 ?�스?��? 그�?�?붙여?�어 주세??</p>
       
       <textarea id="sdvxRawInput" rows="8" placeholder='[&#10;  { "title": "...", "diff": "EXH", "score": 9950000 }&#10;]' class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs font-mono text-slate-200 focus:outline-none focus:border-fuchsia-500 resize-none"></textarea>
       
       <div class="flex justify-end gap-2.5 mt-5">
-        <button onclick="closeSdvxModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-xl text-sm font-semibold transition">닫기</button>
-        <button onclick="processSdvxScores()" class="px-5 py-2 bg-fuchsia-600 hover:bg-fuchsia-500 text-white rounded-xl text-sm font-bold shadow-md transition">분석 및 계산하기</button>
+        <button onclick="closeSdvxModal()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-xl text-sm font-semibold transition">?�기</button>
+        <button onclick="processSdvxScores()" class="px-5 py-2 bg-fuchsia-600 hover:bg-fuchsia-500 text-white rounded-xl text-sm font-bold shadow-md transition">분석 �?계산?�기</button>
       </div>
     </div>
   </div>
 
-  <!-- 📖 등록하는 법 가이드 모달 -->
+  <!-- ?�� ?�록?�는 �?가?�드 모달 -->
   <div id="guideModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[85] hidden flex items-center justify-center p-4">
     <div class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center pb-2 border-b border-slate-700">
         <h3 class="text-base font-bold text-fuchsia-400 flex items-center gap-2">
-          <span>📖</span> 사볼 성적 등록 가이드
+          <span>?��</span> ?�볼 ?�적 ?�록 가?�드
         </h3>
-        <button onclick="closeGuideModal()" class="text-slate-400 hover:text-white text-xl font-bold px-1">✕</button>
+        <button onclick="closeGuideModal()" class="text-slate-400 hover:text-white text-xl font-bold px-1">??/button>
       </div>
 
       <div class="space-y-3 text-xs leading-relaxed text-slate-300">
         <div class="bg-slate-900/90 p-3.5 rounded-xl border border-indigo-500/40">
-          <div class="font-bold text-indigo-300 text-sm mb-1">1️⃣ 코나미 공식 사볼 사이트 접속 & 로그인</div>
-          <p class="text-slate-400">e-amusement 사운드 볼텍스 공식 사이트에 접속하여 로그인합니다.</p>
+          <div class="font-bold text-indigo-300 text-sm mb-1">1️⃣ 코나�?공식 ?�볼 ?�이???�속 & 로그??/div>
+          <p class="text-slate-400">e-amusement ?�운??볼텍??공식 ?�이?�에 ?�속?�여 로그?�합?�다.</p>
         </div>
 
         <div class="bg-amber-950/40 p-3.5 rounded-xl border border-amber-600/60 text-amber-200">
           <div class="font-bold text-amber-400 text-sm mb-1 flex items-center gap-1">
-            <span>⚠️</span> 2️⃣ 가장 중요: '음악 데이터' 창 이동
+            <span>?�️</span> 2️⃣ 가??중요: '?�악 ?�이?? �??�동
           </div>
           <p class="text-[11px] leading-relaxed">
-            반드시 상단 메뉴에서 <b>[PLAY DATA] ➡️ [MUSIC DATA (음악 데이터)]</b> 창으로 이동해야 합니다!<br>
+            반드???�단 메뉴?�서 <b>[PLAY DATA] ?�️ [MUSIC DATA (?�악 ?�이??]</b> 창으�??�동?�야 ?�니??<br>
             <span class="text-amber-300 font-mono text-[10px] block mt-1">URL: /playdata/musicdata/index.html</span>
-            <span class="text-rose-400 font-bold block mt-0.5">* 프로필이나 메인 화면에서는 작동하지 않습니다!</span>
+            <span class="text-rose-400 font-bold block mt-0.5">* ?�로?�이??메인 ?�면?�서???�동?��? ?�습?�다!</span>
           </p>
         </div>
 
         <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-700">
-          <div class="font-bold text-slate-200 text-sm mb-1">3️⃣ 데이터 갱신용 코드 복사 및 실행</div>
+          <div class="font-bold text-slate-200 text-sm mb-1">3️⃣ ?�이??갱신??코드 복사 �??�행</div>
           <p class="text-slate-400">
-            1. 본 사이트에서 <b>[데이터 갱신용 코드 복사]</b> 버튼을 누릅니다.<br>
-            2. 음악 데이터 창의 <b>주소창(URL)</b>에 붙여넣고 엔터를 치거나, <b>북마크(즐겨찾기)</b>로 등록 후 클릭하여 실행합니다.
+            1. �??�이?�에??<b>[?�이??갱신??코드 복사]</b> 버튼???�릅?�다.<br>
+            2. ?�악 ?�이??창의 <b>주소�?URL)</b>??붙여?�고 ?�터�?치거?? <b>북마??즐겨찾기)</b>�??�록 ???�릭?�여 ?�행?�니??
           </p>
         </div>
 
         <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-700">
-          <div class="font-bold text-slate-200 text-sm mb-1">4️⃣ 수집 대기 및 자동 연동 완료!</div>
+          <div class="font-bold text-slate-200 text-sm mb-1">4️⃣ ?�집 ?��?�??�동 ?�동 ?�료!</div>
           <p class="text-slate-400">
-            약 40~50초간 안전하게 전적을 수집한 뒤, 새 창으로 본 사이트가 열리며 <b>VF50 분석 결과가 자동으로 갱신되고 구글 계정에 영구 저장</b>됩니다.
+            ??40~50초간 ?�전?�게 ?�적???�집???? ??창으�?�??�이?��? ?�리�?<b>VF50 분석 결과가 ?�동?�로 갱신?�고 구�? 계정???�구 ?�??/b>?�니??
           </p>
         </div>
       </div>
 
       <button onclick="closeGuideModal()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-xl shadow-lg transition active:scale-95 text-xs">
-        확인했습니다!
+        ?�인?�습?�다!
       </button>
     </div>
   </div>
 
-  <!-- 💡 로직 외부 파일 연결 (테스트용 로직) -->
+  <!-- ?�� 로직 ?��? ?�일 ?�결 (?�스?�용 로직) -->
   <script src="app.js"></script>
-  <script src="app_dev.js?v=1787751800"></script>
+  <script src="app.js?v=1787751800"></script>
 </body>
 </html>

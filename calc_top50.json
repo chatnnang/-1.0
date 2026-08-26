@@ -1,0 +1,502 @@
+[
+  {
+    "id": "2227",
+    "title": "Who then no 灯",
+    "diff": "MXM",
+    "score": 9921847,
+    "vf": 42.6,
+    "level": 19.7,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2325",
+    "title": "XELENOPHOEBEA",
+    "diff": "MXM",
+    "score": 9913065,
+    "vf": 42.2,
+    "level": 19.5,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2324",
+    "title": "DANGER XLOZE",
+    "diff": "MXM",
+    "score": 9943601,
+    "vf": 42.1,
+    "level": 19.4,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2355",
+    "title": "Zt!ri△",
+    "diff": "MXM",
+    "score": 9904330,
+    "vf": 42.1,
+    "level": 19.5,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2202",
+    "title": "Ardenok",
+    "diff": "MXM",
+    "score": 9923680,
+    "vf": 42.0,
+    "level": 19.4,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "1973",
+    "title": "細氷",
+    "diff": "MXM",
+    "score": 9920546,
+    "vf": 41.8,
+    "level": 19.3,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "0805",
+    "title": "Quaint Echo",
+    "diff": "EXH",
+    "score": 9965139,
+    "vf": 41.7,
+    "level": 18.8,
+    "raw_diff": "EXH",
+    "lamp": "UC"
+  },
+  {
+    "id": "1784",
+    "title": "神罰",
+    "diff": "MXM",
+    "score": 9965104,
+    "vf": 41.7,
+    "level": 18.8,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "0116",
+    "title": "大宇宙ステージ",
+    "diff": "GRV",
+    "score": 9961515,
+    "vf": 41.7,
+    "level": 19.2,
+    "raw_diff": "INF",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2321",
+    "title": "華麗なる一撃",
+    "diff": "MXM",
+    "score": 9949939,
+    "vf": 41.7,
+    "level": 19.2,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2201",
+    "title": "Titanomachia",
+    "diff": "MXM",
+    "score": 9905204,
+    "vf": 41.7,
+    "level": 19.3,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2373",
+    "title": "ミスクレイジースピード",
+    "diff": "MXM",
+    "score": 9995095,
+    "vf": 41.6,
+    "level": 18.7,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "1043",
+    "title": "Legendary Road",
+    "diff": "MXM",
+    "score": 9943289,
+    "vf": 41.6,
+    "level": 18.8,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "0699",
+    "title": "ΕΛΠΙΣ",
+    "diff": "XCD",
+    "score": 9929203,
+    "vf": 41.6,
+    "level": 19.2,
+    "raw_diff": "INF",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2088",
+    "title": "Xinca",
+    "diff": "MXM",
+    "score": 9921679,
+    "vf": 41.6,
+    "level": 19.2,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2025",
+    "title": "Distorted Floor -Boosted-",
+    "diff": "MXM",
+    "score": 10000000,
+    "vf": 41.5,
+    "level": 18.0,
+    "raw_diff": "MXM",
+    "lamp": "PUC"
+  },
+  {
+    "id": "1712",
+    "title": "Innocent Azure",
+    "diff": "MXM",
+    "score": 10000000,
+    "vf": 41.5,
+    "level": 18.0,
+    "raw_diff": "MXM",
+    "lamp": "PUC"
+  },
+  {
+    "id": "2310",
+    "title": "Zany Arcadia \"E\"",
+    "diff": "MXM",
+    "score": 9952618,
+    "vf": 41.5,
+    "level": 19.1,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2199",
+    "title": "神凪",
+    "diff": "EXH",
+    "score": 9933548,
+    "vf": 41.5,
+    "level": 18.8,
+    "raw_diff": "EXH",
+    "lamp": "UC"
+  },
+  {
+    "id": "1018",
+    "title": "準備運動",
+    "diff": "MXM",
+    "score": 9931731,
+    "vf": 41.5,
+    "level": 18.8,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "2123",
+    "title": "Allegro Saetta",
+    "diff": "MXM",
+    "score": 9912280,
+    "vf": 41.5,
+    "level": 19.2,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "1033",
+    "title": "Sailing Force",
+    "diff": "MXM",
+    "score": 9912118,
+    "vf": 41.5,
+    "level": 19.2,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "1938",
+    "title": "SuddeИDeath",
+    "diff": "EXH",
+    "score": 9940606,
+    "vf": 41.4,
+    "level": 19.1,
+    "raw_diff": "EXH",
+    "lamp": "MXV"
+  },
+  {
+    "id": "0642",
+    "title": "Sayonara Planet Wars",
+    "diff": "EXH",
+    "score": 9988372,
+    "vf": 41.3,
+    "level": 18.6,
+    "raw_diff": "EXH",
+    "lamp": "UC"
+  },
+  {
+    "id": "2348",
+    "title": "L (SDVX ver.)",
+    "diff": "MXM",
+    "score": 9981793,
+    "vf": 41.3,
+    "level": 18.6,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "1200",
+    "title": "MeteorGlow Aftermath",
+    "diff": "MXM",
+    "score": 9976851,
+    "vf": 41.3,
+    "level": 18.6,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "2171",
+    "title": "BEMANI PRO LEAGUE -SEASON 2- SOUND VOLTEX ULTIMATE MEDLEY",
+    "diff": "MXM",
+    "score": 9966876,
+    "vf": 41.3,
+    "level": 19.0,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "1525",
+    "title": "Macuilxochitl (Latin Jazz Mix)",
+    "diff": "MXM",
+    "score": 9931930,
+    "vf": 41.3,
+    "level": 18.7,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "1102",
+    "title": "Staring at star",
+    "diff": "MXM",
+    "score": 9918256,
+    "vf": 41.3,
+    "level": 19.1,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "1892",
+    "title": "VΛZiLiSQ",
+    "diff": "MXM",
+    "score": 9906560,
+    "vf": 41.3,
+    "level": 19.1,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2114",
+    "title": "Almandite",
+    "diff": "MXM",
+    "score": 9970144,
+    "vf": 41.2,
+    "level": 18.6,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "1044",
+    "title": "Immortal saga",
+    "diff": "MXM",
+    "score": 9947848,
+    "vf": 41.2,
+    "level": 19.0,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "2256",
+    "title": "オムニシエント・ゼロ",
+    "diff": "MXM",
+    "score": 9934230,
+    "vf": 41.2,
+    "level": 19.4,
+    "raw_diff": "MXM",
+    "lamp": "HARD"
+  },
+  {
+    "id": "1100",
+    "title": "WHITEOUT",
+    "diff": "MXM",
+    "score": 9816214,
+    "vf": 41.2,
+    "level": 20.2,
+    "raw_diff": "MXM",
+    "lamp": "HARD"
+  },
+  {
+    "id": "1777",
+    "title": "火狐之舞",
+    "diff": "MXM",
+    "score": 9997755,
+    "vf": 41.1,
+    "level": 18.5,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "2004",
+    "title": "大宇宙ステージ奈落変",
+    "diff": "MXM",
+    "score": 9943457,
+    "vf": 41.1,
+    "level": 18.6,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "2253",
+    "title": "KINGDOM COME",
+    "diff": "EXH",
+    "score": 9937046,
+    "vf": 41.1,
+    "level": 18.6,
+    "raw_diff": "EXH",
+    "lamp": "UC"
+  },
+  {
+    "id": "1660",
+    "title": "MAYHEM",
+    "diff": "MXM",
+    "score": 9884183,
+    "vf": 41.1,
+    "level": 20.0,
+    "raw_diff": "MXM",
+    "lamp": "HARD"
+  },
+  {
+    "id": "1419",
+    "title": "To:BrandNewDeadline",
+    "diff": "MXM",
+    "score": 9978591,
+    "vf": 41.0,
+    "level": 18.5,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "2367",
+    "title": "Astra Blaze",
+    "diff": "MXM",
+    "score": 9976655,
+    "vf": 41.0,
+    "level": 18.5,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "1848",
+    "title": "Fegrix",
+    "diff": "MXM",
+    "score": 9973656,
+    "vf": 41.0,
+    "level": 18.5,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "1785",
+    "title": "Across the Starlight",
+    "diff": "MXM",
+    "score": 9971957,
+    "vf": 41.0,
+    "level": 18.5,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "2096",
+    "title": "アイの雫",
+    "diff": "MXM",
+    "score": 9971339,
+    "vf": 41.0,
+    "level": 18.5,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "1107",
+    "title": "ULTiMATE INFLATiON",
+    "diff": "MXM",
+    "score": 9970834,
+    "vf": 41.0,
+    "level": 18.5,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "1397",
+    "title": "Vividly Impromptu",
+    "diff": "MXM",
+    "score": 9970059,
+    "vf": 41.0,
+    "level": 18.5,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "2082",
+    "title": "随神",
+    "diff": "MXM",
+    "score": 9958677,
+    "vf": 41.0,
+    "level": 18.5,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "1889",
+    "title": "Bl∞min'",
+    "diff": "EXH",
+    "score": 9957716,
+    "vf": 41.0,
+    "level": 18.5,
+    "raw_diff": "EXH",
+    "lamp": "UC"
+  },
+  {
+    "id": "1787",
+    "title": "PHOTON BLAXT",
+    "diff": "MXM",
+    "score": 9994269,
+    "vf": 40.9,
+    "level": 18.4,
+    "raw_diff": "MXM",
+    "lamp": "UC"
+  },
+  {
+    "id": "1954",
+    "title": "trea→journey",
+    "diff": "MXM",
+    "score": 9919391,
+    "vf": 40.9,
+    "level": 18.9,
+    "raw_diff": "MXM",
+    "lamp": "MXV"
+  },
+  {
+    "id": "0636",
+    "title": "Everlasting Message",
+    "diff": "GRV",
+    "score": 9916550,
+    "vf": 40.9,
+    "level": 19.3,
+    "raw_diff": "INF",
+    "lamp": "HARD"
+  }
+]

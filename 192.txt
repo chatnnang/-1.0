@@ -1,0 +1,31 @@
+大宇宙ステージ {'NOV': 5.0, 'ADV': 11.0, 'EXH': 17.0, 'INF': 19.2}
+XROSS INFECTION {'NOV': 6.0, 'ADV': 13.0, 'EXH': 17.5, 'INF': 19.2}
+Innocent Tempest {'NOV': 6.0, 'ADV': 12.0, 'EXH': 17.5, 'INF': 19.2}
+werewolf howls. {'NOV': 6.0, 'ADV': 12.0, 'EXH': 18.5, 'INF': 19.2}
+VILE CAT {'NOV': 5.0, 'ADV': 11.0, 'EXH': 18.3, 'INF': 19.2}
+INSECTICIDE {'NOV': 6.0, 'ADV': 12.0, 'EXH': 18.4, 'INF': 19.2}
+False Cross {'NOV': 5.0, 'ADV': 11.0, 'EXH': 17.5, 'INF': 19.2}
+LegenD. {'NOV': 6.0, 'ADV': 12.0, 'EXH': 18.6, 'INF': 19.2}
+BEAT-NEW-WORLD {'NOV': 4.0, 'ADV': 11.0, 'EXH': 17.5, 'INF': 19.2}
+Preserved Valkyria {'NOV': 6.0, 'ADV': 12.0, 'EXH': 18.4, 'INF': 19.2}
+ΕΛΠΙΣ {'NOV': 5.0, 'ADV': 11.0, 'EXH': 17.5, 'INF': 19.2}
+End to end {'NOV': 6.0, 'ADV': 12.0, 'EXH': 18.6, 'INF': 19.2}
+EMPIRE OF FLAME {'NOV': 6.0, 'ADV': 12.0, 'EXH': 18.7, 'INF': 19.2}
+Sailing Force {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.5, 'MXM': 19.2}
+GODHEART {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}
+9TH5IN {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}
+Chronomia {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}
+VALKYRIE ASSAULT {'NOV': 6.0, 'ADV': 13.0, 'EXH': 16.0, 'MXM': 19.2}
+αzalea {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.5, 'MXM': 19.2}
+Avalanx {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.5, 'MXM': 19.2}
+HALO {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}
+Breakneck Pursuit {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}
+QQ {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}
+Xinca {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.5, 'MXM': 19.2}
+Circuit Surfer {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}
+Allegro Saetta {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}
+ARISE {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}
+Ambivalent Vermilia {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}
+華麗なる一撃 {'NOV': 7.0, 'ADV': 13.0, 'EXH': 16.0, 'MXM': 19.2}
+Synthesis. {'NOV': 6.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}
+Glitch N Ride {'NOV': 7.0, 'ADV': 14.0, 'EXH': 17.0, 'MXM': 19.2}

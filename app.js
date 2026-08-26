@@ -1,289 +1,541 @@
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Failed:', err));
-  });
-}
+// ==========================================
+// SDVX 볼포스 정밀 계산 및 VF50 렌더링 모듈
+// ==========================================
 
-const ADMIN_EMAILS = ["junhoodemian@gmail.com"];
+let sdvxDatabase = null;
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCjS6vsVVnscjBZufjbMcZnhGFIvyQa8VY",
-  authDomain: "test-7595b.firebaseapp.com",
-  projectId: "test-7595b",
-  storageBucket: "test-7595b.firebasestorage.app",
-  messagingSenderId: "1066933910880",
-  appId: "1:1066933910880:web:a1ddbcfb455e7507c73205"
-};
-
-let auth, db, monthlyChartInstance;
-let currentUser = null;
-let isAdmin = false;
-let logs = [];
-let notices = [];
-let favoriteArcades = JSON.parse(localStorage.getItem('rhythm_fav_arcades') || '["삼보", "짱오락실"]');
-let quickPresets = JSON.parse(localStorage.getItem('rhythm_quick_presets') || '[]');
-
-try {
-  firebase.initializeApp(firebaseConfig);
-  auth = firebase.auth();
-  db = firebase.firestore();
-} catch(e) { console.warn("Firebase Init", e); }
-
-if(db) {
-  db.collection("notices").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-    notices = [];
-    snapshot.forEach((doc) => {
-      let data = doc.data();
-      data.id = doc.id;
-      notices.push(data);
-    });
-    if(document.getElementById('tab-notice').classList.contains('active')) renderDynamicNotices();
-  });
-}
-
-async function addNotice() {
-  if(!isAdmin) return alert("관리자 권한이 없습니다.");
-  const title = document.getElementById('noticeTitle').value.trim();
-  const content = document.getElementById('noticeContent').value.trim();
-  const tagValue = document.getElementById('noticeTag').value;
-  const [tagStr, colorStr] = tagValue.split('|');
-  if(!title || !content) return alert("제목과 내용을 모두 입력해주세요!");
-  const newNotice = {
-    title: title, content: content, tag: tagStr, tagColor: `${colorStr} text-white`,
-    date: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }), timestamp: Date.now()
-  };
+// 1. sdvx_db.json 비동기 로드
+async function loadSdvxDB() {
+  if (sdvxDatabase) return sdvxDatabase;
   try {
-    await db.collection("notices").add(newNotice);
-    document.getElementById('noticeTitle').value = ''; document.getElementById('noticeContent').value = '';
-    alert("공지가 등록되었습니다.");
-  } catch(e) { alert("공지 등록 오류"); }
-}
-
-async function deleteNotice(docId) {
-  if(!isAdmin) return;
-  if(confirm("이 공지를 삭제하시겠습니까?")) {
-    try { await db.collection("notices").doc(docId).delete(); alert("삭제되었습니다."); } catch(e) { alert("삭제 실패"); }
+    const res = await fetch('./sdvx_db.json');
+    if (!res.ok) throw new Error("DB 로드 실패");
+    sdvxDatabase = await res.json();
+    return sdvxDatabase;
+  } catch (err) {
+    console.error("⚠️ sdvx_db.json 로드 실패:", err);
+    return null;
   }
 }
 
-async function seedOldNotices() {
-  if(!isAdmin) return;
-  if(!confirm("기본 공지를 복구하시겠습니까?")) return;
-  const old1 = { title: "🛠️ 전적 데이터 연동 점검", content: "점검 중입니다.", tag: "점검중", tagColor: "bg-rose-600 text-white", date: "2026.08.19", timestamp: Date.now() - 1000 };
-  await db.collection("notices").add(old1); alert("복구 완료!");
-}
+// 2. VF50 공식 규격 볼포스 계산식
+function calculateSingleVolforce(level, score, lamp) {
+  if (level === null || !score || score < 7000000) return 0;
 
-function renderDynamicNotices() {
-  const container = document.getElementById('dynamicNoticeList');
-  if (!container) return;
-  container.innerHTML = '';
-  if(notices.length === 0) {
-    container.innerHTML = '<div class="text-center py-8 text-slate-500 text-sm">등록된 공지사항이 없습니다.</div>'; return;
+  // 점수 등급 계수 (Grade Multiplier)
+  let gradeMult = 0.80;
+  if (score >= 9900000) gradeMult = 1.05;      // S
+  else if (score >= 9800000) gradeMult = 1.02; // AAA+
+  else if (score >= 9700000) gradeMult = 1.00; // AAA
+  else if (score >= 9500000) gradeMult = 0.97; // AA+
+  else if (score >= 9300000) gradeMult = 0.94; // AA
+  else if (score >= 9000000) gradeMult = 0.91; // A+
+  else if (score >= 8700000) gradeMult = 0.88; // A
+  else if (score >= 7500000) gradeMult = 0.85; // B
+
+  // 클리어 계수 (Clear Multiplier) - Exceed Gear 공식 배율
+  let clearMult = 1.00;
+  
+  if (lamp === "PUC") clearMult = 1.10;
+  else if (lamp === "UC") clearMult = 1.06;
+  else if (lamp === "EX-HARD" || lamp === "EXC" || lamp === "MXV") clearMult = 1.04;
+  else if (lamp === "HARD" || lamp === "COMP") clearMult = 1.02;
+  else if (lamp === "CLEAR") clearMult = 1.00;
+  else if (lamp === "PLAYED" || lamp === "PLAY") clearMult = 0.50;
+  else {
+    // 램프 정보가 없을 경우 점수 기반으로 추정 (기존 로직 유지, 안전하게 보수적 추정)
+    if (score === 10000000) clearMult = 1.10; // PUC
+    else if (score >= 9900000) clearMult = 1.06; // S랭크 이상은 UC로 추정
+    else if (score >= 9800000) clearMult = 1.02; // AAA+ 이상은 HARD로 추정
   }
-  notices.forEach(notice => {
-    const card = document.createElement('article'); card.className = 'bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700 space-y-2 relative';
-    let deleteBtn = isAdmin ? `<button onclick="deleteNotice('${notice.id}')" class="absolute top-4 right-4 text-[10px] bg-rose-900/50 text-rose-400 px-2 py-1 rounded">삭제</button>` : '';
-    card.innerHTML = `<div class="flex items-center justify-between pr-10"><div><span class="text-xs px-2 py-0.5 rounded-md font-semibold ${notice.tagColor}">${notice.tag}</span><span class="text-xs text-slate-400 font-mono ml-1.5">${notice.date}</span></div></div>${deleteBtn}<h2 class="font-bold text-slate-200 text-base mt-2">${notice.title}</h2><p class="text-xs text-slate-300 whitespace-pre-line leading-relaxed">${notice.content}</p>`;
-    container.appendChild(card);
+
+  // 공식 계산: (상수 * 20) * (점수 / 1000만) * 등급계수 * 클리어계수
+  const rawVf = (level * 20) * (score / 10000000) * gradeMult * clearMult;
+  return Math.floor(rawVf + 0.0001) / 10;
+}
+
+
+
+// 4. 모달 컨트롤
+function openSdvxModal() { document.getElementById('sdvxModal').classList.remove('hidden'); }
+function closeSdvxModal() { document.getElementById('sdvxModal').classList.add('hidden'); }
+
+// 5. 제목 정규화 함수 (전각/반각, 특수문자, 대소문자, 악센트 통일)
+function normalizeTitle(title) {
+  if (!title) return '';
+  // 악센트 분해 (à -> a, é -> e 등) 및 전각 -> 반각 변환
+  let str = title.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  str = str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
   });
+  // 공백, 특수기호, 그리스문자, 인코딩 깨짐문자(驩驧驫驪) 등 모두 제거
+  return str.toLowerCase().replace(/[\s\-_・。、！？!?♥♡★☆"'\(\)\[\]『』「」~～〜ØΞ∞Λ△ΩИΣ驩驧驫驪]/g, '');
 }
 
-if (auth) {
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      currentUser = user;
-      isAdmin = ADMIN_EMAILS.includes(user.email);
-      document.getElementById('adminNoticeForm').classList.toggle('hidden', !isAdmin);
-      document.getElementById('statusDot').className = "w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]";
-      document.getElementById('userStatusText').textContent = `${user.displayName || '유저'}님 연동됨 ${isAdmin ? '👑' : ''}`;
-      document.getElementById('btnLogin').classList.add('hidden'); document.getElementById('btnLogout').classList.remove('hidden');
-      db.collection("users").doc(user.uid).collection("logs").orderBy("id", "desc").onSnapshot((snapshot) => {
-        logs = []; snapshot.forEach((doc) => logs.push(doc.data())); renderDashboard();
-        if(document.getElementById('tab-stats').classList.contains('active')) renderStats();
-      });
-    } else {
-      currentUser = null; isAdmin = false;
-      document.getElementById('adminNoticeForm').classList.add('hidden');
-      document.getElementById('statusDot').className = "w-2.5 h-2.5 rounded-full bg-slate-500";
-      document.getElementById('userStatusText').textContent = "로그인되지 않음";
-      document.getElementById('btnLogin').classList.remove('hidden'); document.getElementById('btnLogout').classList.add('hidden');
-      logs = JSON.parse(localStorage.getItem('rhythm_logs_v3') || '[]');
-      renderDashboard();
-      if(document.getElementById('tab-stats').classList.contains('active')) renderStats();
-    }
-    if(document.getElementById('tab-notice').classList.contains('active')) renderDynamicNotices();
-  });
-}
+function closeSdvxModal() { document.getElementById('sdvxModal').classList.add('hidden'); }
 
-function loginWithGoogle() {
-  if (!auth) return alert("Firebase 인증 준비 중입니다.");
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).catch((error) => alert("로그인 오류: " + error.message));
-}
-function logoutGoogle() { if (auth) auth.signOut(); }
-
-function saveQuickPreset() {
-  const game = document.getElementById('gameInput').value.trim();
-  if(!game) return alert('게임 이름을 입력해주세요!');
-  const arcade = document.getElementById('arcadeInput').value.trim() || '이름 모를 오락실';
-  const unitPrice = parseInt(document.getElementById('priceInput').value || 0);
-  const count = parseInt(document.getElementById('countInput').value || 1);
-  quickPresets.push({ id: Date.now(), arcade, game, unitPrice, count });
-  localStorage.setItem('rhythm_quick_presets', JSON.stringify(quickPresets));
-  renderQuickPresets(); alert("저장되었습니다!");
-}
-
-function deleteQuickPreset(id) {
-  quickPresets = quickPresets.filter(p => p.id !== id);
-  localStorage.setItem('rhythm_quick_presets', JSON.stringify(quickPresets));
-  renderQuickPresets();
-}
-
-async function quickAddLog(id) {
-  const preset = quickPresets.find(p => p.id === id);
-  if(!preset) return;
-  const now = new Date();
-  const log = {
-    id: Date.now(), date: now.toISOString(), dateStr: now.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }),
-    timeStr: now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }), arcade: preset.arcade, game: preset.game,
-    mode: '일반', unitPrice: preset.unitPrice, count: preset.count, totalCost: preset.unitPrice * preset.count
-  };
-  if (currentUser && db) await db.collection("users").doc(currentUser.uid).collection("logs").doc(String(log.id)).set(log);
-  else { logs.unshift(log); localStorage.setItem('rhythm_logs_v3', JSON.stringify(logs)); renderDashboard(); }
-  alert(`⚡ [${preset.game}] 기록 완료!`);
-}
-
-function renderQuickPresets() {
-  const container = document.getElementById('quickPresetList');
-  if(!container) return;
-  container.innerHTML = '';
-  if(quickPresets.length === 0) { container.innerHTML = '<div class="text-[11px] text-slate-500 py-1">등록된 내역이 없습니다.</div>'; return; }
-  quickPresets.forEach(preset => {
-    const card = document.createElement('div'); card.className = 'flex items-center justify-between bg-slate-900 border border-slate-700 p-2.5 rounded-xl text-xs gap-2';
-    card.innerHTML = `<div class="flex-1 min-w-0"><div class="font-bold text-slate-200">${preset.game}</div><div class="text-[10px] text-slate-400 mt-0.5"><span class="text-indigo-300 font-medium">${preset.arcade}</span> · ${preset.unitPrice.toLocaleString()}원 (${preset.count}판)</div></div><div class="flex items-center gap-1.5 shrink-0"><button onclick="quickAddLog(${preset.id})" class="bg-indigo-600 px-3 py-1.5 rounded-lg text-white font-bold">⚡ 기록</button><button onclick="deleteQuickPreset(${preset.id})" class="text-slate-500 font-bold text-sm">×</button></div>`;
-    container.appendChild(card);
-  });
-}
-
-function toggleTimeInput() {
-  const isUnknown = document.getElementById('unknownTime').checked;
-  const dtInput = document.getElementById('customDatetime'); const dInput = document.getElementById('customDate');
-  if (isUnknown) {
-    dtInput.classList.add('hidden'); dtInput.classList.remove('block'); dInput.classList.remove('hidden'); dInput.classList.add('block');
-    dInput.value = dtInput.value.split('T')[0] || new Date().toISOString().split('T')[0];
-  } else {
-    dtInput.classList.remove('hidden'); dtInput.classList.add('block'); dInput.classList.add('hidden'); dInput.classList.remove('block');
-    if(dInput.value) dtInput.value = dInput.value + 'T' + new Date().toTimeString().slice(0,5);
+// 5. 성적 데이터 분석 및 렌더링
+async function processSdvxData(scores) {
+  const db = await loadSdvxDB();
+  if (!db) {
+    alert("sdvx_db.json 파일을 불러오지 못했습니다.");
+    return;
   }
-}
 
-function resetDatetimeInput() {
-  const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-  document.getElementById('customDatetime').value = now.toISOString().slice(0, 16); document.getElementById('customDate').value = now.toISOString().split('T')[0];
-  document.getElementById('unknownTime').checked = false; toggleTimeInput();
-}
-resetDatetimeInput();
-
-function setPrice(amount) { document.getElementById('priceInput').value = amount; }
-function changeCount(val) { const input = document.getElementById('countInput'); const next = parseInt(input.value || 1) + val; if (next >= 1) input.value = next; }
-
-function renderFavoriteArcades() {
-  const container = document.getElementById('favoriteArcadeList'); container.innerHTML = '';
-  favoriteArcades.forEach(arc => {
-    const chip = document.createElement('div'); chip.className = 'flex items-center bg-slate-700/80 text-slate-200 text-xs px-2.5 py-1 rounded-lg cursor-pointer';
-    chip.innerHTML = `<span onclick="selectArcade('${arc}')" class="font-medium mr-1.5">📍 ${arc}</span><span onclick="removeFavoriteArcade('${arc}')" class="text-slate-400 font-bold">×</span>`;
-    container.appendChild(chip);
-  });
-}
-function selectArcade(name) { document.getElementById('arcadeInput').value = name; }
-function saveFavoriteArcade() {
-  const name = document.getElementById('arcadeInput').value.trim();
-  if (name && !favoriteArcades.includes(name)) { favoriteArcades.push(name); localStorage.setItem('rhythm_fav_arcades', JSON.stringify(favoriteArcades)); renderFavoriteArcades(); }
-}
-function removeFavoriteArcade(name) { favoriteArcades = favoriteArcades.filter(a => a !== name); localStorage.setItem('rhythm_fav_arcades', JSON.stringify(favoriteArcades)); renderFavoriteArcades(); }
-renderFavoriteArcades(); renderQuickPresets();
-
-async function addLog() {
-  const isUnknown = document.getElementById('unknownTime').checked; let targetDate, timeStrVal;
-  const gameInputVal = document.getElementById('gameInput').value.trim();
-  if (!gameInputVal) return alert("플레이 게임 입력!");
-  if (isUnknown) { targetDate = new Date((document.getElementById('customDate').value || new Date().toISOString().split('T')[0]) + 'T00:00:00'); timeStrVal = '시간 모름'; } 
-  else { targetDate = new Date(document.getElementById('customDatetime').value || new Date()); timeStrVal = targetDate.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }); }
-  const log = { id: Date.now(), date: targetDate.toISOString(), dateStr: targetDate.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }), timeStr: timeStrVal, arcade: document.getElementById('arcadeInput').value.trim() || '이름 모를 오락실', game: gameInputVal, mode: '일반', unitPrice: parseInt(document.getElementById('priceInput').value || 0), count: parseInt(document.getElementById('countInput').value || 1) };
-  log.totalCost = log.unitPrice * log.count;
-  if (currentUser && db) await db.collection("users").doc(currentUser.uid).collection("logs").doc(String(log.id)).set(log);
-  else { logs.unshift(log); localStorage.setItem('rhythm_logs_v3', JSON.stringify(logs)); renderDashboard(); }
-  document.getElementById('countInput').value = 1; document.getElementById('gameInput').value = ''; resetDatetimeInput(); alert('기록 완료!');
-}
-
-async function deleteLog(id) {
-  if(confirm('삭제할까요?')) {
-    if (currentUser && db) await db.collection("users").doc(currentUser.uid).collection("logs").doc(String(id)).delete();
-    else { logs = logs.filter(l => l.id !== id); localStorage.setItem('rhythm_logs_v3', JSON.stringify(logs)); renderDashboard(); renderStats(); }
+  // 정규화된 DB 맵 생성 (제목 불일치 방지)
+  const normalizedDb = {};
+  for (const key in db) {
+    normalizedDb[normalizeTitle(key)] = db[key];
   }
-}
 
-function renderDashboard() {
-  const todayStr = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
-  let todayCost = 0, todayCount = 0;
-  logs.forEach(log => { if (log.dateStr === todayStr) { todayCost += log.totalCost; todayCount += log.count; } });
-  document.getElementById('todayCost').textContent = `${todayCost.toLocaleString()}원`; document.getElementById('todayCount').textContent = `${todayCount}판`;
-}
+  let calculatedList = [];
 
-function renderStats() {
-  const listEl = document.getElementById('fullLogList'); listEl.innerHTML = '';
-  const now = new Date(); const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-  let thisMonthTotal = 0;
-  if (logs.length === 0) { listEl.innerHTML = '<div class="text-center py-8 text-slate-500">기록 없음</div>'; document.getElementById('thisMonthTotalCost').textContent = '0원'; if(monthlyChartInstance) monthlyChartInstance.destroy(); return; }
-  const monthlyCosts = {};
-  logs.forEach(log => { const mk = log.date.substring(0, 7); monthlyCosts[mk] = (monthlyCosts[mk] || 0) + log.totalCost; if (mk === currentMonthStr) thisMonthTotal += log.totalCost; });
-  document.getElementById('thisMonthTotalCost').textContent = `${thisMonthTotal.toLocaleString()}원`;
-  const sortedMonths = Object.keys(monthlyCosts).sort();
-  const ctx = document.getElementById('monthlyChart').getContext('2d');
-  if (monthlyChartInstance) monthlyChartInstance.destroy();
-  monthlyChartInstance = new Chart(ctx, { type: 'bar', data: { labels: sortedMonths, datasets: [{ data: sortedMonths.map(m => monthlyCosts[m]), backgroundColor: '#4f46e5', borderRadius: 6 }] }, options: { plugins: { legend: { display: false } }, scales: { y: { ticks: { color: '#94a3b8' } }, x: { ticks: { color: '#cbd5e1' } } } } });
-  logs.forEach(log => {
-    const card = document.createElement('div'); card.className = 'bg-slate-900 border border-slate-700/60 p-3 rounded-xl flex justify-between items-center';
-    let tDisp = log.timeStr && log.timeStr !== '시간 모름' ? `<span class="text-[10px] text-slate-500 ml-1">${log.timeStr}</span>` : '';
-    card.innerHTML = `<div class="w-full"><div class="flex justify-between items-center mb-1"><span class="text-xs text-slate-400">${log.dateStr}${tDisp} <b class="text-indigo-300 ml-1">${log.arcade}</b></span><button onclick="deleteLog(${log.id})" class="text-slate-500 text-xs px-2 py-1 rounded bg-slate-800">삭제</button></div><div class="flex justify-between items-end mt-2"><div><span class="font-bold text-sm text-slate-200">${log.game}</span></div><div class="text-right"><span class="text-xs text-slate-400 mr-2">${log.count}판</span><span class="font-bold text-rose-400 text-sm">${log.totalCost.toLocaleString()}원</span></div></div></div>`;
-    listEl.appendChild(card);
-  });
-}
+  scores.forEach(item => {
+    // 1순위: 원본 제목 매칭, 2순위: 정규화 제목 매칭
+    const songInfo = db[item.title] || normalizedDb[normalizeTitle(item.title)];
+    let level = null;
+    let songId = null;
+    let imageName = null;
+    let diff = item.diff || "EXH";
 
-function exportData() {
-  if(logs.length === 0) return alert("데이터 없음");
-  const url = URL.createObjectURL(new Blob([JSON.stringify({ logs }, null, 2)], { type: "application/json" }));
-  const a = document.createElement('a'); a.href = url; a.download = `backup_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url);
-}
-
-function importData(event) {
-  const file = event.target.files[0]; if (!file) return; const reader = new FileReader();
-  reader.onload = async function(e) {
-    try {
-      const imp = JSON.parse(e.target.result);
-      if(imp.logs && Array.isArray(imp.logs)) {
-        if (currentUser && db) { for (const item of imp.logs) await db.collection("users").doc(currentUser.uid).collection("logs").doc(String(item.id)).set(item); }
-        else { logs = [...imp.logs, ...logs]; localStorage.setItem('rhythm_logs_v3', JSON.stringify(logs)); renderDashboard(); }
-        alert("복구 완료");
+    if (songInfo) {
+      songId = songInfo.id || null;
+      imageName = songInfo.imageName || null;
+      // DB 내부에서는 특수 난이도(GRV, HVN, VVD, XCD)가 모두 'INF'로 통합 저장되어 있음 (music_db.xml 구조상)
+      let dbDiff = diff;
+      if (["GRV", "HVN", "VVD", "XCD", "INF"].includes(diff)) {
+        dbDiff = songInfo.levels[diff] ? diff : "INF"; 
       }
-    } catch (err) { alert("파일 오류"); }
-  };
-  reader.readAsText(file); event.target.value = '';
+      level = songInfo.levels[dbDiff] || songInfo.levels["MXM"] || songInfo.levels["EXH"] || null;
+    }
+
+    const vf = calculateSingleVolforce(level, item.score, item.lamp);
+
+    calculatedList.push({
+      title: item.title,
+      diff: diff,
+      score: item.score,
+      level: level,
+      vf: vf,
+      id: songId,
+      imageName: imageName,
+      lamp: item.lamp
+    });
+  });
+
+  // 6. 볼포스 내림차순 정렬 후 TOP 50 추출
+  // 사볼은 동일 곡이더라도 난이도가 다르면(예: MXM, EXH) 탑 50에 중복해서 들어갈 수 있습니다.
+  const finalValidList = [...calculatedList];
+  
+  // VF 내림차순 정렬, 동점시 점수 내림차순, 그다음 레벨 내림차순
+  finalValidList.sort((a, b) => {
+    if (b.vf !== a.vf) return b.vf - a.vf;
+    if (b.score !== a.score) return b.score - a.score;
+    if (b.level !== a.level) return b.level - a.level;
+    return 0;
+  });
+  const top50 = finalValidList.slice(0, 50);
+  
+  // 부동소수점 오차 방지를 위해 정수(예: 416)로 변환하여 합산
+  const totalVfRaw = top50.reduce((acc, cur) => acc + Math.round(cur.vf * 10), 0);
+  const totalVf = totalVfRaw / 1000; // 최종 볼포스 수치 (예: 20.700)
+
+  // 화면 전환 (빈 화면 숨기고, 프로필 상태 표시)
+  document.getElementById('sdvxEmptyState').classList.remove('block');
+  document.getElementById('sdvxEmptyState').classList.add('hidden');
+  document.getElementById('sdvxProfileState').classList.remove('hidden');
+
+  // 상단 요약 대시보드 갱신 (인게임 볼포스 표기: 22.001 형태)
+  document.getElementById('totalVfDisplay').textContent = totalVf.toFixed(3);
+
+  // exportScorecard (베딕트 스타일 이미지) 렌더링
+  const expGrid = document.getElementById('expGrid');
+  const expVf = document.getElementById('expVolforce');
+  const expName = document.getElementById('expName');
+  if (expVf) expVf.textContent = totalVf.toFixed(3);
+  const playerDjName = localStorage.getItem('sdvx_dj_name') || 'PLAYER';
+  if (expName) expName.textContent = playerDjName;
+  if (expDate) expDate.textContent = new Date().toISOString().slice(0, 10);
+  updateDjNameDisplays(playerDjName);
+
+  if (expGrid) {
+    expGrid.innerHTML = top50.map((song, idx) => {
+      let diffTextColor = "text-rose-400 font-black";
+      if (song.diff === "NOV") diffTextColor = "text-sky-400 font-black";
+      else if (song.diff === "ADV") diffTextColor = "text-amber-400 font-black";
+      else if (song.diff === "MXM") diffTextColor = "text-slate-100 font-black drop-shadow-[0_0_6px_rgba(255,255,255,0.7)]";
+      else if (["INF", "GRV", "HVN", "VVD", "XCD"].includes(song.diff)) diffTextColor = "text-fuchsia-400 font-black drop-shadow-[0_0_6px_rgba(232,121,249,0.7)]";
+
+      let lampTextColor = "text-slate-400 font-bold";
+      if (song.lamp === "PUC") lampTextColor = "text-amber-300 font-black drop-shadow-[0_0_8px_rgba(251,191,36,0.9)]";
+      else if (song.lamp === "UC") lampTextColor = "text-rose-400 font-black drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]";
+      else if (song.lamp === "EX-HARD" || song.lamp === "MXV") lampTextColor = "text-yellow-300 font-black";
+      else if (song.lamp === "HARD" || song.lamp === "COMP") lampTextColor = "text-pink-400 font-bold";
+      else if (song.lamp === "CLEAR") lampTextColor = "text-emerald-400 font-bold";
+
+      let coverSrc = '';
+      if (song.imageName) {
+        coverSrc = `https://dp4p6x0xfi5o9.cloudfront.net/sdvx/img/cover/${song.imageName}`;
+      } else if (song.id && /^\d+$/.test(song.id)) {
+        coverSrc = `./jackets/${song.id.padStart(4, '0')}.webp`;
+      }
+
+      return `
+        <div class="bg-slate-800/95 rounded-xl p-3 border border-slate-700/80 relative shadow-md flex gap-3 items-center">
+          <div class="w-16 h-16 bg-slate-950 rounded-lg flex-shrink-0 overflow-hidden relative flex items-center justify-center border border-slate-700/80 shadow-inner">
+            ${coverSrc ? `<img src="${coverSrc}" crossorigin="anonymous" onerror="this.onerror=null; if(this.src.includes('cloudfront')) { this.src='./jackets/${song.id}.webp'; } else { this.style.display='none'; }" class="w-full h-full object-cover absolute inset-0 z-10" />` : ''}
+            <div class="text-[12px] text-slate-600 font-black tracking-tighter">SDVX</div>
+          </div>
+          <div class="flex-grow min-w-0 flex flex-col justify-center h-auto min-h-[64px] py-1">
+            <!-- 1행: 볼포스 & 난이도 레벨 -->
+            <div class="flex items-center justify-between gap-1 mb-2">
+              <div class="text-[28px] font-black text-slate-100 font-mono tracking-tight leading-none drop-shadow-sm">${song.vf.toFixed(1)}</div>
+              <span class="text-[12px] ${diffTextColor} tracking-wider shrink-0">${song.diff || "?"} ${song.level !== null ? song.level : "-"}</span>
+            </div>
+            <!-- 2행: 점수 & 클리어 램프 -->
+            <div class="flex items-center justify-between gap-1 mb-0.5">
+              <span class="text-[11px] text-slate-300 font-mono font-bold tracking-tight leading-none">${song.score.toLocaleString()}</span>
+              <span class="text-[11px] ${lampTextColor} uppercase tracking-wider shrink-0 leading-none">${song.lamp || 'PLAY'}</span>
+            </div>
+            <!-- 3행: 곡 제목 -->
+            <div class="text-[11px] text-slate-200 font-bold truncate leading-normal pb-0.5" title="${song.title}">
+              ${song.title}
+            </div>
+          </div>
+          <div class="absolute top-1 right-2 text-[8px] text-slate-500 font-extrabold tracking-widest">#${idx + 1}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // TOP 50 데이터를 전역 변수에 저장 (뷰어에서 사용)
+  window._vf50Data = { top50, totalVf };
+
+  // 클라우드 및 로컬스토리지 영구 저장
+  saveSdvxUserData(scores, totalVf, top50);
+
+  closeSdvxModal();
 }
 
-function clearAllLogs() {
-  if (confirm('🚨 모든 데이터를 정말 삭제하시겠습니까?')) {
-    if (currentUser && db) logs.forEach(l => db.collection("users").doc(currentUser.uid).collection("logs").doc(String(l.id)).delete());
-    else { logs = []; localStorage.removeItem('rhythm_logs_v3'); renderDashboard(); }
-    localStorage.removeItem('sdvx_data'); alert("초기화 됨"); location.reload();
+// ==========================================
+// 볼포스 히스토리 차트 및 클라우드 연동
+// ==========================================
+let vfHistoryChartInstance = null;
+
+// 히스토리 그래프 렌더링
+function renderVfHistoryChart(historyList) {
+  const ctx = document.getElementById('vfHistoryChart');
+  if (!ctx || !window.Chart) return;
+
+  const countEl = document.getElementById('vfHistoryCount');
+  if (countEl) countEl.textContent = `기록 ${historyList.length}개`;
+
+  if (historyList.length === 0) {
+    if (vfHistoryChartInstance) vfHistoryChartInstance.destroy();
+    return;
+  }
+
+  // 시간순 정렬
+  const sorted = [...historyList].sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+  const labels = sorted.map(h => h.dateStr || new Date(h.timestamp || Date.now()).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }));
+  const dataPoints = sorted.map(h => parseFloat(h.volforce || h.totalVf || 0));
+
+  if (vfHistoryChartInstance) vfHistoryChartInstance.destroy();
+
+  vfHistoryChartInstance = new Chart(ctx.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '볼포스',
+        data: dataPoints,
+        borderColor: '#e879f9',
+        backgroundColor: 'rgba(232, 121, 249, 0.15)',
+        borderWidth: 3,
+        pointBackgroundColor: '#f43f5e',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 1.5,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        fill: true,
+        tension: 0.35
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          titleColor: '#e2e8f0',
+          bodyColor: '#f43f5e',
+          bodyFont: { weight: 'bold' },
+          callbacks: {
+            label: (ctx) => `VOLFORCE: ${ctx.parsed.y.toFixed(3)}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(51, 65, 85, 0.3)' },
+          ticks: { color: '#94a3b8', font: { size: 9 } }
+        },
+        y: {
+          grid: { color: 'rgba(51, 65, 85, 0.3)' },
+          ticks: {
+            color: '#cbd5e1',
+            font: { size: 9 },
+            callback: (v) => v.toFixed(2)
+          }
+        }
+      }
+    }
+  });
+}
+
+// 클라우드/로컬 저장
+async function saveSdvxUserData(scores, totalVf, top50) {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  const timestamp = Date.now();
+
+  const saveData = {
+    scores: scores,
+    totalVf: totalVf,
+    updatedAt: timestamp,
+    dateStr: dateStr
+  };
+
+  // 1. 로컬스토리지에 캐시
+  localStorage.setItem('sdvx_latest_data', JSON.stringify(saveData));
+
+  let localHistory = JSON.parse(localStorage.getItem('sdvx_vf_history') || '[]');
+  // 같은 날짜/볼포스 중복 방지
+  const lastEntry = localHistory[localHistory.length - 1];
+  if (!lastEntry || Math.abs(lastEntry.totalVf - totalVf) > 0.0005) {
+    localHistory.push({ totalVf: totalVf, dateStr: dateStr, timestamp: timestamp });
+    localStorage.setItem('sdvx_vf_history', JSON.stringify(localHistory));
+  }
+  renderVfHistoryChart(localHistory);
+
+  // 2. 구글 로그인 상태면 Firestore 동기화
+  if (currentUser && typeof db !== 'undefined' && db) {
+    try {
+      await db.collection("users").doc(currentUser.uid).collection("sdvx_data").doc("latest").set(saveData);
+      await db.collection("users").doc(currentUser.uid).collection("sdvx_history").add({
+        totalVf: totalVf,
+        dateStr: dateStr,
+        timestamp: timestamp
+      });
+      console.log("☁️ SDVX 성적 및 볼포스 히스토리가 클라우드에 저장되었습니다.");
+    } catch (err) {
+      console.error("클라우드 저장 실패:", err);
+    }
   }
 }
 
-function switchTab(tabId) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active')); document.getElementById(tabId).classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(btn => { btn.classList.remove('text-indigo-400'); btn.classList.add('text-slate-500'); });
-  document.getElementById('btn-' + tabId).classList.add('text-indigo-400'); document.getElementById('btn-' + tabId).classList.remove('text-slate-500');
-  if (tabId === 'tab-stats') renderStats();
-  else if (tabId === 'tab-notice') renderDynamicNotices();
-  else if (tabId === 'tab-input') renderDashboard();
+// 클라우드/로컬에서 성적 불러오기
+async function loadSdvxUserData(user) {
+  // 1. Firestore에서 불러오기 시도
+  if (user && typeof db !== 'undefined' && db) {
+    try {
+      const docSnap = await db.collection("users").doc(user.uid).collection("sdvx_data").doc("latest").get();
+      if (docSnap.exists) {
+        const data = docSnap.data();
+        if (data && data.scores) {
+          processSdvxData(data.scores);
+        }
+      }
+
+      const histSnap = await db.collection("users").doc(user.uid).collection("sdvx_history").orderBy("timestamp", "asc").get();
+      if (!histSnap.empty) {
+        const cloudHistory = [];
+        histSnap.forEach(d => cloudHistory.push(d.data()));
+        localStorage.setItem('sdvx_vf_history', JSON.stringify(cloudHistory));
+        renderVfHistoryChart(cloudHistory);
+        return;
+      }
+    } catch (err) {
+      console.error("클라우드 데이터 로드 오류:", err);
+    }
+  }
+
+  // 2. 로컬 캐시에서 불러오기 (비로그인 또는 오프라인)
+  const cached = localStorage.getItem('sdvx_latest_data');
+  if (cached) {
+    try {
+      const parsed = JSON.parse(cached);
+      if (parsed && parsed.scores) {
+        processSdvxData(parsed.scores);
+      }
+    } catch (e) {}
+  }
+
+  const cachedHistory = JSON.parse(localStorage.getItem('sdvx_vf_history') || '[]');
+  renderVfHistoryChart(cachedHistory);
+}
+
+// DJ Name 관리 함수
+function getPlayerDjName() {
+  return localStorage.getItem('sdvx_dj_name') || 'PLAYER';
+}
+
+function editDjName() {
+  const current = getPlayerDjName();
+  const next = prompt("사운드 볼텍스 플레이어 닉네임(DJ NAME)을 입력해주세요:", current);
+  if (next !== null && next.trim()) {
+    const trimmed = next.trim();
+    localStorage.setItem('sdvx_dj_name', trimmed);
+    updateDjNameDisplays(trimmed);
+    if (window._vf50Data) {
+      const expName = document.getElementById('expName');
+      if (expName) expName.textContent = trimmed;
+    }
+  }
+}
+
+function updateDjNameDisplays(name) {
+  const d1 = document.getElementById('playerDjNameDisplay');
+  const d2 = document.getElementById('expName');
+  if (d1) d1.textContent = name;
+  if (d2) d2.textContent = name;
+}
+
+// 가이드 모달 열기 / 닫기
+function openGuideModal() {
+  const modal = document.getElementById('guideModal');
+  if (modal) modal.classList.remove('hidden');
+}
+function closeGuideModal() {
+  const modal = document.getElementById('guideModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+// VF50 뷰어 모달 열기 (html2canvas로 이미지 생성)
+async function openVf50Viewer() {
+  if (!window._vf50Data) {
+    alert('먼저 성적 데이터를 불러와 주세요.');
+    return;
+  }
+
+  const modal = document.getElementById('vf50ViewerModal');
+  const container = document.getElementById('vf50ImageContainer');
+  modal.classList.remove('hidden');
+  container.innerHTML = '<div class="text-center py-8 text-slate-400 text-sm">이미지 생성 중...</div>';
+
+  // exportScorecard를 html2canvas로 캡쳐
+  const scorecard = document.getElementById('exportScorecard');
+  try {
+    const canvas = await html2canvas(scorecard, {
+      backgroundColor: '#0f172a',
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      width: scorecard.scrollWidth,
+      height: scorecard.scrollHeight
+    });
+    container.innerHTML = '';
+    canvas.style.width = '100%';
+    canvas.style.height = 'auto';
+    container.appendChild(canvas);
+  } catch (err) {
+    container.innerHTML = '<div class="text-center py-8 text-rose-400 text-sm">이미지 생성 실패: ' + err.message + '</div>';
+  }
+}
+
+function closeVf50Viewer() {
+  document.getElementById('vf50ViewerModal').classList.add('hidden');
+}
+
+// VF50 이미지 저장
+function saveVf50Image() {
+  const container = document.getElementById('vf50ImageContainer');
+  const canvas = container.querySelector('canvas');
+  if (!canvas) {
+    alert('이미지가 아직 생성되지 않았습니다.');
+    return;
+  }
+  const link = document.createElement('a');
+  link.download = `VF50_${new Date().toISOString().slice(0,10)}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+// 수동 입력창 제출 처리
+function processSdvxScores() {
+  const rawInput = document.getElementById('sdvxRawInput').value.trim();
+  if (!rawInput) return;
+  try {
+    const scores = JSON.parse(rawInput);
+    processSdvxData(scores);
+  } catch (e) {
+    alert("데이터 형식이 올바르지 않습니다.");
+  }
+}
+
+// 6. 북마크릿 데이터 수신 (postMessage 이벤트 감지)
+window.addEventListener('message', (event) => {
+  // 스크래퍼(북마크릿)에서 보낸 'SDVX_PARSE_DATA' 타입인지 확인
+  if (event.data && event.data.type === 'SDVX_PARSE_DATA') {
+    try {
+      if (event.data.playerName) {
+        localStorage.setItem('sdvx_dj_name', event.data.playerName);
+        updateDjNameDisplays(event.data.playerName);
+      }
+      const scores = event.data.payload;
+      if (Array.isArray(scores)) {
+        processSdvxData(scores);
+      }
+    } catch (err) {
+      console.error("북마크릿 데이터 수신 실패:", err);
+    }
+  }
+});
+
+// 7. URL 해시(#import=...) 자동 감지 및 즉시 실행 (원클릭 연동 백업)
+window.addEventListener('DOMContentLoaded', () => {
+  updateDjNameDisplays(getPlayerDjName());
+
+  if (window.location.hash.startsWith('#import=')) {
+    try {
+      const rawData = decodeURIComponent(window.location.hash.replace('#import=', ''));
+      const scores = JSON.parse(rawData);
+      if (Array.isArray(scores)) {
+        processSdvxData(scores);
+        // URL 해시 정리
+        history.replaceState(null, null, ' ');
+        return;
+      }
+    } catch (err) {
+      console.error("자동 임포트 파싱 실패:", err);
+    }
+  }
+
+  // 초기 저장 데이터 복원
+  loadSdvxUserData(currentUser);
+});
+
+// 8. Auth State 변화 시 자동 로드 연동
+if (typeof auth !== 'undefined' && auth) {
+  auth.onAuthStateChanged((user) => {
+    loadSdvxUserData(user);
+  });
+}
+
+// ==========================================
+// 북마크릿 클립보드 복사 함수 추가
+// ==========================================
+function copyBookmarklet() {
+  const codeElement = document.getElementById('bookmarkletCode');
+  if (!codeElement) return;
+  
+  const codeText = codeElement.innerText || codeElement.textContent;
+  
+  navigator.clipboard.writeText(codeText).then(() => {
+    alert("데이터 갱신용 코드가 복사되었습니다!\n\n반드시 사볼 공식 사이트의 [음악 데이터 (Music Data)] 창에서 실행해 주세요.");
+  }).catch(err => {
+    console.error('복사 실패:', err);
+    alert("복사에 실패했습니다. 수동으로 코드를 복사해 주세요.");
+  });
 }
