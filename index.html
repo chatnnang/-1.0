@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
+<<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🐱 얼마썼냥 v1.3 - 리듬게임 가계부 & 볼포스 트래커</title>
+  <title>🐱 얼마썼냥 v2.0 - 리듬게임 가계부 & 볼포스봤냥</title>
 
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
@@ -14,11 +14,11 @@
 
   <!-- SEO 메타태그 -->
   <meta name="description" content="리듬게임 오락실 지출 기록 가계부 & 사운드 볼텍스(SDVX) 볼포스 VF50 성적 분석 트래커. 오락실 판수, 금액을 기록하고 볼포스를 정밀 계산하세요.">
-  <meta name="keywords" content="얼마썼냥, 리듬게임, 가계부, 사운드볼텍스, SDVX, 볼포스, Volforce, VF50, 오락실, 지출기록">
+  <meta name="keywords" content="얼마썼냥, 리듬게임, 가계부, 사운드볼텍스, SDVX, 볼포스, Volforce, VF50, 볼포스봤냥, 오락실, 지출기록">
   <link rel="canonical" href="https://chatnnang.github.io/-1.0/">
 
   <!-- Open Graph -->
-  <meta property="og:title" content="🐱 얼마썼냥 - 리듬게임 가계부 & 볼포스 트래커">
+  <meta property="og:title" content="🐱 얼마썼냥 - 리듬게임 가계부 & 볼포스봤냥">
   <meta property="og:description" content="오락실 지출 기록 + 사운드 볼텍스 볼포스 VF50 정밀 분석. 북마크릿 원클릭으로 성적을 불러오세요!">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://chatnnang.github.io/-1.0/">
@@ -59,7 +59,7 @@
     <div id="expGrid" class="grid grid-cols-5 gap-3.5"></div>
     <div class="mt-6 text-right text-slate-600 font-bold tracking-widest flex justify-between items-center">
       <span>SOUND VOLTEX EXCEED GEAR (NABLA)</span>
-      <span>Produced by 얼마썼냥 v1.3</span>
+      <span>Produced by 얼마썼냥 v2.0 (볼포스봤냥)</span>
     </div>
   </div>
 
@@ -78,9 +78,9 @@
     </div>
 
     <!-- [탭 1: 지출 입력 & 빠른 기록] -->
-    <div id="tab-input" class="tab-content space-y-4">
+    <div id="tab-input" class="tab-content active space-y-4">
       <header class="bg-slate-800 p-4 rounded-2xl shadow-lg border border-slate-700">
-        <h1 class="text-lg font-bold text-slate-200">🐱 얼마썼냥 v1.3</h1>
+        <h1 class="text-lg font-bold text-slate-200">🐱 얼마썼냥 v2.0</h1>
         <div class="grid grid-cols-2 gap-3 mt-3">
           <div class="bg-slate-950/60 p-3 rounded-xl"><span class="text-xs text-slate-400">오늘 지출</span><p id="todayCost" class="text-xl font-bold text-emerald-400">0원</p></div>
           <div class="bg-slate-950/60 p-3 rounded-xl"><span class="text-xs text-slate-400">오늘 판수</span><p id="todayCount" class="text-xl font-bold text-indigo-400">0판</p></div>
@@ -157,7 +157,7 @@
     </div>
 
     <!-- [탭 2: 플레이 데이터 (사볼 VF50 연동 UI 병합 완료)] -->
-    <div id="tab-profile" class="tab-content active space-y-4">
+    <div id="tab-profile" class="tab-content space-y-4">
       <div class="flex overflow-x-auto hide-scrollbar space-x-2 py-1">
         <button class="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md whitespace-nowrap">사운드 볼텍스</button>
         <button class="bg-slate-800 text-slate-400 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap opacity-50 cursor-not-allowed">마이마이 DX (준비중)</button>
@@ -192,7 +192,7 @@
 
           <div class="flex justify-between items-center mb-5 relative z-10">
             <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 to-pink-500">
-              ⚡ SDVX 볼포스 분석기
+              🐱 볼포스봤냥
             </h2>
             <div class="flex items-center gap-1.5">
               <button onclick="openGuideModal()" class="text-[10px] bg-indigo-900/60 hover:bg-indigo-800 text-indigo-200 border border-indigo-700/50 px-2 py-1 rounded transition font-bold">가이드</button>
