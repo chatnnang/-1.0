@@ -152,6 +152,7 @@ async function processSdvxData(scores) {
   const expGrid = document.getElementById('expGrid');
   const expVf = document.getElementById('expVolforce');
   const expName = document.getElementById('expName');
+  const expDate = document.getElementById('expDate');
   if (expVf) expVf.textContent = totalVf.toFixed(3);
   const playerDjName = localStorage.getItem('sdvx_dj_name') || 'PLAYER';
   if (expName) expName.textContent = playerDjName;
