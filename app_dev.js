@@ -178,30 +178,25 @@ async function processSdvxData(scores) {
   const expVf = document.getElementById('expVolforce');
   const expName = document.getElementById('expName');
   const expDate = document.getElementById('expDate');
-  const expTierBadge = document.getElementById('expTierBadge');
 
   if (expVf) expVf.textContent = totalVf.toFixed(3);
   if (expName && currentUser) expName.textContent = currentUser.displayName || 'PLAYER';
   if (expDate) expDate.textContent = new Date().toISOString().slice(0, 10);
-  if (expTierBadge) {
-    expTierBadge.textContent = tier.name;
-    expTierBadge.className = `text-sm font-black px-3 py-1 rounded-lg border ${tier.color} bg-slate-800/80 border-slate-600 shadow-md tracking-wider`;
-  }
 
   if (expGrid) {
     expGrid.innerHTML = top50.map((song, idx) => {
-      let badgeColor = "bg-rose-600 text-white";
-      if (song.diff === "NOV") badgeColor = "bg-blue-600 text-white";
-      else if (song.diff === "ADV") badgeColor = "bg-amber-400 text-slate-950 font-black";
-      else if (song.diff === "MXM") badgeColor = "bg-slate-100 text-slate-900 border border-slate-300 font-black";
-      else if (["INF", "GRV", "HVN", "VVD", "XCD"].includes(song.diff)) badgeColor = "bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white font-black";
+      let diffTextColor = "text-rose-400 font-black";
+      if (song.diff === "NOV") diffTextColor = "text-sky-400 font-black";
+      else if (song.diff === "ADV") diffTextColor = "text-amber-400 font-black";
+      else if (song.diff === "MXM") diffTextColor = "text-slate-100 font-black drop-shadow-[0_0_6px_rgba(255,255,255,0.7)]";
+      else if (["INF", "GRV", "HVN", "VVD", "XCD"].includes(song.diff)) diffTextColor = "text-fuchsia-400 font-black drop-shadow-[0_0_6px_rgba(232,121,249,0.7)]";
 
-      let lampStyle = "bg-slate-700 text-slate-300";
-      if (song.lamp === "PUC") lampStyle = "bg-amber-400 text-amber-950 font-black border border-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.6)]";
-      else if (song.lamp === "UC") lampStyle = "bg-rose-600 text-white font-black shadow-[0_0_8px_rgba(225,29,72,0.5)]";
-      else if (song.lamp === "EX-HARD" || song.lamp === "MXV") lampStyle = "bg-yellow-400 text-yellow-950 font-black";
-      else if (song.lamp === "HARD" || song.lamp === "COMP") lampStyle = "bg-pink-600 text-white font-black";
-      else if (song.lamp === "CLEAR") lampStyle = "bg-emerald-600 text-white font-bold";
+      let lampTextColor = "text-slate-400 font-bold";
+      if (song.lamp === "PUC") lampTextColor = "text-amber-300 font-black drop-shadow-[0_0_8px_rgba(251,191,36,0.9)]";
+      else if (song.lamp === "UC") lampTextColor = "text-rose-400 font-black drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]";
+      else if (song.lamp === "EX-HARD" || song.lamp === "MXV") lampTextColor = "text-yellow-300 font-black";
+      else if (song.lamp === "HARD" || song.lamp === "COMP") lampTextColor = "text-pink-400 font-bold";
+      else if (song.lamp === "CLEAR") lampTextColor = "text-emerald-400 font-bold";
 
       let coverSrc = '';
       if (song.imageName) {
@@ -217,23 +212,22 @@ async function processSdvxData(scores) {
             <div class="text-[12px] text-slate-600 font-black tracking-tighter">SDVX</div>
           </div>
           <div class="flex-grow min-w-0 flex flex-col justify-between h-16 py-0.5">
-            <div class="flex items-center justify-between gap-1.5">
-              <div class="text-[26px] font-black text-slate-100 tracking-tight leading-none drop-shadow-sm">${song.vf.toFixed(1)}</div>
-              <span class="px-2 py-0.5 text-[9px] font-black rounded-md ${badgeColor} shadow-sm shrink-0 tracking-wider inline-flex items-center justify-center leading-normal">
-                ${song.diff || "?"} ${song.level !== null ? song.level : "-"}
-              </span>
+            <!-- 1행: 볼포스 & 난이도 레벨 -->
+            <div class="flex items-center justify-between gap-1">
+              <div class="text-[28px] font-black text-slate-100 font-mono tracking-tight leading-none drop-shadow-sm">${song.vf.toFixed(1)}</div>
+              <span class="text-[12px] ${diffTextColor} tracking-wider shrink-0">${song.diff || "?"} ${song.level !== null ? song.level : "-"}</span>
             </div>
-            <div class="flex items-center justify-between mt-1">
-              <span class="text-[10px] text-slate-300 font-mono font-bold tracking-tight">${song.score.toLocaleString()}</span>
-              <span class="text-[9px] font-black px-1.5 py-0.5 rounded ${lampStyle} uppercase tracking-wider shadow-sm leading-none inline-flex items-center justify-center">
-                ${song.lamp || 'PLAY'}
-              </span>
+            <!-- 2행: 점수 & 클리어 램프 -->
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-[11px] text-slate-300 font-mono font-bold tracking-tight">${song.score.toLocaleString()}</span>
+              <span class="text-[11px] ${lampTextColor} uppercase tracking-wider shrink-0">${song.lamp || 'PLAY'}</span>
             </div>
-            <div class="text-[10px] text-slate-200 font-bold truncate mt-1 leading-tight" title="${song.title}">
+            <!-- 3행: 곡 제목 -->
+            <div class="text-[11px] text-slate-200 font-bold truncate leading-tight" title="${song.title}">
               ${song.title}
             </div>
           </div>
-          <div class="absolute top-1.5 right-2 text-[7px] text-slate-500 font-extrabold tracking-widest">#${idx + 1}</div>
+          <div class="absolute top-1 right-2 text-[8px] text-slate-500 font-extrabold tracking-widest">#${idx + 1}</div>
         </div>
       `;
     }).join('');
