@@ -177,11 +177,11 @@ async function processSdvxData(scores) {
   const expGrid = document.getElementById('expGrid');
   const expVf = document.getElementById('expVolforce');
   const expName = document.getElementById('expName');
-  const expDate = document.getElementById('expDate');
-
   if (expVf) expVf.textContent = totalVf.toFixed(3);
-  if (expName && currentUser) expName.textContent = currentUser.displayName || 'PLAYER';
+  const playerDjName = localStorage.getItem('sdvx_dj_name') || (currentUser ? currentUser.displayName : '') || 'NYAN';
+  if (expName) expName.textContent = playerDjName;
   if (expDate) expDate.textContent = new Date().toISOString().slice(0, 10);
+  updateDjNameDisplays(playerDjName);
 
   if (expGrid) {
     expGrid.innerHTML = top50.map((song, idx) => {
@@ -401,6 +401,32 @@ async function loadSdvxUserData(user) {
   renderVfHistoryChart(cachedHistory);
 }
 
+// DJ Name 관리 함수
+function getPlayerDjName() {
+  return localStorage.getItem('sdvx_dj_name') || (currentUser ? currentUser.displayName : '') || 'NYAN';
+}
+
+function editDjName() {
+  const current = getPlayerDjName();
+  const next = prompt("사운드 볼텍스 플레이어 닉네임(DJ NAME)을 입력해주세요:", current);
+  if (next !== null && next.trim()) {
+    const trimmed = next.trim();
+    localStorage.setItem('sdvx_dj_name', trimmed);
+    updateDjNameDisplays(trimmed);
+    if (window._vf50Data) {
+      const expName = document.getElementById('expName');
+      if (expName) expName.textContent = trimmed;
+    }
+  }
+}
+
+function updateDjNameDisplays(name) {
+  const d1 = document.getElementById('playerDjNameDisplay');
+  const d2 = document.getElementById('expName');
+  if (d1) d1.textContent = name;
+  if (d2) d2.textContent = name;
+}
+
 // 가이드 모달 열기 / 닫기
 function openGuideModal() {
   const modal = document.getElementById('guideModal');
@@ -478,6 +504,10 @@ window.addEventListener('message', (event) => {
   // 스크래퍼(북마크릿)에서 보낸 'SDVX_PARSE_DATA' 타입인지 확인
   if (event.data && event.data.type === 'SDVX_PARSE_DATA') {
     try {
+      if (event.data.playerName) {
+        localStorage.setItem('sdvx_dj_name', event.data.playerName);
+        updateDjNameDisplays(event.data.playerName);
+      }
       const scores = event.data.payload;
       if (Array.isArray(scores)) {
         processSdvxData(scores);
@@ -490,6 +520,8 @@ window.addEventListener('message', (event) => {
 
 // 7. URL 해시(#import=...) 자동 감지 및 즉시 실행 (원클릭 연동 백업)
 window.addEventListener('DOMContentLoaded', () => {
+  updateDjNameDisplays(getPlayerDjName());
+
   if (window.location.hash.startsWith('#import=')) {
     try {
       const rawData = decodeURIComponent(window.location.hash.replace('#import=', ''));
