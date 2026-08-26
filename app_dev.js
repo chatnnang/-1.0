@@ -198,7 +198,7 @@ async function processSdvxData(scores) {
         <div class="bg-slate-800 rounded-lg p-2 border border-slate-700 relative">
           <div class="flex gap-2">
             <div class="w-16 h-16 bg-slate-700 rounded flex-shrink-0 overflow-hidden relative flex items-center justify-center text-[8px] text-slate-500">
-              <img src="${initialCover}" onerror="if(!this.dataset.tried && '${cdnCover}'){this.dataset.tried='1'; this.src='${cdnCover}';} else {this.style.display='none';}" class="w-full h-full object-cover absolute inset-0 z-10" />
+              <img src="${initialCover}" crossorigin="anonymous" onerror="if(!this.dataset.tried && '${cdnCover}'){this.dataset.tried='1'; this.src='${cdnCover}';} else {this.style.display='none';}" class="w-full h-full object-cover absolute inset-0 z-10" />
               <span class="z-0">${song.id || '?'}</span>
             </div>
             <div class="flex-grow min-w-0">
