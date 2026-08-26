@@ -178,50 +178,62 @@ async function processSdvxData(scores) {
   const expVf = document.getElementById('expVolforce');
   const expName = document.getElementById('expName');
   const expDate = document.getElementById('expDate');
+  const expTierBadge = document.getElementById('expTierBadge');
 
   if (expVf) expVf.textContent = totalVf.toFixed(3);
   if (expName && currentUser) expName.textContent = currentUser.displayName || 'PLAYER';
   if (expDate) expDate.textContent = new Date().toISOString().slice(0, 10);
+  if (expTierBadge) {
+    expTierBadge.textContent = tier.name;
+    expTierBadge.className = `text-sm font-black px-3 py-1 rounded-lg border ${tier.color} bg-slate-800/80 border-slate-600 shadow-md tracking-wider`;
+  }
 
   if (expGrid) {
     expGrid.innerHTML = top50.map((song, idx) => {
-      let badgeColor = "bg-red-600 text-white";
-      if (song.diff === "NOV") badgeColor = "bg-blue-500 text-white";
-      else if (song.diff === "ADV") badgeColor = "bg-yellow-500 text-slate-900";
-      else if (song.diff === "MXM") badgeColor = "bg-slate-100 text-slate-900";
-      else if (["INF", "GRV", "HVN", "VVD", "XCD"].includes(song.diff)) badgeColor = "bg-fuchsia-600 text-white";
+      let badgeColor = "bg-rose-600 text-white";
+      if (song.diff === "NOV") badgeColor = "bg-blue-600 text-white";
+      else if (song.diff === "ADV") badgeColor = "bg-amber-400 text-slate-950 font-black";
+      else if (song.diff === "MXM") badgeColor = "bg-slate-100 text-slate-900 border border-slate-300 font-black";
+      else if (["INF", "GRV", "HVN", "VVD", "XCD"].includes(song.diff)) badgeColor = "bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white font-black";
 
-      let lampColor = "text-slate-400";
-      if (song.lamp === "PUC") lampColor = "text-amber-300";
-      else if (song.lamp === "UC") lampColor = "text-rose-400";
-      else if (song.lamp === "EX-HARD" || song.lamp === "MXV") lampColor = "text-yellow-400";
-      else if (song.lamp === "HARD") lampColor = "text-pink-400";
-      else if (song.lamp === "CLEAR") lampColor = "text-emerald-400";
+      let lampStyle = "bg-slate-700 text-slate-300";
+      if (song.lamp === "PUC") lampStyle = "bg-amber-400 text-amber-950 font-black border border-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.6)]";
+      else if (song.lamp === "UC") lampStyle = "bg-rose-600 text-white font-black shadow-[0_0_8px_rgba(225,29,72,0.5)]";
+      else if (song.lamp === "EX-HARD" || song.lamp === "MXV") lampStyle = "bg-yellow-400 text-yellow-950 font-black";
+      else if (song.lamp === "HARD" || song.lamp === "COMP") lampStyle = "bg-pink-600 text-white font-black";
+      else if (song.lamp === "CLEAR") lampStyle = "bg-emerald-600 text-white font-bold";
 
-      const cdnCover = song.imageName ? `https://dp4p6x0xfi5o9.cloudfront.net/sdvx/img/cover/${song.imageName}` : '';
-      const localCover = song.id ? `./jackets/${song.id}.webp` : '';
-      const initialCover = localCover || cdnCover;
+      let coverSrc = '';
+      if (song.imageName) {
+        coverSrc = `https://dp4p6x0xfi5o9.cloudfront.net/sdvx/img/cover/${song.imageName}`;
+      } else if (song.id && /^\d+$/.test(song.id)) {
+        coverSrc = `./jackets/${song.id.padStart(4, '0')}.webp`;
+      }
 
       return `
-        <div class="bg-slate-800/90 rounded-xl p-2.5 border border-slate-700/80 relative shadow flex gap-2.5 items-center">
-          <div class="w-16 h-16 bg-slate-900 rounded-lg flex-shrink-0 overflow-hidden relative flex items-center justify-center text-[8px] text-slate-500 border border-slate-700/60 shadow-inner">
-            <img src="${initialCover}" crossorigin="anonymous" onerror="if(!this.dataset.tried && '${cdnCover}'){this.dataset.tried='1'; this.src='${cdnCover}';} else {this.style.display='none';}" class="w-full h-full object-cover absolute inset-0 z-10" />
-            <span class="z-0">${song.id || '?'}</span>
+        <div class="bg-slate-800/95 rounded-xl p-3 border border-slate-700/80 relative shadow-md flex gap-3 items-center">
+          <div class="w-16 h-16 bg-slate-950 rounded-lg flex-shrink-0 overflow-hidden relative flex items-center justify-center border border-slate-700/80 shadow-inner">
+            ${coverSrc ? `<img src="${coverSrc}" crossorigin="anonymous" onerror="this.onerror=null; if(this.src.includes('cloudfront')) { this.src='./jackets/${song.id}.webp'; } else { this.style.display='none'; }" class="w-full h-full object-cover absolute inset-0 z-10" />` : ''}
+            <div class="text-[12px] text-slate-600 font-black tracking-tighter">SDVX</div>
           </div>
           <div class="flex-grow min-w-0 flex flex-col justify-between h-16 py-0.5">
-            <div class="flex items-center justify-between gap-1">
-              <div class="text-2xl font-black text-slate-100 tracking-tight leading-none">${song.vf.toFixed(1)}</div>
-              <span class="px-1.5 py-0.5 text-[8px] font-black rounded ${badgeColor} shadow-sm shrink-0 tracking-wider">${song.diff || "?"} ${song.level !== null ? song.level : "-"}</span>
+            <div class="flex items-center justify-between gap-1.5">
+              <div class="text-[26px] font-black text-slate-100 tracking-tight leading-none drop-shadow-sm">${song.vf.toFixed(1)}</div>
+              <span class="px-2 py-0.5 text-[9px] font-black rounded-md ${badgeColor} shadow-sm shrink-0 tracking-wider inline-flex items-center justify-center leading-normal">
+                ${song.diff || "?"} ${song.level !== null ? song.level : "-"}
+              </span>
             </div>
-            <div class="flex items-center justify-between text-[8px] font-mono mt-0.5">
-              <span class="text-slate-400 font-bold">${song.score.toLocaleString()}</span>
-              <span class="text-[8px] font-black ${lampColor} uppercase px-1 py-0.2 rounded bg-slate-900/60">${song.lamp || ''}</span>
+            <div class="flex items-center justify-between mt-1">
+              <span class="text-[10px] text-slate-300 font-mono font-bold tracking-tight">${song.score.toLocaleString()}</span>
+              <span class="text-[9px] font-black px-1.5 py-0.5 rounded ${lampStyle} uppercase tracking-wider shadow-sm leading-none inline-flex items-center justify-center">
+                ${song.lamp || 'PLAY'}
+              </span>
             </div>
-            <div class="text-[9px] text-slate-200 font-bold truncate mt-0.5" title="${song.title}">
+            <div class="text-[10px] text-slate-200 font-bold truncate mt-1 leading-tight" title="${song.title}">
               ${song.title}
             </div>
           </div>
-          <div class="absolute top-1 right-2 text-[7px] text-slate-500 font-extrabold tracking-wider">#${idx + 1}</div>
+          <div class="absolute top-1.5 right-2 text-[7px] text-slate-500 font-extrabold tracking-widest">#${idx + 1}</div>
         </div>
       `;
     }).join('');
