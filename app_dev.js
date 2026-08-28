@@ -295,6 +295,31 @@ function renderVfHistoryChart(historyList) {
   });
 }
 
+// 볼포스 갱신 히스토리 전체 삭제
+async function clearVfHistory() {
+  if (!confirm('볼포스 갱신 히스토리를 전부 삭제하시겠습니까?\n(현재 성적 데이터는 유지됩니다)')) return;
+
+  // 1. 로컬스토리지 히스토리 삭제
+  localStorage.removeItem('sdvx_vf_history');
+
+  // 2. Firestore 히스토리 삭제
+  if (currentUser && typeof db !== 'undefined' && db) {
+    try {
+      const histSnap = await db.collection("users").doc(currentUser.uid).collection("sdvx_history").get();
+      const batch = db.batch();
+      histSnap.forEach(doc => batch.delete(doc.ref));
+      await batch.commit();
+      console.log("☁️ 클라우드 히스토리 삭제 완료");
+    } catch (err) {
+      console.error("클라우드 히스토리 삭제 실패:", err);
+    }
+  }
+
+  // 3. 차트 초기화
+  renderVfHistoryChart([]);
+  alert('히스토리가 삭제되었습니다.');
+}
+
 // 클라우드/로컬 저장
 async function saveSdvxUserData(scores, totalVf, top50) {
   const now = new Date();
