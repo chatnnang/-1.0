@@ -73,8 +73,6 @@ function normalizeTitle(title) {
   return str.toLowerCase().replace(/[\s\-_・。、！？!?♥♡★☆"'\(\)\[\]『』「」~～〜ØΞ∞Λ△ΩИΣ驩驧驫驪]/g, '');
 }
 
-function closeSdvxModal() { document.getElementById('sdvxModal').classList.add('hidden'); }
-
 // 5. 성적 데이터 분석 및 렌더링
 async function processSdvxData(scores) {
   const db = await loadSdvxDB();
