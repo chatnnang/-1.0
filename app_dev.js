@@ -345,6 +345,10 @@ async function loadSdvxUserData(user) {
       if (docSnap.exists) {
         const data = docSnap.data();
         if (data && data.scores) {
+          if (data.djName) {
+            localStorage.setItem('sdvx_dj_name', data.djName);
+            updateDjNameDisplays(data.djName);
+          }
           processSdvxData(data.scores);
         }
       }
@@ -368,6 +372,10 @@ async function loadSdvxUserData(user) {
     try {
       const parsed = JSON.parse(cached);
       if (parsed && parsed.scores) {
+        if (parsed.djName) {
+          localStorage.setItem('sdvx_dj_name', parsed.djName);
+          updateDjNameDisplays(parsed.djName);
+        }
         processSdvxData(parsed.scores);
       }
     } catch (e) {}
