@@ -397,18 +397,31 @@ function editDjName() {
     const trimmed = next.trim();
     localStorage.setItem('sdvx_dj_name', trimmed);
     updateDjNameDisplays(trimmed);
-    if (window._vf50Data) {
-      const expName = document.getElementById('expName');
-      if (expName) expName.textContent = trimmed;
+    
+    // 구글 로그인 상태면 클라우드에도 즉시 업데이트
+    if (currentUser && typeof db !== 'undefined' && db) {
+      db.collection("users").doc(currentUser.uid).collection("sdvx_data").doc("latest").update({
+        djName: trimmed
+      }).catch(err => {
+        console.warn("닉네임 클라우드 업데이트 실패 (문서 없음 가능):", err);
+      });
     }
   }
 }
 
 function updateDjNameDisplays(name) {
+  const cleanName = name || 'PLAYER';
   const d1 = document.getElementById('playerDjNameDisplay');
   const d2 = document.getElementById('expName');
-  if (d1) d1.textContent = name;
-  if (d2) d2.textContent = name;
+  if (d1) d1.textContent = cleanName;
+  if (d2) d2.textContent = cleanName;
+
+  // 상단 헤더 연동 상태 텍스트도 사볼 인게임 닉네임으로 동기화
+  const statusText = document.getElementById('userStatusText');
+  if (statusText && currentUser) {
+    const displayLabel = (cleanName && cleanName !== 'PLAYER' && cleanName !== 'NYAN') ? `${cleanName}님 연동됨` : '클라우드 연동됨';
+    statusText.textContent = `${displayLabel} ${isAdmin ? '👑' : ''}`;
+  }
 }
 
 // 가이드 모달 열기 / 닫기

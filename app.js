@@ -95,7 +95,9 @@ if (auth) {
       isAdmin = ADMIN_EMAILS.includes(user.email);
       document.getElementById('adminNoticeForm').classList.toggle('hidden', !isAdmin);
       document.getElementById('statusDot').className = "w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]";
-      document.getElementById('userStatusText').textContent = `${user.displayName || '유저'}님 연동됨 ${isAdmin ? '👑' : ''}`;
+      const currentDj = localStorage.getItem('sdvx_dj_name');
+      const displayLabel = (currentDj && currentDj !== 'PLAYER' && currentDj !== 'NYAN') ? `${currentDj}님 연동됨` : '클라우드 연동됨';
+      document.getElementById('userStatusText').textContent = `${displayLabel} ${isAdmin ? '👑' : ''}`;
       document.getElementById('btnLogin').classList.add('hidden'); document.getElementById('btnLogout').classList.remove('hidden');
       db.collection("users").doc(user.uid).collection("logs").orderBy("id", "desc").onSnapshot((snapshot) => {
         logs = []; snapshot.forEach((doc) => logs.push(doc.data())); renderDashboard();
