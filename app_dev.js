@@ -18,7 +18,7 @@ async function loadSdvxDB() {
   }
 }
 
-// 2. VF50 공식 규격 볼포스 계산식
+// 2. VF50 공식 규격 볼포스 계산식 (BEMANIWiki 및 EXCEED GEAR 공식 규격)
 function calculateSingleVolforce(level, score, lamp) {
   if (level === null || !score || score < 7000000) return 0;
 
@@ -32,26 +32,27 @@ function calculateSingleVolforce(level, score, lamp) {
   else if (score >= 9000000) gradeMult = 0.91; // A+
   else if (score >= 8700000) gradeMult = 0.88; // A
   else if (score >= 7500000) gradeMult = 0.85; // B
+  else if (score >= 6500000) gradeMult = 0.82; // C
 
   // 클리어 계수 (Clear Multiplier) - Exceed Gear 공식 배율
   let clearMult = 1.00;
-  
   if (lamp === "PUC") clearMult = 1.10;
-  else if (lamp === "UC") clearMult = 1.06;
-  else if (lamp === "EX-HARD" || lamp === "EXC" || lamp === "MXV") clearMult = 1.04;
-  else if (lamp === "HARD" || lamp === "COMP") clearMult = 1.02;
+  else if (lamp === "UC") clearMult = 1.05; // EXCEED GEAR 공식: UC = 1.05
+  else if (lamp === "MXV" || lamp === "EX-HARD") clearMult = 1.04;
+  else if (lamp === "HARD" || lamp === "EXC" || lamp === "COMP") clearMult = 1.02; // Excessive Clear = 1.02
   else if (lamp === "CLEAR") clearMult = 1.00;
   else if (lamp === "PLAYED" || lamp === "PLAY") clearMult = 0.50;
   else {
-    // 램프 정보가 없을 경우 점수 기반으로 추정 (기존 로직 유지, 안전하게 보수적 추정)
-    if (score === 10000000) clearMult = 1.10; // PUC
-    else if (score >= 9900000) clearMult = 1.06; // S랭크 이상은 UC로 추정
-    else if (score >= 9800000) clearMult = 1.02; // AAA+ 이상은 HARD로 추정
+    // 램프 정보가 없을 경우 점수 기반으로 추정
+    if (score === 10000000) clearMult = 1.10;
+    else if (score >= 9900000) clearMult = 1.05;
+    else if (score >= 9800000) clearMult = 1.02;
   }
 
-  // 공식 계산: (상수 * 20) * (점수 / 1000만) * 등급계수 * 클리어계수
+  // 공식 계산: Math.floor( Lv * (Score / 10,000,000) * Grade * Clear * 20 )
+  // 부동소수점 오차(예: 405.99999999)로 인한 0.001점 내림 누락을 100% 방지하기 위해 + 1e-6 정밀도 보정
   const rawVf = (level * 20) * (score / 10000000) * gradeMult * clearMult;
-  return Math.floor(rawVf + 0.0001) / 10;
+  return Math.floor(rawVf + 1e-6);
 }
 
 
@@ -109,14 +110,15 @@ async function processSdvxData(scores) {
       level = songInfo.levels[dbDiff] || songInfo.levels["MXM"] || songInfo.levels["EXH"] || null;
     }
 
-    const vf = calculateSingleVolforce(level, item.score, item.lamp);
+    const vfInt = calculateSingleVolforce(level, item.score, item.lamp);
 
     calculatedList.push({
       title: item.title,
       diff: diff,
       score: item.score,
       level: level,
-      vf: vf,
+      vf: vfInt / 10,
+      vfInt: vfInt,
       id: songId,
       imageName: imageName,
       lamp: item.lamp
@@ -127,18 +129,18 @@ async function processSdvxData(scores) {
   // 사볼은 동일 곡이더라도 난이도가 다르면(예: MXM, EXH) 탑 50에 중복해서 들어갈 수 있습니다.
   const finalValidList = [...calculatedList];
   
-  // VF 내림차순 정렬, 동점시 점수 내림차순, 그다음 레벨 내림차순
+  // 정렬 순서: 1. 단곡 볼포스(vfInt) 내림차순 -> 2. 점수(score) 내림차순 -> 3. 레벨(level) 내림차순
   finalValidList.sort((a, b) => {
-    if (b.vf !== a.vf) return b.vf - a.vf;
+    if (b.vfInt !== a.vfInt) return b.vfInt - a.vfInt;
     if (b.score !== a.score) return b.score - a.score;
     if (b.level !== a.level) return b.level - a.level;
     return 0;
   });
   const top50 = finalValidList.slice(0, 50);
   
-  // 부동소수점 오차 방지를 위해 정수(예: 416)로 변환하여 합산
-  const totalVfRaw = top50.reduce((acc, cur) => acc + Math.round(cur.vf * 10), 0);
-  const totalVf = totalVfRaw / 1000; // 최종 볼포스 수치 (예: 20.700)
+  // 50곡의 정수 단곡 FORCE를 정확히 합산한 뒤 1000으로 나눔 (공식 볼포스 산출식)
+  const totalVfRaw = top50.reduce((acc, cur) => acc + cur.vfInt, 0);
+  const totalVf = totalVfRaw / 1000; // 최종 볼포스 수치 (예: 20.802)
 
   // 화면 전환 (빈 화면 숨기고, 프로필 상태 표시)
   document.getElementById('sdvxEmptyState').classList.remove('block');
